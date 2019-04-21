@@ -12,6 +12,14 @@ from const import MOCAP_SAMPLE_RATE
 class GYRSimulator:
     @staticmethod
     def get_orientation_diff(vector_g_sensor, vector_rotat_sensor_all, vector_g_simu, vector_rota_simu_all):
+        """
+        functional calibration
+        :param vector_g_sensor:
+        :param vector_rotat_sensor_all:
+        :param vector_g_simu:
+        :param vector_rota_simu_all:
+        :return:
+        """
         data_len = min(vector_rotat_sensor_all.shape[0], vector_rota_simu_all.shape[0])
         euler_diff = []
 
@@ -116,7 +124,7 @@ class GYRSimulator:
 
     @staticmethod
     def get_gyr(walking_data_df, R_IMU_transform):
-        walking_data = walking_data_df
+        walking_data = walking_data_df.values
         data_len = walking_data.shape[0]
         marker_number = int(walking_data.shape[1] / 3)
         next_marker_matrix = walking_data[0, :].reshape([marker_number, 3])
