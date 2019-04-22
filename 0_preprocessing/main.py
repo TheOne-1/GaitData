@@ -14,13 +14,13 @@ file_path_haisheng = '{path}{sub_folder}\\{sensor}\\{sensor_loc}\\{trial_name}.c
     path=FOLDER_PATH, sub_folder=subject_folder, sensor='haisheng', sensor_loc='foot_renamed', trial_name=FILE_NAMES[0])
 readme_xls_path = FOLDER_PATH + subject_folder + '\\readme\\readme.xlsx'
 
-# my_xsens_reader = XsensReader(file_path_xsens+'MT_03700647_000.mtb')
-# data = my_xsens_reader.get_channel_data_processed('acc_x')
+my_xsens_reader = XsensReader(file_path_xsens+'MT_03700647_000.mtb')
+data = my_xsens_reader.get_channel_data_processed('acc_x')
 
 
-# HaishengSensorReader.rename_haisheng_sensor_files(FOLDER_PATH + subject_folder + '\\haisheng', readme_xls_path)
-# my_haisheng_sensor_reader = HaishengSensorReader(file_path_haisheng)
-# gyr_1 = my_haisheng_sensor_reader._get_channel_data_raw('gyr_z')
+HaishengSensorReader.rename_haisheng_sensor_files(FOLDER_PATH + subject_folder + '\\haisheng', readme_xls_path)
+my_haisheng_sensor_reader = HaishengSensorReader(file_path_haisheng)
+gyr_1 = my_haisheng_sensor_reader._get_channel_data_raw('gyr_z')
 
 my_vicon_reader = ViconReader(file_path_vicon)
 segment_marker_df = my_vicon_reader.get_marker_data_processed_segment('r_foot')
