@@ -1,5 +1,7 @@
 import numpy as np
-from preprocessor import ViconReader, HaishengSensorReader, XsensReader
+import ViconReader
+import HaishengSensorReader
+import XsensReader
 from const import FOLDER_PATH, FILE_NAMES
 import matplotlib.pyplot as plt
 import sklearn.svm as svm
