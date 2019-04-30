@@ -2,20 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c92c1fa7-68af-461c-8a81-398298ffad5f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/GyrSimulator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/IMUSensorReader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/Initializer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/ViconReader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/XsensReader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/0_preprocessing/initialize_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/abondened/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/MT_0370064B_000.mtb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/preprocessor.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/abondened/GYRSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/abondened/GYRSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/Initializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/Initializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/ViconReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/ViconReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/initialize_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/const.py" beforeDir="false" afterPath="$PROJECT_DIR$/const.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,71 +19,46 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/abondened/main.py">
+        <entry file="file://$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="15" column="31" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+            <state relative-caret-position="110">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#0#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/0_preprocessing/initialize_data.py">
+        <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
+            <state relative-caret-position="264">
+              <caret line="141" selection-start-line="141" selection-end-line="141" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#0#10#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/0_preprocessing/Initializer.py">
+        <entry file="file://$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="45" column="22" selection-start-line="45" selection-start-column="22" selection-end-line="45" selection-end-column="22" />
-              <folding>
-                <element signature="e#3145#3533#0" />
-                <element signature="e#6150#6459#0" />
-                <element signature="e#31640#31949#0" />
-                <element signature="e#31829#31915#0" />
-                <element signature="e#32029#32662#0" />
-                <element signature="e#32418#32501#0" />
-                <element signature="e#32773#33778#0" />
-                <element signature="e#32980#33152#0" />
-                <element signature="e#33280#33551#0" />
-                <element signature="e#33324#33496#0" />
-                <element signature="e#33418#33496#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2552">
-              <caret line="116" column="91" selection-start-line="116" selection-start-column="78" selection-end-line="116" selection-end-column="91" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/0_preprocessing/XsensReader.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="36" column="85" selection-start-line="36" selection-start-column="85" selection-end-line="36" selection-end-column="85" />
+            <state relative-caret-position="189">
+              <caret line="99" column="67" selection-start-line="99" selection-start-column="53" selection-end-line="99" selection-end-column="67" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/const.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="203">
+              <caret line="44" column="14" selection-start-line="44" selection-end-line="44" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -107,14 +74,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>L</find>
-      <find>100</find>
-      <find>self.plate_data</find>
-      <find>processed</find>
-      <find>for</find>
-      <find>&quot;</find>
-      <find>callback</find>
-      <find>acc</find>
       <find>cuto</find>
       <find>self</find>
       <find>IMUSensorReader</find>
@@ -134,9 +93,17 @@
       <find>reset_index</find>
       <find>'foot</find>
       <find>'foot'</find>
-      <find>check</find>
       <find>concat</find>
       <find>print</find>
+      <find>Detectors</find>
+      <find>workboo</find>
+      <find>static</find>
+      <find>rename</find>
+      <find>check</find>
+      <find>toe</find>
+      <find>l_heel</find>
+      <find>grf</find>
+      <find>lower</find>
     </findStrings>
     <replaceStrings>
       <replace>\\</replace>
@@ -150,6 +117,8 @@
       <replace>acc</replace>
       <replace>trunk</replace>
       <replace>marker</replace>
+      <replace>FM2</replace>
+      <replace>LFCC</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -169,13 +138,17 @@
         <option value="$PROJECT_DIR$/0_preprocessing/IMUSensorReader.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/preprocessors.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/initialize_data.py" />
-        <option value="$PROJECT_DIR$/const.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/ViconReader.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/GyrSimulator.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/XsensReader.py" />
         <option value="$PROJECT_DIR$/abondened/main.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/GaitParameter.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/XsensReader.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" />
+        <option value="$PROJECT_DIR$/const.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/ViconReader.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/Initializer.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py" />
       </list>
     </option>
   </component>
@@ -241,8 +214,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.initialize_data">
-    <configuration name="example_mti_parse_logfile" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.1_initialize_parameter">
+    <configuration name="0_initialize_data" type="PythonConfigurationType" factoryName="Python">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -254,7 +227,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/example_mti_parse_logfile.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -263,7 +236,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="initialize_data" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
+    <configuration name="1_initialize_parameter" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -275,28 +248,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/initialize_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
-      <module name="190406DataProcess" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/0_preprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\abondened\main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -306,15 +258,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.example_mti_parse_logfile" />
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.initialize_data" />
+      <item itemvalue="Python.0_initialize_data" />
+      <item itemvalue="Python.1_initialize_parameter" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.initialize_data" />
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.example_mti_parse_logfile" />
+        <item itemvalue="Python.1_initialize_parameter" />
       </list>
     </recent_temporary>
   </component>
@@ -341,13 +290,13 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.329718" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3438178" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.3438178" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.329718" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50052685" side_tool="true" weight="0.3438178" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.329718" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -364,9 +313,14 @@
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/0_preprocessing/Initializer.py</url>
-          <line>295</line>
-          <option name="timeStamp" value="98" />
+          <url>file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py</url>
+          <line>132</line>
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/0_preprocessing/ViconReader.py</url>
+          <line>141</line>
+          <option name="timeStamp" value="130" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -498,96 +452,117 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/const.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/0_preprocessing/XsensReader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="36" column="85" selection-start-line="36" selection-start-column="85" selection-end-line="36" selection-end-column="85" />
+        <state relative-caret-position="506">
+          <caret line="38" column="54" lean-forward="true" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-71">
-          <caret line="177" column="8" selection-start-line="177" selection-start-column="8" selection-end-line="177" selection-end-column="8" />
+        <state relative-caret-position="682">
+          <caret line="35" column="16" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1144">
+          <caret line="60" column="8" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/abondened/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="15" column="31" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+        <state relative-caret-position="374">
+          <caret line="24" column="50" selection-start-line="24" selection-end-line="25" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexes/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="3957" selection-start-line="3957" selection-end-line="3957" />
         </state>
       </provider>
     </entry>
     <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="1245" selection-start-line="1245" selection-end-line="1245" />
+        <state relative-caret-position="197">
+          <caret line="1353" selection-start-line="1353" selection-end-line="1353" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py">
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/shape_base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2552">
-          <caret line="116" column="91" selection-start-line="116" selection-start-column="78" selection-end-line="116" selection-end-column="91" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="197">
+          <caret line="282" selection-start-line="282" selection-end-line="282" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/initialize_data.py">
+    <entry file="file://$PROJECT_DIR$/const.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="203">
+          <caret line="44" column="14" selection-start-line="44" selection-end-line="44" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/0_initialize_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="37" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#46#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/0_preprocessing/Initializer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="45" column="22" selection-start-line="45" selection-start-column="22" selection-end-line="45" selection-end-column="22" />
+        <state>
+          <caret line="53" column="29" lean-forward="true" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
           <folding>
-            <element signature="e#3145#3533#0" />
-            <element signature="e#6150#6459#0" />
-            <element signature="e#31640#31949#0" />
-            <element signature="e#31829#31915#0" />
-            <element signature="e#32029#32662#0" />
-            <element signature="e#32418#32501#0" />
-            <element signature="e#32773#33778#0" />
-            <element signature="e#32980#33152#0" />
-            <element signature="e#33280#33551#0" />
-            <element signature="e#33324#33496#0" />
-            <element signature="e#33418#33496#0" />
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="141" selection-start-line="141" selection-end-line="141" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="99" column="67" selection-start-line="99" selection-start-column="53" selection-end-line="99" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

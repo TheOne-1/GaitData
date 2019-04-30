@@ -13,26 +13,30 @@ from GyrSimulator import GyrSimulator
 
 
 class SubjectDataInitializer:
-    def __init__(self, processed_data_path, subject_folder, readme_xls, check_sync=True, initialize_100Hz=True,
-                 initialize_200Hz=True):
+    def __init__(self, processed_data_path, subject_folder, readme_xls, check_sync=False, check_running_period=False,
+                 initialize_100Hz=False, initialize_200Hz=False, initialize_1000Hz=False):
         self.__processed_data_path = processed_data_path
         self._subject_folder = subject_folder
         self.__readme_xls = readme_xls
 
-        fre_100_path, fre_200_path = SubjectDataInitializer.__initialize_path(processed_data_path, subject_folder)
+        fre_100_path, fre_200_path, fre_1000_path = SubjectDataInitializer.__initialize_path(
+            processed_data_path, subject_folder)
 
         # initialize 100 Hz data
         if initialize_100Hz:
-            for trial_name in FILE_NAMES[1:]:
-                print('Initializing {trial_name} trial, vicon and xsens, 200 Hz...'.format(trial_name=trial_name))
+            HaishengSensorReader.rename_haisheng_sensor_files(RAW_DATA_PATH + subject_folder + '\\haisheng',
+                                                              readme_xls)
+            for trial_name in FILE_NAMES:
+                print('Initializing {trial_name} trial, vicon and xsens, 100 Hz...'.format(trial_name=trial_name))
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = self.initialize_vicon_resampled(
-                    trial_name, HAISHENG_SENSOR_SAMPLE_RATE)
+                    trial_name, HAISHENG_SENSOR_SAMPLE_RATE, check_running_period)
                 haisheng_df = self.initialize_haisheng_sensor(
                     trial_name, 'r_foot', r_foot_marker_df, start_vicon, end_vicon)
-                SubjectDataInitializer.__save_data(fre_100_path, trial_name, vicon_all_df, haisheng_df)
+                data_all_df = pd.concat([vicon_all_df, haisheng_df], axis=1)
+                SubjectDataInitializer.__save_data(fre_100_path, trial_name, data_all_df)
                 if check_sync:
                     self.check_sync(trial_name, vicon_all_df, haisheng_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
-            plt.show()
+                    plt.show()
 
         # initialize 200 Hz data
         if initialize_200Hz:
@@ -40,10 +44,23 @@ class SubjectDataInitializer:
                 print('Initializing {trial_name} trial, vicon and xsens, 200 Hz...'.format(trial_name=trial_name))
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = self.initialize_vicon(trial_name)
                 xsens_all_df = self.initialize_xsens(trial_name, l_foot_marker_df, start_vicon, end_vicon)
-                SubjectDataInitializer.__save_data(fre_200_path, trial_name, vicon_all_df, xsens_all_df)
+                data_all_df = pd.concat([vicon_all_df, xsens_all_df], axis=1)
+                SubjectDataInitializer.__save_data(fre_200_path, trial_name, data_all_df)
                 if check_sync:
                     self.check_sync(trial_name, vicon_all_df, xsens_all_df, 'l_foot')
-            plt.show()
+                    plt.show()
+
+        # initialzed 1000 Hz GRFz data, all the data was saved
+        if initialize_1000Hz:
+            for trial_name in FILE_NAMES:
+                print('Initializing {trial_name} trial, z-axis of GRF, 1000 Hz...'.format(trial_name=trial_name))
+                file_path_vicon = '{path}{sub_folder}\\{sensor}\\{file_name}.csv'.format(
+                    path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='vicon', file_name=trial_name)
+                vicon_reader = ViconReader(file_path_vicon)
+                grf_1000Hz = vicon_reader.get_plate_processed()
+                SubjectDataInitializer.__save_data(fre_1000_path, trial_name, grf_1000Hz)
+
+
 
     def initialize_haisheng_sensor(self, trial_name, location, marker_df, start_vicon, end_vicon):
         file_path_haisheng = '{path}{sub_folder}\\{sensor}\\{sensor_loc}_renamed\\{trial_name}.csv'.format(
@@ -115,7 +132,7 @@ class SubjectDataInitializer:
         r_foot_marker_df = vicon_reader.get_marker_data_processed_segment('r_foot')
         return vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon
 
-    def initialize_vicon_resampled(self, trial_name, sampling_rate, check_running_period=False):
+    def initialize_vicon_resampled(self, trial_name, sampling_rate, check_running_period):
         file_path_vicon = '{path}{sub_folder}\\{sensor}\\{file_name}.csv'.format(
             path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='vicon', file_name=trial_name)
         vicon_reader = ViconReader(file_path_vicon)
@@ -135,7 +152,7 @@ class SubjectDataInitializer:
             plt.plot(f_1_z_data)
             plt.plot([start_vicon, start_vicon], [np.min(f_1_z_data), np.max(f_1_z_data)], 'g--')
             plt.plot([end_vicon, end_vicon], [np.min(f_1_z_data), np.max(f_1_z_data)], 'r--')
-            plt.show()
+        plt.show()
 
         start_vicon = int(start_vicon / (MOCAP_SAMPLE_RATE / sampling_rate))
         end_vicon = int(end_vicon / (MOCAP_SAMPLE_RATE / sampling_rate))
@@ -223,21 +240,21 @@ class SubjectDataInitializer:
         # create folder for this subject
         fre_100_path = processed_data_path + '\\' + subject_folder + '\\100Hz'
         fre_200_path = processed_data_path + '\\' + subject_folder + '\\200Hz'
+        fre_1000_path = processed_data_path + '\\' + subject_folder + '\\1000Hz'
         if not os.path.exists(processed_data_path + '\\' + subject_folder):
             os.makedirs(processed_data_path + '\\' + subject_folder)
         if not os.path.exists(fre_100_path):
             os.makedirs(fre_100_path)
         if not os.path.exists(fre_200_path):
             os.makedirs(fre_200_path)
-        return fre_100_path, fre_200_path
+        if not os.path.exists(fre_1000_path):
+            os.makedirs(fre_1000_path)
+        return fre_100_path, fre_200_path, fre_1000_path
 
     @staticmethod
-    def __save_data(folder_path, trial_name, vicon_df, sensor_df):
-        data_all_df = pd.concat([vicon_df, sensor_df], axis=1)
+    def __save_data(folder_path, trial_name, data_all_df):
         data_file_str = '{folder_path}\\{trial_name}.csv'.format(folder_path=folder_path, trial_name=trial_name)
         data_all_df.to_csv(data_file_str, index=False)
-        x=1
-
 
 
 
