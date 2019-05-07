@@ -2,7 +2,8 @@ import csv
 import pandas as pd
 import numpy as np
 from scipy.signal import butter, filtfilt
-from const import SEGMENT_MARKERS, PLATE_SAMPLE_RATE, HAISHENG_SENSOR_SAMPLE_RATE, FORCE_NAMES, MOCAP_SAMPLE_RATE
+from const import SEGMENT_MARKERS, PLATE_SAMPLE_RATE, HAISHENG_SENSOR_SAMPLE_RATE, FORCE_NAMES, MOCAP_SAMPLE_RATE, \
+    COP_DIFFERENCE
 
 
 class ViconReader:
@@ -113,7 +114,7 @@ class ViconReader:
         plate_data_raw = plate_reader._get_plate_data_raw_resampled()
         center_plate = plate_data_raw[['Cx', 'Cy', 'Cz']].values
         cop_offset = np.mean(center_plate - center_vicon, axis=0)
-        cop_offset += np.array([279.4, 784, 0])  # reset coordinate difference
+        cop_offset += COP_DIFFERENCE
         return cop_offset
 
     def _get_plate_raw(self):
@@ -131,10 +132,11 @@ class ViconReader:
         :return: dataframe, force and COP data
         """
         plate_data_raw = self._get_plate_raw().values
+        plate_data_raw
         # calibrate COP differences between force plate and vicon
         plate_offsets = self._get_plate_calibration(self._file)
         for channel in range(4, 7):  # Minus the COP offset of the first plate
-            plate_data_raw[:, channel] -= plate_offsets[channel - 4]
+            plate_data_raw[:, channel] = COP_DIFFERENCE[channel - 4] - plate_offsets[channel - 4]
 
         # filter the force data
         plate_data = plate_data_raw[:, 1:]

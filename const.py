@@ -1,3 +1,5 @@
+import numpy as np
+
 
 COLUMN_NAMES_HAISHENG = ['hour', 'minute', 'second', 'millisecond', 'acc_x', 'acc_y', 'acc_z', 'gyr_x', 'gyr_y',
                          'gyr_z', 'mag_x', 'mag_y', 'mag_z']
@@ -37,4 +39,16 @@ with open('configuration.txt', 'r') as config:
 
 path_index = RAW_DATA_PATH.rfind('\\', 0, len(RAW_DATA_PATH)-2)
 PROCESSED_DATA_PATH = RAW_DATA_PATH[:path_index] + '\\ProcessedData'
+
+LOADING_RATE_NORMALIZATION = True
+
+COP_DIFFERENCE = np.array([279.4, 784, 0])  # reset coordinate difference
+
+
+
+
+
+
+
+
 
