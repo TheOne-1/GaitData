@@ -31,7 +31,7 @@ class SubjectDataInitializer:
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = \
                     self.initialize_vicon_resampled(trial_name, HAISHENG_SENSOR_SAMPLE_RATE, check_running_period)
                 haisheng_df = self.initialize_haisheng_sensor(
-                    trial_name, 'r_foot', r_foot_marker_df, start_vicon, end_vicon)
+                    trial_name, r_foot_marker_df, start_vicon, end_vicon)
                 data_all_df = pd.concat([vicon_all_df, haisheng_df], axis=1)
                 SubjectDataInitializer.__save_data(fre_100_path, trial_name, data_all_df)
                 if check_sync:
@@ -64,23 +64,29 @@ class SubjectDataInitializer:
                 SubjectDataInitializer.__save_data(fre_1000_path, trial_name, grf_1000Hz)
         plt.show()
 
-    def initialize_haisheng_sensor(self, trial_name, location, marker_df, start_vicon, end_vicon):
-        file_path_haisheng = '{path}{sub_folder}\\{sensor}\\{sensor_loc}_renamed\\{trial_name}.csv'.format(
-                path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='haisheng', sensor_loc=location,
-                trial_name=trial_name)
-        haisheng_sensor_reader = HaishengSensorReader(file_path_haisheng)
-        sensor_gyr_norm = haisheng_sensor_reader.get_normalized_gyr()
+    def initialize_haisheng_sensor(self, trial_name, marker_df, start_vicon, end_vicon):
+        sensor_all_df = pd.DataFrame()
+        for location in ['r_foot']:
+            file_path_haisheng = '{path}{sub_folder}\\{sensor}\\{sensor_loc}_renamed\\{trial_name}.csv'.format(
+                    path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='haisheng', sensor_loc=location,
+                    trial_name=trial_name)
+            haisheng_sensor_reader = HaishengSensorReader(file_path_haisheng)
+            sensor_gyr_norm = haisheng_sensor_reader.get_normalized_gyr()
 
-        # get gyr norm from simulation
-        my_nike_gyr_simulator = GyrSimulator(self._subject_folder, location)
-        gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, marker_df, sampling_rate=HAISHENG_SENSOR_SAMPLE_RATE)
-        gyr_norm_vicon = norm(gyr_vicon, axis=1)
+            # get gyr norm from simulation
+            my_nike_gyr_simulator = GyrSimulator(self._subject_folder, location)
+            gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, marker_df, sampling_rate=HAISHENG_SENSOR_SAMPLE_RATE)
+            gyr_norm_vicon = norm(gyr_vicon, axis=1)
 
-        vicon_delay = GyrSimulator.sync_vicon_sensor(trial_name, 'r_foot', gyr_norm_vicon, sensor_gyr_norm, check=False)
-        start_haisheng, end_haisheng = start_vicon + vicon_delay, end_vicon + vicon_delay
-        haisheng_sensor_df = haisheng_sensor_reader.data_processed_df.copy().loc[start_haisheng:end_haisheng]
-        haisheng_sensor_df = haisheng_sensor_df.reset_index(drop=True)
-        return haisheng_sensor_df
+            vicon_delay = GyrSimulator.sync_vicon_sensor(trial_name, 'r_foot', gyr_norm_vicon, sensor_gyr_norm, check=False)
+            start_haisheng, end_haisheng = start_vicon + vicon_delay, end_vicon + vicon_delay
+            sensor_df = haisheng_sensor_reader.data_processed_df.copy().loc[start_haisheng:end_haisheng]
+            sensor_df = sensor_df.drop(['sample'], axis=1).reset_index(drop=True)
+            current_xsens_col_names = [location + '_' + channel for channel in DATA_COLUMNS_IMU]
+            sensor_df.columns = current_xsens_col_names
+            sensor_all_df = pd.concat([sensor_df, sensor_all_df], axis=1)
+
+        return sensor_all_df
 
     def initialize_xsens(self, trial_name, l_foot_marker_df, start_vicon, end_vicon, check=False):
         # get gyr norm from left foot xsens sensor
@@ -220,7 +226,7 @@ class SubjectDataInitializer:
                 break
             trial_num += 1
 
-        pattern_start = readme_sheet.row_values(trial_num+2)[12]
+        pattern_start = readme_sheet.row_values(trial_num+2)[13]
         if pattern_start is '':
             start_vicon = np.argmax(f_1_z > force_thd)
         else:

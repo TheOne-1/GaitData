@@ -34,7 +34,7 @@ MOCAP_SAMPLE_RATE = 200
 PLATE_SAMPLE_RATE = 1000
 STATIC_STANDING_PERIOD = 10     # unit: second
 
-with open('configuration.txt', 'r') as config:
+with open('..\\configuration.txt', 'r') as config:
     RAW_DATA_PATH = config.readline()
 
 path_index = RAW_DATA_PATH.rfind('\\', 0, len(RAW_DATA_PATH)-2)
