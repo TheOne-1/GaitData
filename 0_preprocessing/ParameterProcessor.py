@@ -6,16 +6,19 @@ from const import PROCESSED_DATA_PATH, FILE_NAMES, PLATE_SAMPLE_RATE, MOCAP_SAMP
     LOADING_RATE_NORMALIZATION
 import scipy.interpolate as interpo
 import xlrd
-from scipy.signal import butter, filtfilt, find_peaks
+from scipy.signal import find_peaks
 from numpy.linalg import norm
+import pickle
 
 
 class ParamProcessor:
-    def __init__(self, path, sub_name, readme_xls):
+    def __init__(self, path, sub_name, readme_xls, check_steps=False, plot_strike_off=False):
         self._sub_name = sub_name
         readme_sheet = xlrd.open_workbook(readme_xls).sheet_by_index(0)
         self.__weight = readme_sheet.cell_value(17, 1)  # in kilos
         self.__height = readme_sheet.cell_value(18, 1)  # in meters
+        self.__check_steps = check_steps
+        self.__plot_strike_off = plot_strike_off
         # self.__path_fre = path + '{frequency}\\'
 
         fre_100_path = path + '\\' + sub_name + '\\100Hz\\'
@@ -23,19 +26,42 @@ class ParamProcessor:
         fre_1000_path = path + '\\' + sub_name + '\\1000Hz\\'
         static_data_100_df = pd.read_csv(fre_100_path + FILE_NAMES[0] + '.csv', index_col=False)
         static_data_200_df = pd.read_csv(fre_200_path + FILE_NAMES[0] + '.csv', index_col=False)
-        for trial_name in FILE_NAMES[3:]:
-            # initialize 100 Hz parameter
+        self.__initialize_thresholds()
+
+        running_trial_names = FILE_NAMES[1:7] + FILE_NAMES[8:14]
+        for trial_name in running_trial_names:
+            print('Initializing ' + trial_name + ' trial')
             self._current_trial = trial_name
-            self._stance_phase_sample_thd_lower = 200
-            self._stance_phase_sample_thd_higher = 400
-            self._impact_peak_sample_num_lower = 20
-            self._impact_peak_sample_num_higher = 80
-            self._20_80_sample_len_lower = 5
-            self._20_80_sample_len_higher = 40
+            # initialize 100 Hz parameter
             gait_data_100_df = pd.read_csv(fre_100_path + trial_name + '.csv', index_col=False)
             grf_1000_df = pd.read_csv(fre_1000_path + trial_name + '.csv', index_col=False)
-            trial_param_df_100 = self.init_trial_params(gait_data_100_df, grf_1000_df, HAISHENG_SENSOR_SAMPLE_RATE)
+            trial_param_df_100, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_100_df, grf_1000_df, HAISHENG_SENSOR_SAMPLE_RATE)
+            self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
+
+            # initialize 200 Hz parameter
+            gait_data_200_df = pd.read_csv(fre_200_path + trial_name + '.csv', index_col=False)
+            grf_1000_df = pd.read_csv(fre_1000_path + trial_name + '.csv', index_col=False)
+            trial_param_df_200, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_200_df, grf_1000_df, MOCAP_SAMPLE_RATE)
+            l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
+            self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
             pass
+
+    @staticmethod
+    def resample_steps(steps_1000, sample_fre):
+        ratio = int(1000 / sample_fre)
+        steps_resampled = []
+        for step in steps_1000:
+            step_resampled = [round(step[0] / ratio), round(step[1] / ratio)]
+            steps_resampled.append(step_resampled)
+        return steps_resampled
+
+    def __initialize_thresholds(self):
+        self._stance_phase_sample_thd_lower = 200
+        self._stance_phase_sample_thd_higher = 400
+        self._impact_peak_sample_num_lower = 15
+        self._impact_peak_sample_num_higher = 80
+        self._20_80_sample_len_lower = 5
+        self._20_80_sample_len_higher = 40
 
     def init_trial_params(self, gait_data_df, grf_1000_df, sensor_sampling_rate):
         # get the corresponding plate data period
@@ -58,25 +84,24 @@ class ParamProcessor:
                                  'l_FPA', 'r_FPA']
         param_data_df.insert(0, 'marker_frame', gait_data_df['marker_frame'])
         # get loading rate
-        l_steps_1000 = self.get_legal_steps(l_strikes_1000, l_offs_1000, plate_data_1000, check_steps=False)
+        l_steps_1000 = self.get_legal_steps(l_strikes_1000, l_offs_1000, plate_data_1000)
         l_LR = self.get_loading_rate(plate_data_1000, l_steps_1000)
         self.insert_LR_to_param_data(param_data_df, l_LR, 'l_LR')
-        r_steps_1000 = self.get_legal_steps(r_strikes_1000, r_offs_1000, plate_data_1000, check_steps=False)
+        r_steps_1000 = self.get_legal_steps(r_strikes_1000, r_offs_1000, plate_data_1000)
         r_LR = self.get_loading_rate(plate_data_1000, r_steps_1000)
         self.insert_LR_to_param_data(param_data_df, r_LR, 'r_LR')
-        return param_data_df
+        return param_data_df, l_steps_1000, r_steps_1000
 
     @staticmethod
     def check_loading_rate_all(l_loading_rate):
         plt.figure()
         plt.plot(l_loading_rate)
 
-    def get_strike_off(self, gait_data_df, threshold=50):
+    def get_strike_off(self, gait_data_df, threshold=20):
         force = gait_data_df[['f_1_x', 'f_1_y', 'f_1_z']].values
         force_norm = norm(force, axis=1)
-        strikes = self.get_raw_strikes(force_norm, threshold)
-        offs = self.get_raw_offs(force_norm, threshold)
-        self.check_strikes_offs(gait_data_df, strikes, offs)
+        strikes, offs = self.get_raw_strikes_offs(force_norm, threshold)
+        self.check_strikes_offs(force_norm, strikes, offs)
 
         # distribute strikes offs to left and right foot
         data_len = len(strikes)
@@ -97,109 +122,102 @@ class ParamProcessor:
                     r_offs[i_sample] = 1
         return l_strikes, r_strikes, l_offs, r_offs
 
-    def get_raw_strikes(self, force_norm, threshold, comparison_len=2):
-        data_len = force_norm.shape[0]
-        strikes = np.zeros(data_len, dtype=np.int8)
-        for i_point in range(comparison_len - 1, data_len - comparison_len):
-            if force_norm[i_point - 2] > threshold:
-                continue
-            if force_norm[i_point - 1] > threshold:
-                continue
-            if force_norm[i_point] < threshold:
-                continue
-            if force_norm[i_point + 1] < threshold:
-                continue
-            if force_norm[i_point + 2] < threshold:
-                continue
-            strikes[i_point - 1] = 1
-        return strikes
-
-    def get_strike_off_1000(self, gait_data_df, plate_data_1000, sensor_sampling_rate, threshold=50):
+    def get_strike_off_1000(self, gait_data_df, plate_data_1000, sensor_sampling_rate, threshold=20):
         force = plate_data_1000[['f_1_x', 'f_1_y', 'f_1_z']].values
         force_norm = norm(force, axis=1)
-        strikes = self.get_raw_strikes(force_norm, threshold)
-        offs = self.get_raw_offs(force_norm, threshold)
-        self.check_strikes_offs(gait_data_df, strikes, offs)
+        strikes, offs = self.get_raw_strikes_offs(force_norm, threshold, comparison_len=30)
+        self.check_strikes_offs(force_norm, strikes, offs)
 
         # distribute strikes offs to left and right foot
         data_len = len(strikes)
         ratio = sensor_sampling_rate / PLATE_SAMPLE_RATE
+
         l_strikes, r_strikes = np.zeros(data_len), np.zeros(data_len)
         l_offs, r_offs = np.zeros(data_len), np.zeros(data_len)
         for i_sample in range(data_len):
             if strikes[i_sample] == 1:
-                l_heel_y = gait_data_df.loc[int(i_sample * ratio), 'LFCC_y']
-                r_heel_y = gait_data_df.loc[int(i_sample * ratio), 'RFCC_y']
+                l_heel_y = gait_data_df.loc[round(i_sample * ratio), 'LFCC_y']
+                r_heel_y = gait_data_df.loc[round(i_sample * ratio), 'RFCC_y']
+                if l_heel_y == 0 or r_heel_y == 0:
+                    raise ValueError('Marker missing')
                 if l_heel_y > r_heel_y:
                     l_strikes[i_sample] = 1
                 else:
                     r_strikes[i_sample] = 1
             if offs[i_sample] == 1:
-                l_heel_y = gait_data_df.loc[int(i_sample * ratio), 'LFCC_y']
-                r_heel_y = gait_data_df.loc[int(i_sample * ratio), 'RFCC_y']
+                l_heel_y = gait_data_df.loc[round(i_sample * ratio), 'LFCC_y']
+                r_heel_y = gait_data_df.loc[round(i_sample * ratio), 'RFCC_y']
+                if l_heel_y == 0 or r_heel_y == 0:
+                    raise ValueError('Marker missing')
                 if l_heel_y < r_heel_y:
                     l_offs[i_sample] = 1
                 else:
                     r_offs[i_sample] = 1
         return l_strikes, r_strikes, l_offs, r_offs
 
-    def get_raw_offs(self, force_norm, threshold, comparison_len=2):
+    @staticmethod
+    def get_raw_strikes_offs(force_norm, threshold, comparison_len=4):
         data_len = force_norm.shape[0]
-        offs = np.zeros(data_len, dtype=np.int8)
-        for i_point in range(comparison_len - 1, data_len - comparison_len):
-            if force_norm[i_point - 2] < threshold:
-                continue
-            if force_norm[i_point - 1] < threshold:
-                continue
-            if force_norm[i_point] > threshold:
-                continue
-            if force_norm[i_point + 1] > threshold:
-                continue
-            if force_norm[i_point + 2] > threshold:
-                continue
-            offs[i_point] = 1
-        return offs
+        strikes, offs = np.zeros(data_len, dtype=np.int8), np.zeros(data_len, dtype=np.int8)
+        i_point = comparison_len
+        # go to the first swing phase
+        while i_point < data_len and force_norm[i_point] < 300:  # go to the middle of the first stance phase
+            i_point += 1
+        swing_phase = False
+        while i_point < data_len - comparison_len:
+            # for swing phase
+            if swing_phase:
+                while i_point < data_len - comparison_len:
+                    i_point += 1
+                    lower_than_threshold_num = len(np.where(force_norm[i_point:i_point+comparison_len] < threshold)[0])
+                    if lower_than_threshold_num >= round(0.8 * comparison_len):
+                        continue
+                    else:
+                        strikes[i_point + round(0.8 * comparison_len)-1] = 1
+                        swing_phase = False
+                        break
+            # for stance phase
+            else:
+                while i_point < data_len and force_norm[i_point] > 300:        # go to the next stance phase
+                    i_point += 1
+                while i_point < data_len - comparison_len:
+                    i_point += 1
+                    lower_than_threshold_num = len(np.where(force_norm[i_point:i_point+comparison_len] < threshold)[0])
+                    if lower_than_threshold_num >= round(0.8 * comparison_len):
+                        offs[i_point + round(0.2 * comparison_len)] = 1
+                        swing_phase = True
+                        break
+        return strikes, offs
 
-    def check_strikes_offs(self, gait_data_df, strikes, offs):
+    def check_strikes_offs(self, force_norm, strikes, offs):
         strike_indexes = np.where(strikes == 1)[0]
         off_indexes = np.where(offs == 1)[0]
         data_len = min(strike_indexes.shape[0], off_indexes.shape[0])
 
         # check strike off by checking if each strike is followed by a off
-        diffs = np.array(strike_indexes[:data_len]) - np.array(off_indexes[:data_len])
-        strike_ahead_num, off_ahead_num = 0, 0
-        for i_diff in range(data_len):
-            if diffs[i_diff] > 0:
-                off_ahead_num += 1
-            else:
-                strike_ahead_num += 1
-        if min(off_ahead_num, strike_ahead_num) > 0:
-            f_1_z = gait_data_df['f_1_z'].values
-            plt.plot(f_1_z)
-            plt.plot(strike_indexes, f_1_z[strike_indexes], 'r*')
-            plt.plot(off_indexes,  f_1_z[strike_indexes], 'g*')
+        strike_off_detection_flaw = False
+        if strike_indexes[0] > off_indexes[0]:
+            diffs_0 = np.array(strike_indexes[:data_len]) - np.array(off_indexes[:data_len])
+            diffs_1 = np.array(strike_indexes[:data_len-1]) - np.array(off_indexes[1:data_len])
+        else:
+            diffs_0 = np.array(off_indexes[:data_len]) - np.array(strike_indexes[:data_len])
+            diffs_1 = np.array(off_indexes[:data_len-1]) - np.array(strike_indexes[1:data_len])
+        if np.min(diffs_0) < 0 or np.max(diffs_1) > 0:
+            strike_off_detection_flaw = True
+
+        try:
+            if strike_off_detection_flaw:
+                raise ValueError('For trial {trial_name}, strike off detection result are wrong.'.format(
+                    trial_name=self._current_trial))
+            if self.__plot_strike_off:
+                raise ValueError
+        except ValueError as value_error:
+            if len(value_error.args) != 0:
+                print(value_error.args[0])
+            plt.plot(force_norm)
+            plt.plot(strike_indexes, force_norm[strike_indexes], 'rx')
+            plt.plot(off_indexes,  force_norm[off_indexes], 'g*')
             plt.show()
-            raise ValueError('For trial {trial_name}, {wrong_num} strike off detection result are wrong.'.format(
-                trial_name=self._current_trial, wrong_num=min(off_ahead_num, strike_ahead_num)))
-
-    def plot_strikes_offs(self, strikes, offs, check_len=5000):
-        l_force = self._gait_data.as_matrix(columns=['f_1_x', 'f_1_y', 'f_1_z'])
-        l_force_norm = l_force[0:check_len, 0:2]
-        plt.figure()
-        plt.plot(norm(l_force_norm, axis=1))
-
-        strike_locs = np.where(strikes[:, 0] == 1)
-        off_locs = np.where(offs[:, 0] == 1)
-        plt.plot(strike_locs, 1.7, '.', color='red')
-        plt.plot(off_locs, 1.7, '.', color='yellow')
-
-        # for i in range(0, check_len):
-        #     if strikes[i, 0] == 1:
-        #         plt.plot(i, 1.7, '.', color='red')
-        #     if offs[i, 0] == 1:
-        #         plt.plot(i, 1.7, '.', color='yellow')
-        # plt.legend()
-        plt.title('heel strike & toe off')
 
     def get_trunk_swag(self):
         C7 = self._gait_data.as_matrix(columns=['C7_x', 'C7_y', 'C7_z'])
@@ -277,13 +295,16 @@ class ParamProcessor:
                     raise ValueError('Wrong peak number, please check the plot.')
                 if impact_peak_sample_num < self._impact_peak_sample_num_lower or\
                         impact_peak_sample_num > self._impact_peak_sample_num_higher:
-                    raise ValueError('Wrong impact peak, please check the plot.')
+                    raise ValueError('Wrong impact peak location, please check the plot.')
             except ValueError as value_error:
+                # if the user close the plot, the calculation will continue
                 print(value_error.args[0])
+                print('From sample {start} to sample {end}\n'.format(start=step[0], end=step[1]))
                 plt.plot(grf_z_step)
                 plt.plot(peaks, grf_z_step[peaks], 'r*')
                 plt.show()
-            peak_index = int(impact_peak_sample_num)
+                continue        # continue without recording loading rate
+            peak_index = int(round(impact_peak_sample_num))
             impact_peak_force = grf_z_step[peak_index]
             force_start = 0.2 * impact_peak_force
             start_index = np.abs(grf_z_step[:peak_index] - force_start).argmin()
@@ -296,19 +317,17 @@ class ParamProcessor:
                                      format(num=end_index - start_index))
             except ValueError as value_error:
                 print(value_error.args[0])
+                print('From sample {start} to sample {end}\n'.format(start=step[0], end=step[1]))
                 plt.plot(grf_z_step)
                 plt.plot([start_index, end_index], [grf_z_step[start_index], grf_z_step[end_index]], 'r-')
                 plt.show()
+                continue        # continue without recording loading rate
             loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) / (end_index - start_index)
             if LOADING_RATE_NORMALIZATION:
                 loading_rate = - loading_rate / self.__weight
-            marker_frame = plate_data.loc[int((step[0] + step[1]) / 2), 'marker_frame']
+            marker_frame = plate_data.loc[round((step[0] + step[1]) / 2), 'marker_frame']
             loading_rates.append([loading_rate, marker_frame])
         return loading_rates
-        #     plt.plot(grf_z_step)
-        #     plt.plot([int(impact_peak_sample_num), int(impact_peak_sample_num)],
-        #              [0, grf_z_step[int(impact_peak_sample_num)]], 'd--')
-        # plt.show()
 
     def insert_params_to_param_data(self, param_data_df, params, param_names):
         if len(params) != len(param_names):
@@ -326,7 +345,7 @@ class ParamProcessor:
             insert_data[row_index[0]] = item[0]
         gait_data_df.insert(len(gait_data_df.columns), column_name, insert_data)
 
-    def get_legal_steps(self, strikes, offs, plate_data=None, check_steps=False):
+    def get_legal_steps(self, strikes, offs, plate_data=None):
         """
         Sometimes subjects have their both feet on the ground so it is necessary to do step check.
         :param strikes: 
@@ -339,16 +358,24 @@ class ParamProcessor:
         off_tuple = np.where(offs == 1)[0]
         off_tuple = off_tuple[off_tuple > strike_tuple[0]]
         steps = []
-        for i_step in range(min(len(strike_tuple), len(off_tuple))):
+        abandoned_step_nam = 0
+        i_step = -1
+        while i_step < min(len(strike_tuple), len(off_tuple))-1:
+            i_step += 1
             stance_start = strike_tuple[i_step]
             stance_end = off_tuple[i_step]
+            step_len = stance_end - stance_start
             # pop out illegal steps
-            if self._stance_phase_sample_thd_lower > stance_end - stance_start:
-                off_tuple = np.delete(off_tuple, i_step)
-            if stance_end - stance_start > self._stance_phase_sample_thd_higher:
-                strike_tuple = np.delete(strike_tuple, i_step)
+            if not self._stance_phase_sample_thd_lower < step_len < self._stance_phase_sample_thd_higher:
+                abandoned_step_nam += 1
+                if step_len > self._stance_phase_sample_thd_higher:
+                    strike_tuple = np.delete(strike_tuple, i_step)
+                else:
+                    off_tuple = np.delete(off_tuple, i_step)
+                continue
             steps.append([strike_tuple[i_step], off_tuple[i_step]])
-        if check_steps:
+        print('{step_num} steps abandonded'.format(step_num=abandoned_step_nam))
+        if self.__check_steps:
             grf_z = plate_data['f_1_z'].values
             for step in steps:
                 plt.plot(grf_z[step[0]:step[1]])
@@ -371,6 +398,24 @@ class ParamProcessor:
         r_loading_rate_all = r_loading_rate_all_raw[0]
 
         return np.column_stack([l_loading_rate_all, r_loading_rate_all])
+
+    @staticmethod
+    def __save_data(folder_path, trial_name, data_all_df, l_steps, r_steps):
+        # save param data
+        data_file_str = '{folder_path}\\param_of_{trial_name}.csv'.format(
+            folder_path=folder_path, trial_name=trial_name)
+        data_all_df.to_csv(data_file_str, index=False)
+        # save steps
+        step_file_str = '{folder_path}\\step_l_of_{trial_name}.pkl'.format(
+            folder_path=folder_path, trial_name=trial_name)
+        with open(step_file_str, 'wb') as file:
+            pickle.dump(l_steps, file)
+
+        step_file_str = '{folder_path}\\step_r_of_{trial_name}.pkl'.format(
+            folder_path=folder_path, trial_name=trial_name)
+        with open(step_file_str, 'wb') as file:
+            pickle.dump(r_steps, file)
+
 
     # def get_strike_off_from_imu(self, i_trial):
     #     my_detector = Detectors(self._sub_name, 'l')
@@ -603,6 +648,44 @@ class ParamProcessor:
             left_FPAs[strike_index[i_step+1]] = FPA
 
 
+
+
+    # @staticmethod
+    # def get_raw_strikes(force_norm, threshold, comparison_len=4):
+    #     data_len = force_norm.shape[0]
+    #     strikes = np.zeros(data_len, dtype=np.int8)
+    #     i_point = comparison_len
+    #     # go to the first swing phase
+    #     while i_point < data_len and force_norm[i_point] > threshold:
+    #         i_point += 1
+    #     while i_point < data_len - comparison_len:
+    #         i_point += 1
+    #         lower_than_threshold_num = len(np.where(force_norm[i_point:i_point+comparison_len] < threshold)[0])
+    #         if lower_than_threshold_num >= comparison_len - 1:
+    #             continue
+    #         else:
+    #             strikes[i_point+comparison_len-3] = 1
+    #             # off detected, go to next strike
+    #             i_point += 20
+    #             while i_point < data_len and force_norm[i_point] > threshold:        # find the sample after next strike
+    #                 i_point += 1
+    #     return strikes
+    #
+    # @staticmethod
+    # def get_raw_offs(force_norm, threshold, comparison_len=3):
+    #     data_len = force_norm.shape[0]
+    #     offs = np.zeros(data_len, dtype=np.int8)
+    #     i_point = -1
+    #     while i_point < data_len - comparison_len:
+    #         i_point += 1
+    #         lower_than_threshold_num = len(np.where(force_norm[i_point:i_point + comparison_len] < threshold)[0])
+    #         if lower_than_threshold_num >= comparison_len - 1:
+    #             offs[i_point + 1] = 1
+    #             # off detected, go to next strike
+    #             i_point += 4
+    #             while i_point < data_len and force_norm[i_point] < 200:        # find the sample after next strike
+    #                 i_point += 1
+    #     return offs
 
 
 

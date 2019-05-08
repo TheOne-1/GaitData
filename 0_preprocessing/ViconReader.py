@@ -132,7 +132,6 @@ class ViconReader:
         :return: dataframe, force and COP data
         """
         plate_data_raw = self._get_plate_raw().values
-        plate_data_raw
         # calibrate COP differences between force plate and vicon
         plate_offsets = self._get_plate_calibration(self._file)
         for channel in range(4, 7):  # Minus the COP offset of the first plate
