@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c92c1fa7-68af-461c-8a81-398298ffad5f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Processor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/1_param_processing/test_strike_off.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/190406DataProcess.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/190406DataProcess.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/0_preprocessing/Initializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/Initializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_param_processing/ParameterProcessor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_loading_rate/1_loading_rate.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/2_loading_rate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_loading_rate/ProcessorLR.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_strike_index/2_strike_index.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_strike_index/3_strike_index.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_strike_index/ProcessorSI.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_strike_index/ProcessorSI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/abondened/GYRSimulator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/abondened/functional_calibration.py" beforeDir="false" afterPath="$PROJECT_DIR$/abondened/functional_calibration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/const.py" beforeDir="false" afterPath="$PROJECT_DIR$/const.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,36 +26,75 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="190406DataProcess" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_strike_index/2_strike_index.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/0_preprocessing/0_initialize_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+            <state relative-caret-position="132">
+              <caret line="6" column="110" selection-start-line="6" selection-start-column="110" selection-end-line="6" selection-end-column="110" />
               <folding>
-                <element signature="e#0#35#0" expanded="true" />
+                <element signature="e#0#46#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/2_strike_index/ProcessorSI.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/const.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="13" column="67" selection-start-line="13" selection-start-column="67" selection-end-line="13" selection-end-column="67" />
+            <state relative-caret-position="44">
+              <caret line="2" column="9" selection-start-line="2" selection-end-line="2" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Processor.py">
+        <entry file="file://$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="43" column="12" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+            <state relative-caret-position="132">
+              <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
               <folding>
-                <element signature="e#1#86#0" expanded="true" />
+                <element signature="e#0#64#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/1_param_processing/ParameterProcessor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="339">
+              <caret line="31" column="42" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="449">
+              <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/1_param_processing/test_strike_off.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -61,15 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>concat</find>
-      <find>print</find>
-      <find>Detectors</find>
-      <find>workboo</find>
-      <find>static</find>
-      <find>rename</find>
-      <find>check</find>
-      <find>toe</find>
-      <find>l_heel</find>
       <find>grf</find>
       <find>lower</find>
       <find>try</find>
@@ -80,7 +121,6 @@
       <find>if check</find>
       <find>80%</find>
       <find>Wrong peak number, please check the plot.</find>
-      <find>Wrong impact peak location, please check the plot.</find>
       <find>threshold</find>
       <find>save</find>
       <find>aban</find>
@@ -88,9 +128,19 @@
       <find>40</find>
       <find>remove</find>
       <find>int(</find>
-      <find>delay</find>
       <find>dela</find>
       <find>strike</find>
+      <find>plt.plot(f_1_z_data)</find>
+      <find>data_filt</find>
+      <find>SAMPLING_RATE</find>
+      <find>get_strike_off_from_imu</find>
+      <find>_gait_data</find>
+      <find>self._gait_data</find>
+      <find>norm</find>
+      <find>estimated_strikes</find>
+      <find>steps abandonded</find>
+      <find>Wrong impact peak location, please check the plot.</find>
+      <find>delay</find>
     </findStrings>
     <replaceStrings>
       <replace>\\</replace>
@@ -107,6 +157,8 @@
       <replace>FM2</replace>
       <replace>LFCC</replace>
       <replace>off</replace>
+      <replace>gait_data_df</replace>
+      <replace>z</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -118,7 +170,6 @@
         <option value="$PROJECT_DIR$/0_preprocessing/IMU_haisheng.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/example_mti_parse_logfile.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/configuration.txt" />
-        <option value="$PROJECT_DIR$/abondened/functional_calibration.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/GYRSimulator.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/0_preprocessing/preprocessor.py" />
@@ -130,15 +181,9 @@
         <option value="$PROJECT_DIR$/0_preprocessing/GaitParameter.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/XsensReader.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/ViconReader.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py" />
         <option value="$PROJECT_DIR$/1_loading_rate/LRProcessor.py" />
         <option value="$PROJECT_DIR$/1_loading_rate/loading_rate.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/IMUSensorReader.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/Initializer.py" />
-        <option value="$PROJECT_DIR$/const.py" />
         <option value="$PROJECT_DIR$/1_phase_one/0_loading_rate.py" />
         <option value="$PROJECT_DIR$/1_phase_one/ProcessorLR.py" />
         <option value="$PROJECT_DIR$/1_phase_one/1_strike_index.py" />
@@ -146,6 +191,17 @@
         <option value="$PROJECT_DIR$/1_phase_one/ProcessorSI.py" />
         <option value="$PROJECT_DIR$/Processor.py" />
         <option value="$PROJECT_DIR$/2_strike_index/ProcessorSI.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/Initializer.py" />
+        <option value="$PROJECT_DIR$/abondened/functional_calibration.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/test_strike_off.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py" />
+        <option value="$PROJECT_DIR$/const.py" />
+        <option value="$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py" />
+        <option value="$PROJECT_DIR$/1_param_processing/ParameterProcessor.py" />
+        <option value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
       </list>
     </option>
   </component>
@@ -162,6 +218,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -177,18 +234,22 @@
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
               <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-              <item name="1_loading_rate" type="462c0819:PsiDirectoryNode" />
+              <item name="1_param_processing" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
               <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-              <item name="2_strike_index" type="462c0819:PsiDirectoryNode" />
+              <item name="2_loading_rate" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
+              <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
+              <item name="3_strike_index" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -197,15 +258,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_phase_one" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\0_preprocessing" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_phase_one" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_param_processing" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_strike_index" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_phase_one" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\abondened" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\0_preprocessing" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -220,7 +281,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.2_strike_index">
+  <component name="RunManager" selected="Python.0_initialize_data">
     <configuration name="0_initialize_data" type="PythonConfigurationType" factoryName="Python">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -254,7 +315,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py" />
+      <option name="SCRIPT_NAME" value="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_param_processing\1_initialize_parameter.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -305,17 +366,40 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_strike_off" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="190406DataProcess" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/0_preprocessing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_param_processing\test_strike_off.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.0_initialize_data" />
       <item itemvalue="Python.1_initialize_parameter" />
       <item itemvalue="Python.1_loading_rate" />
       <item itemvalue="Python.2_strike_index" />
+      <item itemvalue="Python.test_strike_off" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.1_initialize_parameter" />
+        <item itemvalue="Python.test_strike_off" />
         <item itemvalue="Python.2_strike_index" />
         <item itemvalue="Python.1_loading_rate" />
-        <item itemvalue="Python.1_initialize_parameter" />
       </list>
     </recent_temporary>
   </component>
@@ -336,12 +420,12 @@
     <frame x="-1928" y="0" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13277134" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.13277134" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Favorites" order="2" sideWeight="0.50323623" side_tool="true" weight="0.13277134" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.329718" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.36767897" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.3438178" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -360,37 +444,29 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/abondened/GYRSimulator.py</url>
-          <line>127</line>
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py</url>
-          <line>55</line>
-          <option name="timeStamp" value="139" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py</url>
-          <line>326</line>
-          <option name="timeStamp" value="149" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Evaluation.py</url>
           <line>32</line>
           <option name="timeStamp" value="174" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/2_strike_index/ProcessorSI.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="186" />
+          <url>file://$PROJECT_DIR$/3_strike_index/ProcessorSI.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="188" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py</url>
+          <line>61</line>
+          <option name="timeStamp" value="209" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py</url>
+          <line>63</line>
+          <option name="timeStamp" value="230" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/pandas/core/internals/construction.py" />
-    <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/pandas/core/internals/blocks.py" />
-    <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/pandas/core/internals/managers.py" />
     <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/numpy/core/numeric.py" />
     <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/pandas/core/dtypes/cast.py" />
     <entry file="file://E:/ProgramFiles/Python36/Lib/site-packages/pandas/core/indexing.py" />
@@ -423,16 +499,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/abondened/functional_calibration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/scipy/interpolate/fitpack.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
@@ -444,16 +510,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
           <caret line="251" selection-start-line="251" selection-end-line="251" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/abondened/GYRSimulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1196">
-          <caret line="79" selection-start-line="79" selection-end-line="91" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -507,16 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/XsensReader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="38" column="54" lean-forward="true" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/abondened/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -541,63 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="134" selection-start-line="134" selection-end-line="134" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/ParameterProcessor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-101">
-          <caret line="40" column="41" lean-forward="true" selection-start-line="40" selection-start-column="41" selection-end-line="40" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/1_initialize_parameter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="51" column="76" selection-start-line="51" selection-start-column="76" selection-end-line="51" selection-end-column="76" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1219">
-          <caret line="80" column="61" lean-forward="true" selection-start-line="80" selection-start-column="61" selection-end-line="80" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/Initializer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="228" selection-start-line="228" selection-end-line="228" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/0_preprocessing/IMUSensorReader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="344">
@@ -612,27 +601,101 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/0_initialize_data.py">
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/sklearn/utils/validation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="19" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="19" />
+        <state relative-caret-position="197">
+          <caret line="234" selection-start-line="234" selection-end-line="234" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_loading_rate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
           <folding>
-            <element signature="e#0#46#0" expanded="true" />
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/fromnumeric.py">
+    <entry file="file://$PROJECT_DIR$/3_strike_index/3_strike_index.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="85" selection-start-line="85" selection-end-line="85" />
+        <state relative-caret-position="44">
+          <caret line="3" column="33" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/const.py">
+    <entry file="file://$PROJECT_DIR$/Processor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+        <state relative-caret-position="836">
+          <caret line="43" column="12" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+          <folding>
+            <element signature="e#1#86#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="30" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Evaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abondened/GYRSimulator.py" />
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/GyrSimulator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="94" column="62" selection-start-line="94" selection-start-column="62" selection-end-line="94" selection-end-column="62" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/XsensReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/abondened/functional_calibration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="25" column="33" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="143" column="38" selection-start-line="143" selection-start-column="30" selection-end-line="143" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -643,67 +706,98 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/sklearn/utils/validation.py">
+    <entry file="file://$PROJECT_DIR$/3_strike_index/ProcessorSI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="31" column="49" selection-start-line="31" selection-start-column="36" selection-end-line="31" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="611">
+          <caret line="61" selection-start-line="61" selection-end-line="61" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/fromnumeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
-          <caret line="234" selection-start-line="234" selection-end-line="234" />
+          <caret line="3117" selection-start-line="3117" selection-end-line="3117" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/1_loading_rate/ProcessorLR.py">
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/_methods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="189">
+          <caret line="139" selection-start-line="139" selection-end-line="139" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/1_loading_rate/1_loading_rate.py">
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/Initializer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="915">
+          <caret line="72" column="49" selection-start-line="72" selection-start-column="49" selection-end-line="72" selection-end-column="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Evaluation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="43" column="12" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
-          <folding>
-            <element signature="e#1#86#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_strike_index/2_strike_index.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_strike_index/ProcessorSI.py">
+    <entry file="file://$PROJECT_DIR$/1_param_processing/test_strike_off.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
-          <caret line="13" column="67" selection-start-line="13" selection-start-column="67" selection-end-line="13" selection-end-column="67" />
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/1_param_processing/ParameterProcessor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="31" column="42" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/const.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="9" selection-start-line="2" selection-end-line="2" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0_preprocessing/0_initialize_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="110" selection-start-line="6" selection-start-column="110" selection-end-line="6" selection-end-column="110" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

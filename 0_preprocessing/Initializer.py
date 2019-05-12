@@ -129,10 +129,10 @@ class SubjectDataInitializer:
                                                                 running_thd=300)
         if check_running_period:
             f_1_z_data = vicon_reader.get_plate_data_resampled()['f_1_z']
+            plt.figure()
             plt.plot(f_1_z_data)
             plt.plot([start_vicon, start_vicon], [np.min(f_1_z_data), np.max(f_1_z_data)], 'g--')
             plt.plot([end_vicon, end_vicon], [np.min(f_1_z_data), np.max(f_1_z_data)], 'r--')
-            plt.show()
 
         vicon_all_df = vicon_reader.get_vicon_all_processed_df()
         vicon_all_df = vicon_all_df.loc[start_vicon:end_vicon].reset_index(drop=True)
@@ -186,17 +186,11 @@ class SubjectDataInitializer:
         segment_marker_names = SEGMENT_MARKERS[location]
         segment_marker_names_xyz = [name + axis for name in segment_marker_names for axis in ['_x', '_y', '_z']]
         marker_df_clip = marker_df[segment_marker_names_xyz].copy().reset_index(drop=True).loc[0:check_len]
-        # marker_df_clip = marker_df[segment_marker_names_xyz].copy().reset_index(drop=True)
-        if location is 'l_foot':
-            gyr_column_names = ['l_foot_gyr_' + axis for axis in ['x', 'y', 'z']]
-            sensor_df = sensor_df[gyr_column_names].loc[:check_len]
-        elif location is 'r_foot':
-            sensor_df = sensor_df[['gyr_x', 'gyr_y', 'gyr_z']].loc[:check_len]
-        elif location is 'trunk':
-            pass
-        else:
+        if location not in ['r_foot', 'trunk', 'l_foot']:
             raise ValueError('Wrong sensor location')
 
+        gyr_column_names = [location + '_gyr_' + axis for axis in ['x', 'y', 'z']]
+        sensor_df = sensor_df[gyr_column_names].loc[:check_len]
         # get gyr norm from simulation
         my_nike_gyr_simulator = GyrSimulator(self._subject_folder, location)
         gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, marker_df_clip, sampling_rate=sampling_rate)

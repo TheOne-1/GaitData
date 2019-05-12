@@ -42,9 +42,13 @@ class HaishengSensorReader(IMUSensorReader):
         processed_data_df = pd.DataFrame()
         original_x = cleaned_data_df['sample'].values
         target_x = range(np.max(cleaned_data_df['sample']))
+
         for channel in DATA_COLUMNS_IMU:
             # interpolation
             original_y = cleaned_data_df[channel].values
+            # For some unknown reason, Haisheng sensors' acceleration are always 10 times smaller than true value
+            if 'acc' in channel:
+                original_y = 10 * original_y
             interpo_f = interpo.interp1d(original_x, original_y, kind='linear')
             target_y = interpo_f(target_x)
             # filtering

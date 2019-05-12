@@ -1,8 +1,10 @@
 import numpy as np
 
+SUB_NAMES = ('190414WangDianxin', '190423LiuSensen', '190424XuSen', '190426YuHongzhe')
 
-COLUMN_NAMES_HAISHENG = ['hour', 'minute', 'second', 'millisecond', 'acc_x', 'acc_y', 'acc_z', 'gyr_x', 'gyr_y',
-                         'gyr_z', 'mag_x', 'mag_y', 'mag_z']
+# in Haisheng sensor's column names, x and y are switched to make it the same as Xsens column
+COLUMN_NAMES_HAISHENG = ['hour', 'minute', 'second', 'millisecond', 'acc_y', 'acc_x', 'acc_z', 'gyr_y', 'gyr_x',
+                         'gyr_z', 'mag_y', 'mag_x', 'mag_z']
 
 SEGMENT_MARKERS = {'trunk': ['RAC', 'LAC', 'C7'], 'pelvis': ['RIAS', 'LIAS', 'LIPS', 'RIPS'],
                    'l_thigh': ['LTC1', 'LTC2', 'LTC3', 'LTC4', 'LFME', 'LFLE'],
