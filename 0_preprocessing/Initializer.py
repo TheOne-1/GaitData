@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from const import RAW_DATA_PATH, FILE_NAMES, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, \
+from const import RAW_DATA_PATH, TRIAL_NAMES, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, \
     XSENS_SENSOR_LOACTIONS, XSENS_FILE_NAME_DIC, STATIC_STANDING_PERIOD, DATA_COLUMNS_IMU, SEGMENT_MARKERS
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
@@ -22,26 +22,26 @@ class SubjectDataInitializer:
         fre_100_path, fre_200_path, fre_1000_path = SubjectDataInitializer._initialize_path(
             processed_data_path, subject_folder)
 
-        # initialize 100 Hz data
-        if initialize_100Hz:
-            HaishengSensorReader.rename_haisheng_sensor_files(RAW_DATA_PATH + subject_folder + '\\haisheng',
-                                                              readme_xls)
-            for trial_name in FILE_NAMES:
-                print('Initializing {trial_name} trial, vicon and xsens, 100 Hz...'.format(trial_name=trial_name))
-                vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = \
-                    self.initialize_vicon_resampled(trial_name, HAISHENG_SENSOR_SAMPLE_RATE, check_running_period)
-                haisheng_df = self.initialize_haisheng_sensor(
-                    trial_name, r_foot_marker_df, start_vicon, end_vicon)
-                data_all_df = pd.concat([vicon_all_df, haisheng_df], axis=1)
-                SubjectDataInitializer.__save_data(fre_100_path, trial_name, data_all_df)
-                if check_sync:
-                    self.check_sync(trial_name, vicon_all_df, haisheng_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
-            plt.show()
-            print('100 Hz data done. Please check plots.')
+        # # initialize 100 Hz data
+        # if initialize_100Hz:
+        #     HaishengSensorReader.rename_haisheng_sensor_files(RAW_DATA_PATH + subject_folder + '\\haisheng',
+        #                                                       readme_xls)
+        #     for trial_name in FILE_NAMES:
+        #         print('Initializing {trial_name} trial, vicon and xsens, 100 Hz...'.format(trial_name=trial_name))
+        #         vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = \
+        #             self.initialize_vicon_resampled(trial_name, HAISHENG_SENSOR_SAMPLE_RATE, check_running_period)
+        #         haisheng_df = self.initialize_haisheng_sensor(
+        #             trial_name, r_foot_marker_df, start_vicon, end_vicon)
+        #         data_all_df = pd.concat([vicon_all_df, haisheng_df], axis=1)
+        #         SubjectDataInitializer.__save_data(fre_100_path, trial_name, data_all_df)
+        #         if check_sync:
+        #             self.check_sync(trial_name, vicon_all_df, haisheng_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
+        #     plt.show()
+        #     print('100 Hz data done. Please check plots.')
 
         # initialize 200 Hz data
         if initialize_200Hz:
-            for trial_name in FILE_NAMES:
+            for trial_name in TRIAL_NAMES[6:]:
                 print('Initializing {trial_name} trial, vicon and xsens, 200 Hz...'.format(trial_name=trial_name))
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon =\
                     self.initialize_vicon(trial_name, check_running_period=check_running_period)
@@ -55,7 +55,7 @@ class SubjectDataInitializer:
 
         # initialzed 1000 Hz GRFz data, all the data was saved
         if initialize_1000Hz:
-            for trial_name in FILE_NAMES:
+            for trial_name in TRIAL_NAMES:
                 print('Initializing {trial_name} trial, z-axis of GRF, 1000 Hz...'.format(trial_name=trial_name))
                 file_path_vicon = '{path}{sub_folder}\\{sensor}\\{file_name}.csv'.format(
                     path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='vicon', file_name=trial_name)
@@ -96,8 +96,7 @@ class SubjectDataInitializer:
         sensor_gyr_norm = l_foot_xsens_reader.get_normalized_gyr()
         # get gyr norm from simulation
         my_nike_gyr_simulator = GyrSimulator(self._subject_folder, 'l_foot')
-        gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, l_foot_marker_df,
-                                                  sampling_rate=MOCAP_SAMPLE_RATE)
+        gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, l_foot_marker_df, sampling_rate=MOCAP_SAMPLE_RATE)
         gyr_norm_vicon = norm(gyr_vicon, axis=1)
         vicon_delay = GyrSimulator.sync_vicon_sensor(trial_name, 'l_foot', gyr_norm_vicon, sensor_gyr_norm, check)
         start_xsens, end_xsens = start_vicon + vicon_delay, end_vicon + vicon_delay

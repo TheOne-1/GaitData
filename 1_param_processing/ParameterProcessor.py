@@ -2,9 +2,8 @@ import pandas as pd
 import numpy as np
 from numpy.core.umath_tests import inner1d
 import matplotlib.pyplot as plt
-from const import PROCESSED_DATA_PATH, FILE_NAMES, PLATE_SAMPLE_RATE, MOCAP_SAMPLE_RATE, HAISHENG_SENSOR_SAMPLE_RATE, \
+from const import TRIAL_NAMES, PLATE_SAMPLE_RATE, MOCAP_SAMPLE_RATE, HAISHENG_SENSOR_SAMPLE_RATE, \
     LOADING_RATE_NORMALIZATION
-import scipy.interpolate as interpo
 import xlrd
 from scipy.signal import find_peaks
 from numpy.linalg import norm
@@ -26,10 +25,10 @@ class ParamProcessor:
         fre_100_path = path + '\\' + self._sub_name + '\\100Hz\\'
         fre_200_path = path + '\\' + self._sub_name + '\\200Hz\\'
         fre_1000_path = path + '\\' + self._sub_name + '\\1000Hz\\'
-        static_data_100_df = pd.read_csv(fre_100_path + FILE_NAMES[0] + '.csv', index_col=False)
-        static_data_200_df = pd.read_csv(fre_200_path + FILE_NAMES[0] + '.csv', index_col=False)
+        static_data_100_df = pd.read_csv(fre_100_path + TRIAL_NAMES[0] + '.csv', index_col=False)
+        static_data_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
 
-        running_trial_names = FILE_NAMES[5:7] + FILE_NAMES[8:14]
+        running_trial_names = TRIAL_NAMES[1:7] + TRIAL_NAMES[8:14]
         for trial_name in running_trial_names:
             print('\n' + trial_name + ' trial')
             self._current_trial = trial_name
@@ -47,7 +46,7 @@ class ParamProcessor:
             trial_param_df_200, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_200_df, grf_1000_df, MOCAP_SAMPLE_RATE)
             l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
             self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
-            pass
+            # plt.show()
 
     @staticmethod
     def resample_steps(steps_1000, sample_fre):
@@ -91,7 +90,7 @@ class ParamProcessor:
 
         # get strikes and offs from IMU data
         estimated_strikes, estimated_offs = self.get_strike_off_from_imu(
-            gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True)
+            gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True, plot_the_strike_off=True)
         param_data_df.insert(len(param_data_df.columns), 'strikes_IMU', estimated_strikes)
         param_data_df.insert(len(param_data_df.columns), 'offs_IMU', estimated_offs)
 
@@ -138,7 +137,7 @@ class ParamProcessor:
     def get_strike_off_1000(self, gait_data_df, plate_data_1000, sensor_sampling_rate, threshold=20):
         force = plate_data_1000[['f_1_x', 'f_1_y', 'f_1_z']].values
         force_norm = norm(force, axis=1)
-        strikes, offs = self.get_raw_strikes_offs(force_norm, threshold, comparison_len=30)
+        strikes, offs = self.get_raw_strikes_offs(force_norm, threshold, comparison_len=20)
         self.check_strikes_offs(force_norm, strikes, offs)
 
         # distribute strikes offs to left and right foot
@@ -281,7 +280,7 @@ class ParamProcessor:
                 if impact_peak_sample_num < self._impact_peak_sample_num_lower or\
                         impact_peak_sample_num > self._impact_peak_sample_num_higher:
                     raise ValueError('Wrong impact peak location, please check the plot.')
-            except ValueError:
+            except ValueError as value_error:
                 # if the user close the plot, the calculation will continue
                 plt.figure()
                 plt.plot(grf_z_step)
@@ -360,6 +359,7 @@ class ParamProcessor:
             steps.append([strike_tuple[i_step], off_tuple[i_step]])
         print('For {side} foot steps, {step_num} steps abandonded'.format(side=side, step_num=abandoned_step_nam))
         if self.__check_steps:
+            plt.figure()
             grf_z = plate_data['f_1_z'].values
             for step in steps:
                 plt.plot(grf_z[step[0]:step[1]])
@@ -383,16 +383,19 @@ class ParamProcessor:
         with open(step_file_str, 'wb') as file:
             pickle.dump(r_steps, file)
 
-    def get_strike_off_from_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True):
+    def get_strike_off_from_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True, plot_the_strike_off=False):
         if sensor_sampling_rate == HAISHENG_SENSOR_SAMPLE_RATE:
-            my_detector = StrikeOffDetectorIMU(gait_data_df, param_data_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
+            my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
             strike_delay, off_delay = 3, 5      # delay from the peak
         elif sensor_sampling_rate == MOCAP_SAMPLE_RATE:
-            my_detector = StrikeOffDetectorIMU(gait_data_df, param_data_df, 'l_foot', MOCAP_SAMPLE_RATE)
+            my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot', MOCAP_SAMPLE_RATE)
             strike_delay, off_delay = 6, 10      # delay from the peak
         else:
             raise ValueError('Wrong sensor sampling rate value')
+        # strike_delay, off_delay = 0, 0  # delay from the peak
         estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)
+        if plot_the_strike_off:
+            my_detector.show_IMU_data_and_strike_off(estimated_strike_indexes, estimated_off_indexes)
         data_len = gait_data_df.shape[0]
         estimated_strikes, estimated_offs = np.zeros([data_len]), np.zeros([data_len])
         estimated_strikes[estimated_strike_indexes] = 1
@@ -436,7 +439,7 @@ class ParamProcessor:
         fre_1000_path = path + '\\' + self._sub_name + '\\1000Hz\\'
         self.__initialize_thresholds()
 
-        test_trial_names = FILE_NAMES[5:6]
+        test_trial_names = TRIAL_NAMES[5:7]
         for trial_name in test_trial_names:
             print('\n' + trial_name + ' trial')
             self._current_trial = trial_name
@@ -452,7 +455,6 @@ class ParamProcessor:
             grf_1000_df = pd.read_csv(fre_1000_path + trial_name + '.csv', index_col=False)
             trial_param_df_200, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_200_df, grf_1000_df, MOCAP_SAMPLE_RATE)
             l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
-
         plt.show()
 
 

@@ -40,19 +40,28 @@ class TrialProcessor:
         return data
 
     # step_segmentation based on heel strike
-    def get_step_IMU_data(self, IMU_location, acc=True, gyr=False, mag=False):
-        offs, step_num = self.get_offs()
-        data = self.get_one_IMU_data(IMU_location, acc, gyr, mag).values
+    def get_step_strike_and_IMU_data(self, IMU_location, strike=True, acc=True, gyr=False, mag=False, from_IMU=True):
+        if from_IMU:
+            off_indexes, strike_indexes, step_num = self.get_offs_strikes_from_IMU()
+            strikes = self.gait_param_df['strikes_IMU']
+        else:
+            off_indexes, step_num = self.get_offs()
+            strikes = self.gait_param_df[self._side + '_strikes']
+        IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag).values
+        return_data = np.column_stack([IMU_data, strikes])
         step_data = []      # each element represent a step
         for i_step in range(step_num):
-            step_start = offs[i_step]
-            step_end = offs[i_step+1]
-            step_data.append(data[step_start:step_end, :])
+            step_start = off_indexes[i_step]
+            step_end = off_indexes[i_step+1]
+            step_data.append(return_data[step_start:step_end, :])
         step_data = self.check_step_data(step_data)
         return step_data
 
-    def get_step_param(self, param_name):
-        offs, step_num = self.get_offs()
+    def get_step_param(self, param_name, from_IMU=True):
+        if from_IMU:
+            offs, strikes, step_num = self.get_offs_strikes_from_IMU()
+        else:
+            offs, step_num = self.get_offs()
         column_name = self._side + '_' + param_name
         param_data = self.gait_param_df[column_name].values
         step_data = []      # each element represent a step
@@ -80,6 +89,21 @@ class TrialProcessor:
         offs = np.where(offs == 1)[0]
         step_num = len(offs) - 1
         return offs, step_num
+
+    def get_offs_strikes_from_IMU(self):
+        """
+        There is no side because by default 100Hz is the right side, 200Hz is the left side.
+        :return:
+        """
+        off_column = 'offs_IMU'
+        offs = self.gait_param_df[off_column]
+        offs = np.where(offs == 1)[0]
+        step_num = len(offs) - 1
+
+        strike_column = 'strikes_IMU'
+        strikes = self.gait_param_df[strike_column]
+        strikes = np.where(strikes == 1)[0]
+        return offs, strikes, step_num
 
     @staticmethod
     def check_step_data(step_data, up_diff_ratio=0.5, down_diff_ratio=0.15):        # check if step length is correct
@@ -162,23 +186,6 @@ class TrialProcessor:
     #     roll_diff_degree = (angles[0] - roll_marker)
     #     cali_matrix = euler2mat(np.deg2rad(roll_diff_degree), np.deg2rad(angles[1]),  np.deg2rad(yaw_diff_degree))
     #     return cali_matrix
-
-    def prepare_IMU_data(self, trial_name, cali=False, filt=False):
-        step_IMU_data = self.get_step_IMU_data(trial_name, acc=True, gyr=True)
-        step_IMU_data_processed = []
-        step_num = len(step_IMU_data)
-        cali_matrix = self.get_cali_matrix()
-        for i_step in range(step_num):
-            IMU_data = step_IMU_data[i_step]
-            if cali:
-                IMU_data[:, 0:3] = np.matmul(cali_matrix, IMU_data[:, 0:3].T).T
-                IMU_data[:, 3:6] = np.matmul(cali_matrix, IMU_data[:, 3:6].T).T
-            if filt:
-                for channel in range(6):
-                    IMU_data[:, channel] = self.data_filt(IMU_data[:, channel], 20)
-            step_IMU_data_processed.append(IMU_data)
-        return step_IMU_data_processed
-
 
 
 

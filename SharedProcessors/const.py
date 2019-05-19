@@ -21,7 +21,7 @@ DATA_COLUMNS_XSENS = ['acc_x', 'acc_y', 'acc_z', 'gyr_x', 'gyr_y', 'gyr_z', 'mag
 
 DATA_COLUMNS_IMU = ['acc_x', 'acc_y', 'acc_z', 'gyr_x', 'gyr_y', 'gyr_z', 'mag_x', 'mag_y', 'mag_z']
 
-FILE_NAMES = ['nike static', 'nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28',
+TRIAL_NAMES = ['nike static', 'nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28',
               'nike SR 28', 'mini static', 'mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28',
               'mini SI 28', 'mini SR 28']
 
@@ -46,7 +46,8 @@ LOADING_RATE_NORMALIZATION = True
 
 COP_DIFFERENCE = np.array([279.4, 784, 0])  # reset coordinate difference
 
-
+COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', 'sienna', 'olive', 'darkgreen',
+          'slategray', 'navy', 'slateblue', 'm', 'indigo']
 
 
 

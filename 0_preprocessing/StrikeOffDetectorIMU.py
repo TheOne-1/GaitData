@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
-from const import PROCESSED_DATA_PATH
 import numpy as np
-import pandas as pd
 from scipy.signal import butter, filtfilt
 from scipy.signal import find_peaks
 
@@ -10,7 +8,8 @@ class StrikeOffDetectorIMU:
     """
     This class detect strike, off event via IMU data
     """
-    def __init__(self, gait_data_df, param_data_df, IMU_location, sampling_fre):
+    def __init__(self, trial_name, gait_data_df, param_data_df, IMU_location, sampling_fre):
+        self._trial_name = trial_name
         self._gait_data_df = gait_data_df
         self._param_data_df = param_data_df
         self._IMU_location = IMU_location
@@ -180,7 +179,7 @@ class StrikeOffDetectorIMU:
         acc_z = -acc_data[:, 2]
         acc_z = self.data_filt(acc_z, 8, self._sampling_fre)
         plt.figure()
-        plt.title(self._IMU_location + '   acc_z')
+        plt.title(self._trial_name + '   ' + self._IMU_location + '   acc_z')
         plt.plot(acc_z)
         strike_plt_handle = plt.plot(true_strike_indexes, acc_z[true_strike_indexes], 'g*')
         off_plt_handle = plt.plot(true_off_indexes, acc_z[true_off_indexes], 'gx')
@@ -194,7 +193,7 @@ class StrikeOffDetectorIMU:
         gyr_x = -gyr_data[:, 0]
         gyr_x = self.data_filt(gyr_x, 8, self._sampling_fre)
         plt.figure()
-        plt.title(self._IMU_location + '   gyr_x')
+        plt.title(self._trial_name + '   ' + self._IMU_location + '   gyr_x')
         plt.plot(gyr_x)
         strike_plt_handle = plt.plot(true_strike_indexes, gyr_x[true_strike_indexes], 'g*')
         off_plt_handle = plt.plot(true_off_indexes, gyr_x[true_off_indexes], 'gx')

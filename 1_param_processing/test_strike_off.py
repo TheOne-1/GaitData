@@ -1,4 +1,4 @@
-from const import PROCESSED_DATA_PATH, RAW_DATA_PATH, FILE_NAMES
+from const import PROCESSED_DATA_PATH, RAW_DATA_PATH
 from ParameterProcessor import ParamProcessor
 
 subject_folder = '190414WangDianxin'
