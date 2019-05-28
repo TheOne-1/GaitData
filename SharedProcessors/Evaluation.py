@@ -50,15 +50,15 @@ class Evaluation:
         early_stopping = EarlyStopping(monitor='val_loss', patience=10)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
-        batch_size = 200  # the size of data that be trained together
+        batch_size = 20  # the size of data that be trained together
         model.fit(self._x_train, self._y_train, batch_size=batch_size,
-                  epochs=100, validation_split=0.2, callbacks=[early_stopping])
+                  epochs=50, validation_split=0.2, callbacks=[early_stopping])
 
-        # test NN
         y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
         R2, RMSE, mean_error = Evaluation._get_all_scores(self._y_test, y_pred, precision=3)
         plt.figure()
         plt.plot(self._y_test, y_pred, 'b.')
+        plt.plot([0, 2.5], [0, 2.5], 'r--')
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(self._y_test, y_pred))[1:6]

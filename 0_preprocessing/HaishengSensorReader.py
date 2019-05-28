@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
 from scipy.signal import butter, filtfilt
-from const import COLUMN_NAMES_HAISHENG, HAISHENG_SENSOR_SAMPLE_RATE, DATA_COLUMNS_IMU
+from const import COLUMN_NAMES_HAISHENG, HAISHENG_SENSOR_SAMPLE_RATE, DATA_COLUMNS_IMU, DATA_COLUMNS_XSENS
 import os
 import xlrd
 from shutil import copyfile
 import scipy.interpolate as interpo
 from IMUSensorReader import IMUSensorReader
-
 
 
 class HaishengSensorReader(IMUSensorReader):
@@ -57,7 +56,7 @@ class HaishengSensorReader(IMUSensorReader):
         # insert sample number
         processed_data_df.insert(0, 'sample', target_x)
         interpolated_sample_num = processed_data_df.shape[0] - cleaned_data_df.shape[0]
-        print('For trial {name}, {drop_num:d} samples dropped, {interpo_num:d} samples interpolated'.
+        print('{drop_num:d} samples dropped, {interpo_num:d} samples interpolated'.
               format(name=self.trial_name, drop_num=dropped_sample_num, interpo_num=interpolated_sample_num))
         return processed_data_df
 
@@ -72,8 +71,8 @@ class HaishengSensorReader(IMUSensorReader):
         """
         readme_sheet = xlrd.open_workbook(readme_xls).sheet_by_index(0)
         file_formal_names = readme_sheet.col_values(1)[2:]
-        file_nums_foot = readme_sheet.col_values(2)[2:]
-        file_nums_trunk = readme_sheet.col_values(3)[2:]
+        file_nums_foot = readme_sheet.col_values(2)[2:16]
+        file_nums_trunk = readme_sheet.col_values(3)[2:16]
         sensor_locs = ['r_foot', 'trunk']
         file_nums_all = {sensor_locs[0]: file_nums_foot, sensor_locs[1]: file_nums_trunk}
         for sensor_loc in sensor_locs:

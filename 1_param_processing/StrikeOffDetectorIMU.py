@@ -38,7 +38,7 @@ class StrikeOffDetectorIMU:
         return np.array(strikes_checked), step_num_checked
 
     def get_jogging_strike_off(self, strike_delay, off_delay):
-        strike_acc_z_thd = 6        # threshold of the maximum peak of acc norm
+        strike_acc_z_thd = 6        # threshold of the maximum peak of acc z
         strike_acc_prominence = 5
         off_gyr_thd = 4          # threshold the minimum peak of medio-lateral heel strike
         off_gyr_prominence = 2
@@ -48,11 +48,11 @@ class StrikeOffDetectorIMU:
 
         acc_data = self.get_IMU_data(acc=True, gyr=False).values
         acc_z_unfilt = acc_data[:, 2]
-        acc_z = StrikeOffDetectorIMU.data_filt(acc_z_unfilt, 8, self._sampling_fre)
+        acc_z = StrikeOffDetectorIMU.data_filt(acc_z_unfilt, 20, self._sampling_fre)
 
         gyr_data = self.get_IMU_data(acc=False, gyr=True).values
         gyr_x_unfilt = gyr_data[:, 0]
-        gyr_x = StrikeOffDetectorIMU.data_filt(gyr_x_unfilt, 8, self._sampling_fre)
+        gyr_x = StrikeOffDetectorIMU.data_filt(gyr_x_unfilt, 20, self._sampling_fre)
 
         # step 0, find the falling before the first strike
         win_len = 4
@@ -119,8 +119,6 @@ class StrikeOffDetectorIMU:
     def true_esti_diff(self, estimated_event_indexes, event_name):
         """
         Compare the strike/off detection result between force plate and IMU
-        :param true_event:
-        :param estimated_event:
         :return:
         """
         side = self._IMU_location[0]
@@ -177,7 +175,7 @@ class StrikeOffDetectorIMU:
 
         acc_data = self.get_IMU_data(acc=True, gyr=False).values
         acc_z = -acc_data[:, 2]
-        acc_z = self.data_filt(acc_z, 8, self._sampling_fre)
+        acc_z = self.data_filt(acc_z, 20, self._sampling_fre)
         plt.figure()
         plt.title(self._trial_name + '   ' + self._IMU_location + '   acc_z')
         plt.plot(acc_z)
@@ -191,7 +189,7 @@ class StrikeOffDetectorIMU:
 
         gyr_data = self.get_IMU_data(acc=False, gyr=True).values
         gyr_x = -gyr_data[:, 0]
-        gyr_x = self.data_filt(gyr_x, 8, self._sampling_fre)
+        gyr_x = self.data_filt(gyr_x, 20, self._sampling_fre)
         plt.figure()
         plt.title(self._trial_name + '   ' + self._IMU_location + '   gyr_x')
         plt.plot(gyr_x)
