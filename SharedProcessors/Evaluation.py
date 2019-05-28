@@ -8,11 +8,12 @@ from keras.callbacks import EarlyStopping
 
 
 class Evaluation:
-    def __init__(self, x_train, x_test, y_train, y_test):
+    def __init__(self, x_train, x_test, y_train, y_test, aux_input=None):
         self._x_train = x_train
         self._x_test = x_test
         self._y_train = y_train
         self._y_test = y_test
+        self._aux_input = aux_input
 
     @staticmethod
     def _get_all_scores(y_test, y_pred, precision=None):
@@ -47,12 +48,16 @@ class Evaluation:
         optimizer = optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
-        early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+        early_stopping = EarlyStopping(monitor='val_loss', patience=5)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
         batch_size = 20  # the size of data that be trained together
-        model.fit(self._x_train, self._y_train, batch_size=batch_size,
-                  epochs=50, validation_split=0.2, callbacks=[early_stopping])
+        if self._aux_input is not None:
+            model.fit(x={'main_input': self._x_train, 'aux_input': self._y_train}, batch_size=batch_size,
+                      epochs=50, validation_split=0.2, callbacks=[early_stopping])
+        else:
+            model.fit(self._x_train, self._y_train, batch_size=batch_size,
+                      epochs=50, validation_split=0.2, callbacks=[early_stopping])
 
         y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
         R2, RMSE, mean_error = Evaluation._get_all_scores(self._y_test, y_pred, precision=3)

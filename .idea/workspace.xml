@@ -2,21 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c92c1fa7-68af-461c-8a81-398298ffad5f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv0.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLRSklearn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/Initializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/Initializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/StrikeOffDetectorIMU.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_param_processing/StrikeOffDetectorIMU.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/0_preprocessing/XsensReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/0_preprocessing/XsensReader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_param_processing/ParameterProcessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_param_processing/ParameterProcessor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2_loading_rate/2_loading_rate.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/2_loading_rate.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2_loading_rate/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/AllSubData.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/AllSubData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/model.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/OneTrialData.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/OneTrialData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/const.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/const.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,23 +26,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/2_loading_rate/2_loading_rate.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+            <state relative-caret-position="196">
+              <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
               <folding>
-                <element signature="e#0#35#0" expanded="true" />
+                <element signature="e#75#110#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
+        <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-937">
-              <caret line="230" column="27" lean-forward="true" selection-start-line="230" selection-start-column="27" selection-end-line="230" selection-end-column="27" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="262">
+              <caret line="49" column="59" lean-forward="true" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -56,11 +47,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="49" column="70" selection-start-line="49" selection-start-column="70" selection-end-line="49" selection-end-column="70" />
+            <state relative-caret-position="314">
+              <caret line="65" column="39" selection-start-line="65" selection-start-column="39" selection-end-line="65" selection-end-column="39" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SharedProcessors/OneTrialData.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2970">
+              <caret column="87" selection-start-column="87" selection-end-column="87" />
             </state>
           </provider>
         </entry>
@@ -76,7 +76,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ravel</find>
       <find>self.__nn_model</find>
       <find>kernel_shape</find>
       <find>load</find>
@@ -106,6 +105,7 @@
       <find>4</find>
       <find>delay</find>
       <find>TRIAL_NAMES</find>
+      <find>classmethod</find>
     </findStrings>
     <replaceStrings>
       <replace>\\</replace>
@@ -144,12 +144,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/0_preprocessing/IMU_haisheng.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/example_mti_parse_logfile.py" />
-        <option value="$PROJECT_DIR$/0_preprocessing/configuration.txt" />
-        <option value="$PROJECT_DIR$/0_preprocessing/GYRSimulator.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/0_preprocessing/preprocessor.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/main.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/preprocessors.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/initialize_data.py" />
@@ -186,20 +180,26 @@
         <option value="$PROJECT_DIR$/0_preprocessing/GyrSimulator.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/XsensReader.py" />
         <option value="$PROJECT_DIR$/SharedProcessors/AllSubData.py" />
-        <option value="$PROJECT_DIR$/SharedProcessors/const.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/HaishengSensorReader.py" />
         <option value="$PROJECT_DIR$/1_param_processing/ParameterProcessor.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/Initializer.py" />
         <option value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
         <option value="$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/2_loading_rate.py" />
-        <option value="$PROJECT_DIR$/SharedProcessors/Evaluation.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR_primitive_cnn.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR_GBDT.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRSklearn.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv0.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv1.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" />
+        <option value="$PROJECT_DIR$/SharedProcessors/const.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv2.py" />
+        <option value="$PROJECT_DIR$/SharedProcessors/Evaluation.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/2_loading_rate.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1893" />
+    <option name="x" value="-1928" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -246,20 +246,21 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../ML Project/codes/000ori_codes/python/0313ML" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../190109LoadingRateFeasibility/python" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\0_preprocessing" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_phase_one" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_param_processing" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\SharedProcessors" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\abondened" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_strike_index" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\0_preprocessing" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\1_phase_one" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -372,7 +373,7 @@
       <window_info id="Favorites" order="2" sideWeight="0.5041322" side_tool="true" weight="0.13382508" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.4154013" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.35140997" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.3438178" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -402,7 +403,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SharedProcessors/Evaluation.py</url>
-          <line>29</line>
+          <line>30</line>
           <option name="timeStamp" value="321" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -410,68 +411,10 @@
           <line>132</line>
           <option name="timeStamp" value="337" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py</url>
-          <line>299</line>
-          <option name="timeStamp" value="341" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py</url>
-          <line>294</line>
-          <option name="timeStamp" value="342" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SharedProcessors/Evaluation.py</url>
-          <line>53</line>
-          <option name="timeStamp" value="343" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py</url>
-          <line>245</line>
-          <option name="timeStamp" value="345" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/generic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="3019" selection-start-line="3019" selection-end-line="3019" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/io/formats/csvs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="169" selection-start-line="169" selection-end-line="169" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/abondened/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="24" column="50" selection-start-line="24" selection-end-line="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexes/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="3957" selection-start-line="3957" selection-end-line="3957" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/shape_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="282" selection-start-line="282" selection-end-line="282" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/io/parsers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
@@ -644,23 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/AllSubData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#85#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/OneTrialData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1870">
-          <caret line="88" column="49" selection-start-line="88" selection-start-column="30" selection-end-line="88" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/0_preprocessing/ViconReader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
@@ -768,10 +694,83 @@
     <entry file="file://$PROJECT_DIR$/2_loading_rate/model.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLRSklearn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#1#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="13" column="28" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding>
+            <element signature="e#49#82#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv0.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SharedProcessors/AllSubData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="12" lean-forward="true" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="52" column="25" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SharedProcessors/const.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret line="61" column="14" selection-start-line="61" selection-end-line="61" selection-end-column="14" />
+          <caret line="96" column="34" lean-forward="true" selection-start-line="96" selection-start-column="34" selection-end-line="96" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SharedProcessors/OneTrialData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2970">
+          <caret column="87" selection-start-column="87" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/matplotlib/axes/_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="117" selection-start-line="117" selection-end-line="117" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="65" column="39" selection-start-line="65" selection-start-column="39" selection-end-line="65" selection-end-column="39" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -780,31 +779,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/2_loading_rate/2_loading_rate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+        <state relative-caret-position="196">
+          <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
           <folding>
-            <element signature="e#0#35#0" expanded="true" />
+            <element signature="e#75#110#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLRCNNv2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="49" column="70" selection-start-line="49" selection-start-column="70" selection-end-line="49" selection-end-column="70" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-937">
-          <caret line="230" column="27" lean-forward="true" selection-start-line="230" selection-start-column="27" selection-end-line="230" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="262">
+          <caret line="49" column="59" lean-forward="true" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
         </state>
       </provider>
     </entry>
