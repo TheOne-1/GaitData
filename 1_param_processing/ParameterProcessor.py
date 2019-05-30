@@ -423,11 +423,11 @@ class ParamProcessor:
         if sensor_sampling_rate == HAISHENG_SENSOR_SAMPLE_RATE:
             my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'r_foot',
                                                HAISHENG_SENSOR_SAMPLE_RATE)
-            strike_delay, off_delay = 3, 3  # delay from the peak
+            strike_delay, off_delay = 4, 4  # delay from the peak
         elif sensor_sampling_rate == MOCAP_SAMPLE_RATE:
             my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot',
                                                MOCAP_SAMPLE_RATE)
-            strike_delay, off_delay = 4, 6  # delay from the peak
+            strike_delay, off_delay = 6, 8  # delay from the peak
         else:
             raise ValueError('Wrong sensor sampling rate value')
         estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)

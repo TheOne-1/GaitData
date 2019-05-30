@@ -11,7 +11,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from const import SUB_NAMES, TRIAL_NAMES, COLORS, DATA_COLUMNS_XSENS
 import scipy.stats as stats
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 class ProcessorLR:
@@ -24,19 +24,19 @@ class ProcessorLR:
         self.split_train = split_train
         self.do_norm = do_norm
         self.param_name = 'LR'
+        train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+        self.train_all_data_list = train_all_data.get_all_data()
+        test_all_data = AllSubData(self.test_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+        self.test_all_data_list = test_all_data.get_all_data()
 
     def prepare_data(self):
-        train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
-        train_all_data_list = train_all_data.get_all_data()
-        train_all_data_list = ProcessorLR.clean_all_data(train_all_data_list)
+        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
         input_list, output_list = train_all_data_list.get_input_output_list()
         self._x_train, feature_names = self.convert_input(input_list, self.sensor_sampling_fre)
         self._y_train = ProcessorLR.convert_output(output_list)
 
         if not self.split_train:
-            test_all_data = AllSubData(self.test_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
-            test_all_data_list = test_all_data.get_all_data()
-            test_all_data_list = ProcessorLR.clean_all_data(test_all_data_list)
+            test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list)
             input_list, output_list = test_all_data_list.get_input_output_list()
             self._x_test, feature_names = self.convert_input(input_list, self.sensor_sampling_fre)
             self._y_test = ProcessorLR.convert_output(output_list)
@@ -180,10 +180,14 @@ class ProcessorLR:
         main_input_scalar = StandardScaler()
         channel_num = self._x_train.shape[2]
         for i_channel in range(channel_num):
-
             self._x_train[:, :, i_channel] = main_input_scalar.fit_transform(self._x_train[:, :, i_channel])
             self._x_test[:, :, i_channel] = main_input_scalar.transform(self._x_test[:, :, i_channel])
-            # aux_input_scalar = StandardScaler()
+
+        if hasattr(self, '_x_train_aux'):
+            # MinMaxScaler is more suitable because StandardScalar will make the input greatly differ from each other
+            aux_input_scalar = MinMaxScaler()
+            self._x_train_aux = aux_input_scalar.fit_transform(self._x_train_aux)
+            self._x_test_aux = aux_input_scalar.transform(self._x_test_aux)
 
 
 

@@ -37,7 +37,7 @@ class SubjectDataInitializer:
                 SubjectDataInitializer.__save_data(fre_100_path, trial_name, data_all_df)
                 if check_sync:
                     self.check_sync(trial_name, vicon_all_df, haisheng_df, 'r_foot', HAISHENG_SENSOR_SAMPLE_RATE)
-            plt.show()
+                plt.show()
             print('100 Hz data done. Please check plots.')
 
         # initialize 200 Hz data

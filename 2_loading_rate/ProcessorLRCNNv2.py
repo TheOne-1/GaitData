@@ -1,5 +1,5 @@
 """
-Each channel was processed independently
+Cov template
 """
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
@@ -25,8 +25,6 @@ class ProcessorLRCNNv2(ProcessorLR):
             for i_channel in range(6):
                 channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
                 step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
-            strike_data = input_all_list[i_step][:, 6]
-            step_len = input_all_list[i_step].shape[0]
 
         feature_names = None
         return step_input, feature_names
@@ -53,7 +51,8 @@ class ProcessorLRCNNv2(ProcessorLR):
         outputs = Dense(1, activation='relu')(outputs)
         model = Model(inputs, outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test)
-        my_evaluator.evaluate_nn(model, 'loading rate')
+        y_pred = my_evaluator.evaluate_nn(model)
+        my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
         plt.show()
 
 

@@ -50,6 +50,7 @@ class ProcessorLRCNNv1(ProcessorLR):
         outputs = Dense(1, activation='relu')(outputs)
         model = Model(inputs, outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test)
-        my_evaluator.evaluate_nn(model, 'loading rate')
+        y_pred = my_evaluator.evaluate_nn(model)
+        my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
         plt.show()
 

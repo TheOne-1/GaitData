@@ -48,11 +48,11 @@ class StrikeOffDetectorIMU:
 
         acc_data = self.get_IMU_data(acc=True, gyr=False).values
         acc_z_unfilt = acc_data[:, 2]
-        acc_z = StrikeOffDetectorIMU.data_filt(acc_z_unfilt, 20, self._sampling_fre)
+        acc_z = StrikeOffDetectorIMU.data_filt(acc_z_unfilt, 10, self._sampling_fre)
 
         gyr_data = self.get_IMU_data(acc=False, gyr=True).values
         gyr_x_unfilt = gyr_data[:, 0]
-        gyr_x = StrikeOffDetectorIMU.data_filt(gyr_x_unfilt, 20, self._sampling_fre)
+        gyr_x = StrikeOffDetectorIMU.data_filt(gyr_x_unfilt, 10, self._sampling_fre)
 
         # step 0, find the falling before the first strike
         win_len = 4
@@ -175,7 +175,7 @@ class StrikeOffDetectorIMU:
 
         acc_data = self.get_IMU_data(acc=True, gyr=False).values
         acc_z = -acc_data[:, 2]
-        acc_z = self.data_filt(acc_z, 20, self._sampling_fre)
+        acc_z = self.data_filt(acc_z, 10, self._sampling_fre)
         plt.figure()
         plt.title(self._trial_name + '   ' + self._IMU_location + '   acc_z')
         plt.plot(acc_z)
@@ -189,7 +189,7 @@ class StrikeOffDetectorIMU:
 
         gyr_data = self.get_IMU_data(acc=False, gyr=True).values
         gyr_x = -gyr_data[:, 0]
-        gyr_x = self.data_filt(gyr_x, 20, self._sampling_fre)
+        gyr_x = self.data_filt(gyr_x, 10, self._sampling_fre)
         plt.figure()
         plt.title(self._trial_name + '   ' + self._IMU_location + '   gyr_x')
         plt.plot(gyr_x)
