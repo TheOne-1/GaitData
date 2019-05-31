@@ -45,7 +45,7 @@ LOADING_RATE_NORMALIZATION = True
 
 COP_DIFFERENCE = np.array([279.4, 784, 0])  # reset coordinate difference
 
-COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', 'sienna', 'olive', 'darkgreen',
+COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', 'olive', 'darkgreen',
           'slategray', 'navy', 'slateblue', 'm', 'indigo']
 
 # '190513OuYangjue', '190513YangYicheng', '190514QiuYue', '190514XieJie', '190517FuZhenzhen',
@@ -62,14 +62,18 @@ MINI_TRIALS = ('mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28
 SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAMES, '190522SunDongxiao': TRIAL_NAMES,
                   '190522QinZhun': TRIAL_NAMES, '190522YangCan': TRIAL_NAMES, '190521LiangJie': TRIAL_NAMES,
                   '190517ZhangYaqian': TRIAL_NAMES, '190518MouRongzi': TRIAL_NAMES, '190518FuZhinan': TRIAL_NAMES,
+                  # '190414WangDianxin': TRIAL_NAMES[0:4] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:12] + TRIAL_NAMES[13:],
+                  # '190423LiuSensen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:14],
+                  # '190424XuSen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:],
+                  # '190426YuHongzhe': TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[5:6] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:11] + TRIAL_NAMES[13:],
+                  # '190510HeMing': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:],
+                  # '190513OuYangjue':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  # '190513YangYicheng':  TRIAL_NAMES[0:3] + TRIAL_NAMES[4:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  # '190514QiuYue':  TRIAL_NAMES[0:4] + TRIAL_NAMES[5:8] + TRIAL_NAMES[9:],
+                  # '190514XieJie':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[5:9] + TRIAL_NAMES[10:],
+                  # '190517FuZhenzhen':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   }
 
-# '190414WangDianxin': TRIAL_NAMES,
-# '190423LiuSensen': TRIAL_NAMES,
-# '190424XuSen': TRIAL_NAMES,
-# '190426YuHongzhe': TRIAL_NAMES,
-# '190510HeMing': TRIAL_NAMES[0:6] + TRIAL_NAMES[8:11] + TRIAL_NAMES[12:],
-# '190511ZhuJiayi': TRIAL_NAMES,
 
 SUB_NAMES = tuple(SUB_AND_TRIALS.keys())
 

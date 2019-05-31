@@ -5,7 +5,8 @@ from numpy import sqrt
 from scipy.stats import pearsonr
 from keras import optimizers
 from keras.callbacks import EarlyStopping
-from const import COLORS
+from const import COLORS, TRIAL_NAMES
+from keras import backend as K
 
 
 class Evaluation:
@@ -47,23 +48,33 @@ class Evaluation:
     def evaluate_nn(self, model):
         # train NN
         # lr = learning rate, the other params are default values
-        optimizer = optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+        optimizer = optimizers.Nadam(lr=0.0002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
-        early_stopping = EarlyStopping(monitor='val_loss', patience=5)
+        early_stopping_patience = 3
+        early_stopping = EarlyStopping(monitor='val_loss', patience=early_stopping_patience)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
         batch_size = 20  # the size of data that be trained together
         if self._x_train_aux is not None:
-            model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
-                      batch_size=batch_size, epochs=50, validation_split=0.2, callbacks=[early_stopping])
+            r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
+                          batch_size=batch_size, epochs=50, validation_split=0.2, callbacks=[early_stopping], verbose=2)
+            n_epochs = len(r.history['loss'])
+            # retrain the model if the model did not converge
+            while n_epochs < early_stopping_patience + 5:
+                print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
+                Evaluation.reset_weights(model)
+                r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
+                              batch_size=batch_size, epochs=50, validation_split=0.2, callbacks=[early_stopping],
+                              verbose=2)
+                n_epochs = len(r.history['loss'])
             y_pred = model.predict(x={'main_input': self._x_test, 'aux_input': self._x_test_aux},
                                    batch_size=batch_size).ravel()
+            # print('Final model, loss = {loss}, epochs = {epochs}'.format(loss=r.history['loss'][-1], epochs=len())
         else:
             model.fit(self._x_train, self._y_train, batch_size=batch_size,
                       epochs=50, validation_split=0.2, callbacks=[early_stopping])
             y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
-
         return y_pred
 
     @staticmethod
@@ -81,19 +92,24 @@ class Evaluation:
         plt.ylabel('predicted value')
 
     @staticmethod
-    def plot_nn_result_cate_color(y_true, y_pred, category_id, id_names=None, title=''):
+    def plot_nn_result_cate_color(y_true, y_pred, category_id, category_names, title=''):
         R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plt.plot([0, 2.5], [0, 2.5], 'r--')
-        sub_num_list = set(category_id)
+        category_list = set(category_id)
         category_id_array = np.array(category_id)
-        plt_handles = []
-        for i_sub in list(sub_num_list):
-            category_index = np.where(category_id_array == i_sub)[0]
-            plt_handle, = plt.plot(y_true[category_index], y_pred[category_index], '.', color=COLORS[i_sub])
-            plt_handles.append(plt_handle)
-        if id_names is not None:
-            plt.legend(plt_handles, id_names)
+        plot_handles, plot_names = [], []
+        for category_id in list(category_list):
+            category_name = category_names[category_id]
+            plot_names.append(category_name)
+            if 'mini' in category_name:
+                plot_pattern = 'x'
+            else:
+                plot_pattern = '.'
+            category_index = np.where(category_id_array == category_id)[0]
+            plt_handle, = plt.plot(y_true[category_index], y_pred[category_index], plot_pattern, color=COLORS[category_id])
+            plot_handles.append(plt_handle)
+        plt.legend(plot_handles, plot_names)
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
@@ -102,6 +118,12 @@ class Evaluation:
         plt.xlabel('true value')
         plt.ylabel('predicted value')
 
+    @staticmethod
+    def reset_weights(model):
+        session = K.get_session()
+        for layer in model.layers:
+            if hasattr(layer, 'kernel_initializer'):
+                layer.kernel.initializer.run(session=session)
 
 
 

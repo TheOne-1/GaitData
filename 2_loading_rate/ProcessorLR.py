@@ -16,18 +16,19 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 class ProcessorLR:
     def __init__(self, train_sub_and_trials, test_sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=False,
-                 split_train=False, do_norm=True):
+                 split_train=False, do_input_norm=True):
         self.train_sub_and_trials = train_sub_and_trials
         self.test_sub_and_trials = test_sub_and_trials
         self.sensor_sampling_fre = sensor_sampling_fre
         self.strike_off_from_IMU = strike_off_from_IMU
         self.split_train = split_train
-        self.do_norm = do_norm
+        self.do_input_norm = do_input_norm
         self.param_name = 'LR'
         train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
         self.train_all_data_list = train_all_data.get_all_data()
-        test_all_data = AllSubData(self.test_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
-        self.test_all_data_list = test_all_data.get_all_data()
+        if test_sub_and_trials is not None:
+            test_all_data = AllSubData(self.test_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+            self.test_all_data_list = test_all_data.get_all_data()
 
     def prepare_data(self):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
@@ -46,7 +47,7 @@ class ProcessorLR:
                 self._x_train, self._y_train, test_size=0.33)
 
         # do input normalization
-        if self.do_norm:
+        if self.do_input_norm:
             self.norm_input()
 
     def find_feature(self):
