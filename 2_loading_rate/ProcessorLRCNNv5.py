@@ -86,26 +86,23 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
             predict_result_all = np.row_stack([predict_result_all, y_pred])
         predict_result_all = predict_result_all.ravel()
         y_true = ProcessorLR.convert_output(output_list)
-        Evaluation.plot_nn_result_cate_color(y_true, predict_result_all, trial_id_list, TRIAL_NAMES, 'loading rate')
+        Evaluation.plot_nn_result_cate_color(y_true, predict_result_all, sub_id_list, SUB_NAMES, 'loading rate')
         plt.show()
 
     def cnn_solution(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=5, kernel_size=20)(main_input)
+        tower_1 = Conv1D(filters=2, kernel_size=20)(main_input)
         tower_1 = MaxPool1D(pool_size=11)(tower_1)
 
         # for each feature, add 10 * 1 cov kernel
-        tower_2 = Conv1D(filters=5, kernel_size=9)(main_input)
-        tower_2 = MaxPool1D(pool_size=3, strides=3)(tower_2)
-        tower_2 = Conv1D(filters=5, kernel_size=4)(tower_2)
+        tower_2 = Conv1D(filters=2, kernel_size=10)(main_input)
+        tower_2 = MaxPool1D(pool_size=21)(tower_2)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=5, kernel_size=4)(main_input)
-        tower_3 = MaxPool1D(pool_size=3, strides=3)(tower_3)
-        tower_3 = Conv1D(filters=5, kernel_size=4)(tower_3)
-        tower_3 = MaxPool1D(pool_size=6)(tower_3)
+        tower_3 = Conv1D(filters=2, kernel_size=5)(main_input)
+        tower_3 = MaxPool1D(pool_size=26)(tower_3)
 
         joined_outputs = concatenate([tower_1, tower_2, tower_3], axis=1)
         joined_outputs = Activation('relu')(joined_outputs)
@@ -113,15 +110,15 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
 
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
-        aux_joined_outputs = Dense(30, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
+
+        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
-        # model.reset_states()
+        # model.load_weights('model_weights_all_sub.h5')
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)
         y_pred = my_evaluator.evaluate_nn(model)
-        model.save_weights('model_sub_' + str('sub'))
+        model.save_weights('model_sub_' + str('sub') + '.h5')
         if self.do_output_norm:
             y_pred = self.norm_output_reverse(y_pred, self._x_test_aux_ori[:, 0])
         return y_pred

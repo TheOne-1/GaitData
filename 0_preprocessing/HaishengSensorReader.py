@@ -10,12 +10,12 @@ from IMUSensorReader import IMUSensorReader
 
 
 class HaishengSensorReader(IMUSensorReader):
-    def __init__(self, file, cut_off_fre=20, filter_order=4):
+    def __init__(self, file):
         super().__init__()
         self._file = file
         self.trial_name = file[file.rfind('\\'):]
         self.data_raw_df = self._get_raw_data()
-        self.data_processed_df = self._get_sensor_data_processed(self.data_raw_df, cut_off_fre, filter_order)
+        self.data_processed_df = self._get_sensor_data_processed(self.data_raw_df)
 
     def _get_raw_data(self):
         """
@@ -29,14 +29,10 @@ class HaishengSensorReader(IMUSensorReader):
         data_raw_df.insert(0, 'sample', sample_num_col.astype(int))
         return data_raw_df
 
-    def _get_sensor_data_processed(self, raw_data_df, cut_off_fre, filter_order):
+    def _get_sensor_data_processed(self, raw_data_df):
         # remove duplicated samples
         cleaned_data_df = raw_data_df.drop_duplicates(subset='sample', keep='first', inplace=False)
         dropped_sample_num = raw_data_df.shape[0] - cleaned_data_df.shape[0]
-
-        # interpolation and filtering
-        wn = cut_off_fre / (HAISHENG_SENSOR_SAMPLE_RATE / 2)
-        b_IMU, a_IMU = butter(filter_order, wn, btype='low')
 
         processed_data_df = pd.DataFrame()
         original_x = cleaned_data_df['sample'].values
@@ -50,8 +46,6 @@ class HaishengSensorReader(IMUSensorReader):
                 original_y = 10 * original_y
             interpo_f = interpo.interp1d(original_x, original_y, kind='linear')
             target_y = interpo_f(target_x)
-            # filtering
-            target_y = filtfilt(b_IMU, a_IMU, target_y)
             processed_data_df.insert(len(processed_data_df.columns), channel, target_y)
         # insert sample number
         processed_data_df.insert(0, 'sample', target_x)

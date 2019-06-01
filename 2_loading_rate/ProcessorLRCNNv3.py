@@ -97,7 +97,7 @@ class ProcessorLRCNNv3(ProcessorLR):
 
         aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(1, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)

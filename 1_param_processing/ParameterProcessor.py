@@ -3,7 +3,7 @@ import numpy as np
 from numpy.core.umath_tests import inner1d
 import matplotlib.pyplot as plt
 from const import TRIAL_NAMES, PLATE_SAMPLE_RATE, MOCAP_SAMPLE_RATE, HAISHENG_SENSOR_SAMPLE_RATE, \
-    LOADING_RATE_NORMALIZATION, RUNNING_TRIALS
+    LOADING_RATE_NORMALIZATION, RUNNING_TRIALS, FORCE_NAMES
 import xlrd
 from scipy.signal import find_peaks
 from numpy.linalg import norm
@@ -36,8 +36,8 @@ class ParamProcessor:
         fre_200_path = path + '\\' + self._sub_name + '\\200Hz\\'
         fre_1000_path = path + '\\' + self._sub_name + '\\1000Hz\\'
         self.nike_static_100_df = pd.read_csv(fre_100_path + TRIAL_NAMES[0] + '.csv', index_col=False)
-        self.nike_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
         self.mini_static_100_df = pd.read_csv(fre_100_path + TRIAL_NAMES[7] + '.csv', index_col=False)
+        self.nike_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
         self.mini_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[7] + '.csv', index_col=False)
 
         running_trial_names = self._trials
@@ -62,7 +62,16 @@ class ParamProcessor:
                                                                                     MOCAP_SAMPLE_RATE)
             l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
             self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
+
             plt.show()
+
+    # @staticmethod
+    # def read_gait_csv(folder_path, marker_cut_off_fre, force_cut_off_fre):
+    #     gait_data_df = pd.read_csv(folder_path, index_col=False)
+    #
+    #     # filter the IMU data
+    #     force_data_df = gait_data_df[FORCE_NAMES]
+    #     for
 
     @staticmethod
     def resample_steps(steps_1000, sample_fre):

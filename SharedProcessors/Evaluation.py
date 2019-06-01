@@ -51,7 +51,7 @@ class Evaluation:
         optimizer = optimizers.Nadam(lr=0.0002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
-        early_stopping_patience = 3
+        early_stopping_patience = 5
         early_stopping = EarlyStopping(monitor='val_loss', patience=early_stopping_patience)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved

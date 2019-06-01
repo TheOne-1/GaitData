@@ -1,5 +1,5 @@
 """
-Cov template
+Cov template, no aux input
 """
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
@@ -47,8 +47,9 @@ class ProcessorLRCNNv2(ProcessorLR):
         joined_outputs = concatenate([tower_1, tower_2, tower_3], axis=1)
         joined_outputs = Activation('relu')(joined_outputs)
         outputs = Flatten()(joined_outputs)
-        outputs = Dense(40, activation='relu')(outputs)
-        outputs = Dense(1, activation='relu')(outputs)
+        outputs = Dense(20, activation='relu')(outputs)
+        outputs = Dense(20, activation='relu')(outputs)
+        outputs = Dense(1, activation='linear')(outputs)
         model = Model(inputs, outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test)
         y_pred = my_evaluator.evaluate_nn(model)

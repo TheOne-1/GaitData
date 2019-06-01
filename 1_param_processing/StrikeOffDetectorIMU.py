@@ -38,7 +38,7 @@ class StrikeOffDetectorIMU:
         return np.array(strikes_checked), step_num_checked
 
     def get_jogging_strike_off(self, strike_delay, off_delay):
-        strike_acc_z_thd = 6        # threshold of the maximum peak of acc z
+        strike_acc_z_thd = 3.5        # threshold of the maximum peak of acc z
         strike_acc_prominence = 5
         off_gyr_thd = 4          # threshold the minimum peak of medio-lateral heel strike
         off_gyr_prominence = 2

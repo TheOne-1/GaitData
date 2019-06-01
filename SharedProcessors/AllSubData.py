@@ -14,10 +14,8 @@ class AllSubData:
         self._sensor_sampling_fre = sensor_sampling_fre
         self._strike_off_from_IMU = strike_off_from_IMU
         if sensor_sampling_fre == MOCAP_SAMPLE_RATE:
-            data_folder = '\\200Hz\\'
             self._side = 'l'  # 'l' or 'r'
         else:
-            data_folder = '\\100Hz\\'
             self._side = 'r'  # 'l' or 'r'
 
         # initialize the dataframe of gait data, including force plate, marker and IMU data
