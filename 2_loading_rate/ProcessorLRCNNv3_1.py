@@ -101,8 +101,8 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
-        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(15, activation='sigmoid')(aux_joined_outputs)
+        # aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
