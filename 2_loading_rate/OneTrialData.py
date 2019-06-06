@@ -1,5 +1,5 @@
 from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, ROTATION_VIA_STATIC_CALIBRATION,\
-    SPECIFIC_CALI_MATRIX
+    SPECIFIC_CALI_MATRIX, FILTER_BUFFER
 import numpy as np
 import pandas as pd
 
@@ -21,8 +21,12 @@ class OneTrialData:
         self.gait_data_df = pd.read_csv(gait_data_path, index_col=False)
         # initialize the dataframe of gait parameters, including loading rate, strike index, ...
         gait_param_path = PROCESSED_DATA_PATH + '\\' + subject_name + data_folder + 'param_of_' + trial_name + '.csv'
+
+        buffer_sample_num = self._sensor_sampling_fre * FILTER_BUFFER
+        self.gait_data_df = self.gait_data_df.loc[buffer_sample_num:, :]        # skip the first several hundred data
         if static_data_df is not None:
             self.gait_param_df = pd.read_csv(gait_param_path, index_col=False)
+            self.gait_param_df = self.gait_param_df.loc[buffer_sample_num:, :]
 
     def get_one_IMU_data(self, IMU_location, acc=True, gyr=False, mag=False):
         column_names = []
@@ -157,11 +161,12 @@ class OneTrialData:
         for i_step in range(step_num):
             step_lens[i_step] = len(step_data[i_step])
         step_len_mean = np.mean(step_lens)
-        if step_num != 0:
-            acceptable_len_max = step_len_mean * (1+up_diff_ratio)
-        else:
-            acceptable_len_max = 0
-        acceptable_len_min = step_len_mean * (1-down_diff_ratio)
+        # if step_num != 0:
+        #     acceptable_len_max = step_len_mean * (1+up_diff_ratio)
+        # else:
+        #     acceptable_len_max = 0
+        # acceptable_len_min = step_len_mean * (1-down_diff_ratio)
+        acceptable_len_min, acceptable_len_max = 50, 100
 
         step_data_new = []
         for i_step in range(step_num):

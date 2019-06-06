@@ -6,10 +6,9 @@ from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
 from ProcessorLR import ProcessorLR
-from keras.models import Sequential, Model
-from AllSubData import AllSubData
+from keras.models import Model
 from sklearn.model_selection import train_test_split
-from const import RUNNING_TRIALS, TRIAL_NAMES
+from const import TRIAL_NAMES
 
 
 class ProcessorLRCNNv3(ProcessorLR):
@@ -42,7 +41,7 @@ class ProcessorLRCNNv3(ProcessorLR):
         """
         step_num = len(input_all_list)
         resample_len = 100
-        data_clip_start, data_clip_end = 50, 80
+        data_clip_start, data_clip_end = 50, 75
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, 6])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
@@ -55,6 +54,11 @@ class ProcessorLRCNNv3(ProcessorLR):
                 strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
         aux_input = ProcessorLRCNNv3.clean_aux_input(aux_input)
+
+        # # !!! just for debug
+        # for i_step in range(step_input.shape[0]):
+        #     plt.plot(step_input[i_step, :, 3])
+        # plt.show()
 
         return step_input, aux_input
 
@@ -77,16 +81,16 @@ class ProcessorLRCNNv3(ProcessorLR):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=5, kernel_size=20)(main_input)
+        tower_1 = Conv1D(filters=10, kernel_size=15)(main_input)
         tower_1 = MaxPool1D(pool_size=11)(tower_1)
 
         # for each feature, add 10 * 1 cov kernel
-        tower_2 = Conv1D(filters=5, kernel_size=10)(main_input)
-        tower_2 = MaxPool1D(pool_size=21)(tower_2)
+        tower_2 = Conv1D(filters=10, kernel_size=10)(main_input)
+        tower_2 = MaxPool1D(pool_size=16)(tower_2)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=5, kernel_size=5)(main_input)
-        tower_3 = MaxPool1D(pool_size=26)(tower_3)
+        tower_3 = Conv1D(filters=10, kernel_size=5)(main_input)
+        tower_3 = MaxPool1D(pool_size=21)(tower_3)
 
         joined_outputs = concatenate([tower_1, tower_2, tower_3], axis=1)
         joined_outputs = Activation('relu')(joined_outputs)
@@ -95,8 +99,8 @@ class ProcessorLRCNNv3(ProcessorLR):
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
-        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,

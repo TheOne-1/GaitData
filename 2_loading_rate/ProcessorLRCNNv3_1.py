@@ -1,16 +1,14 @@
 """
 Conv template, improvements:
 (1) add input such as subject height, step length, strike occurance time
-(2) reduced cov kernel size
 """
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
 from ProcessorLR import ProcessorLR
-from keras.models import Sequential, Model
-from AllSubData import AllSubData
+from keras.models import Model
 from sklearn.model_selection import train_test_split
-from const import RUNNING_TRIALS, TRIAL_NAMES
+from const import TRIAL_NAMES
 
 
 class ProcessorLRCNNv3_1(ProcessorLR):
@@ -43,12 +41,12 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         """
         step_num = len(input_all_list)
         resample_len = 100
-        data_clip_start, data_clip_end = 50, 80
-        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 6])
+        data_clip_start, data_clip_end = 50, 75
+        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 4])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
-            acc_gyr_data = input_all_list[i_step][:, 0:6]
-            for i_channel in range(6):
+            acc_gyr_data = input_all_list[i_step][:, 2:6]
+            for i_channel in range(4):
                 channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
                 step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
                 step_len = acc_gyr_data.shape[0]
@@ -56,7 +54,6 @@ class ProcessorLRCNNv3_1(ProcessorLR):
                 strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
         aux_input = ProcessorLRCNNv3_1.clean_aux_input(aux_input)
-
         return step_input, aux_input
 
     @staticmethod
@@ -78,46 +75,43 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=10, kernel_size=20)(main_input)
+        tower_1 = Conv1D(filters=6, kernel_size=15)(main_input)
         tower_1 = MaxPool1D(pool_size=11)(tower_1)
 
-        # # for each feature, add 10 * 1 cov kernel
-        # tower_2 = Conv1D(filters=5, kernel_size=10)(main_input)
-        # tower_2 = MaxPool1D(pool_size=21)(tower_2)
-        #
-        # # for each feature, add 5 * 1 cov kernel
-        # tower_3 = Conv1D(filters=5, kernel_size=5)(main_input)
-        # tower_3 = MaxPool1D(pool_size=26)(tower_3)
+        # for each feature, add 10 * 1 cov kernel
+        tower_2 = Conv1D(filters=6, kernel_size=10)(main_input)
+        tower_2 = MaxPool1D(pool_size=16)(tower_2)
 
-        # joined_outputs = concatenate([tower_1, tower_2, tower_3], axis=1)
-        joined_outputs = Activation('relu')(tower_1)
+        # for each feature, add 5 * 1 cov kernel
+        tower_3 = Conv1D(filters=6, kernel_size=5)(main_input)
+        tower_3 = MaxPool1D(pool_size=21)(tower_3)
+
+        # for each feature, add 5 * 1 cov kernel
+        tower_4 = Conv1D(filters=6, kernel_size=3)(main_input)
+        tower_4 = MaxPool1D(pool_size=23)(tower_4)
+
+        # for each feature, add 5 * 1 cov kernel
+        tower_5 = Conv1D(filters=6, kernel_size=1)(main_input)
+        tower_5 = MaxPool1D(pool_size=25)(tower_5)
+
+        joined_outputs = concatenate([tower_1, tower_2, tower_3, tower_4, tower_5], axis=1)
+        joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
-        aux_joined_outputs = Dense(20, activation='sigmoid')(aux_joined_outputs)
+        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
-        model.load_weights('model_weights_all_sub.h5')
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)
         y_pred = my_evaluator.evaluate_nn(model)
-        self.check_pred_zero(y_pred, self._x_test)
         if self.split_train:
             my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES, 'loading rate')
-        # model.save_weights('model_weights_all_sub.h5')
         plt.show()
 
-    def check_pred_zero(self, y_pred, x_test):
-        """
-        To check why there are zeros in predicted values
-        :return:
-        """
-        zero_indexes = np.where(y_pred < 1e-3)[0]
-        non_zero_indexes = np.where(y_pred > 1e-3)[0]
-
-        x=1
 

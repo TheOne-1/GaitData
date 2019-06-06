@@ -1,8 +1,7 @@
-from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE
-import numpy as np
-import pandas as pd
+from const import PROCESSED_DATA_PATH, MOCAP_SAMPLE_RATE
 from OneTrialData import OneTrialData, OneTrialDataStatic
 from AllSubDataStruct import AllSubDataStruct
+import matplotlib.pyplot as plt
 
 
 class AllSubData:

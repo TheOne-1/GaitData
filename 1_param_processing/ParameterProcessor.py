@@ -62,16 +62,7 @@ class ParamProcessor:
                                                                                     MOCAP_SAMPLE_RATE)
             l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
             self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
-
             plt.show()
-
-    # @staticmethod
-    # def read_gait_csv(folder_path, marker_cut_off_fre, force_cut_off_fre):
-    #     gait_data_df = pd.read_csv(folder_path, index_col=False)
-    #
-    #     # filter the IMU data
-    #     force_data_df = gait_data_df[FORCE_NAMES]
-    #     for
 
     @staticmethod
     def resample_steps(steps_1000, sample_fre):

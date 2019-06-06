@@ -6,9 +6,7 @@ import matplotlib.pyplot as plt
 from keras.layers import *
 from ProcessorLRCNNv3 import ProcessorLRCNNv3
 from ProcessorLR import ProcessorLR
-from keras.models import Sequential, Model
-from AllSubData import AllSubData
-from sklearn.model_selection import train_test_split
+from keras.models import Model
 
 from const import TRIAL_NAMES
 

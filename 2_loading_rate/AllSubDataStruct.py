@@ -43,7 +43,3 @@ class AllSubDataStruct:
 
     def get_trial_id_list(self):
         return self.__trial_id_list
-
-
-
-

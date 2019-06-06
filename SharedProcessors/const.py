@@ -46,7 +46,7 @@ LOADING_RATE_NORMALIZATION = True
 COP_DIFFERENCE = np.array([279.4, 784, 0])  # reset coordinate difference
 
 COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', 'olive', 'darkgreen',
-          'slategray', 'navy', 'slateblue', 'm', 'indigo']
+          'slategray', 'navy', 'slateblue', 'm', 'indigo', 'maroon', 'peru', 'seagreen']
 
 # '190513OuYangjue', '190513YangYicheng', '190514QiuYue', '190514XieJie', '190517FuZhenzhen',
 #              '190517ZuanYaqian', '190518FuZhinan', '190518MouRongzi'
@@ -72,12 +72,12 @@ SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAM
                   '190426YuHongzhe': TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[5:6] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:11] + TRIAL_NAMES[13:],
                   # trial 6 and 11 was abandoned because Haisheng's sensor was broken
                   '190510HeMing': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:6] + TRIAL_NAMES[7:11] + TRIAL_NAMES[12:],
-                  # trial 1 and  was abandoned because Haisheng's sensor was broken
-                  '190513OuYangjue':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  '190511ZhuJiayi':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   '190513YangYicheng':  TRIAL_NAMES[0:3] + TRIAL_NAMES[4:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   '190514QiuYue':  TRIAL_NAMES[0:4] + TRIAL_NAMES[5:8] + TRIAL_NAMES[9:],
                   '190514XieJie':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[5:9] + TRIAL_NAMES[10:],
                   '190517FuZhenzhen':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  '190513OuYangjue':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   }
 
 SUB_NAMES = tuple(SUB_AND_TRIALS.keys())
@@ -113,4 +113,6 @@ SPECIFIC_CALI_MATRIX = {
                                      [-0.37081009, 0.80245287, -0.46751393],
                                      [-0.04712714, 0.48649496, 0.87241142]]}}
 
-ROTATION_VIA_STATIC_CALIBRATION = True
+ROTATION_VIA_STATIC_CALIBRATION = False
+
+FILTER_BUFFER = 3       # 3 seconds filter buffer

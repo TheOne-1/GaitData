@@ -9,7 +9,7 @@ from const import COLORS, TRIAL_NAMES
 from keras import backend as K
 
 
-class Evaluation:
+class EvaluationDirect:
     def __init__(self, x_train, x_test, y_train, y_test, x_train_aux=None, x_test_aux=None):
         self._x_train = x_train
         self._x_test = x_test
@@ -33,10 +33,11 @@ class Evaluation:
     def evaluate_sklearn(self, model, title=''):
         model.fit(self._x_train, self._y_train)
         y_pred = model.predict(self._x_test)
-        R2, RMSE, mean_error = Evaluation._get_all_scores(self._y_test, y_pred, precision=3)
+        R2, RMSE, mean_error = EvaluationDirect._get_all_scores(self._y_test, y_pred, precision=3)
 
         plt.figure()
-        plt.plot(self._y_test, y_pred, 'b.')
+        plt.plot(self._y_test[:1000])
+        plt.plot(y_pred[:1000])
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(self._y_test, y_pred))[1:6]
@@ -56,17 +57,16 @@ class Evaluation:
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
         batch_size = 20  # the size of data that be trained together
-        epoch_num = 200
         if self._x_train_aux is not None:
             r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
-                          batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping], verbose=2)
+                          batch_size=batch_size, epochs=200, validation_split=0.2, callbacks=[early_stopping], verbose=2)
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
             while n_epochs < early_stopping_patience + 5:
                 print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
-                Evaluation.reset_weights(model)
+                EvaluationDirect.reset_weights(model)
                 r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
-                              batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
+                              batch_size=batch_size, epochs=50, validation_split=0.2, callbacks=[early_stopping],
                               verbose=2)
                 n_epochs = len(r.history['loss'])
             y_pred = model.predict(x={'main_input': self._x_test, 'aux_input': self._x_test_aux},
@@ -74,7 +74,7 @@ class Evaluation:
             # print('Final model, loss = {loss}, epochs = {epochs}'.format(loss=r.history['loss'][-1], epochs=len())
         else:
             model.fit(self._x_train, self._y_train, batch_size=batch_size,
-                      epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping])
+                      epochs=200, validation_split=0.2, callbacks=[early_stopping])
             y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
         return y_pred
 
@@ -86,7 +86,7 @@ class Evaluation:
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
 
-        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+        R2, RMSE, mean_error = EvaluationDirect._get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plt.plot(y_true, y_pred, 'b.')
         plt.plot([0, 2.5], [0, 2.5], 'r--')
@@ -105,15 +105,8 @@ class Evaluation:
             y_true = y_true.ravel()
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
+        R2, RMSE, mean_error = EvaluationDirect._get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
-        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
-        RMSE_str = str(RMSE[0])
-        mean_error_str = str(mean_error)
-        pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
-        title_extended = title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +\
-                         '  Mean error: ' + mean_error_str
-        plt.title(title_extended)
-        print(title_extended)
         plt.plot([0, 2.5], [0, 2.5], 'r--')
         category_list = set(category_id)
         category_id_array = np.array(category_id)
@@ -129,6 +122,11 @@ class Evaluation:
             plt_handle, = plt.plot(y_true[category_index], y_pred[category_index], plot_pattern, color=COLORS[category_id])
             plot_handles.append(plt_handle)
         plt.legend(plot_handles, plot_names)
+        RMSE_str = str(RMSE[0])
+        mean_error_str = str(mean_error)
+        pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
+        plt.title(title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +
+                  '  Mean error: ' + mean_error_str)
         plt.xlabel('true value')
         plt.ylabel('predicted value')
 

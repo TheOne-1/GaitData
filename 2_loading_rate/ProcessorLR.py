@@ -3,9 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 import matplotlib.pyplot as plt
 from AllSubData import AllSubData
-from keras.models import Sequential, Model
 from keras.layers import *
-from keras.utils import plot_model
 import scipy.interpolate as interpo
 from sklearn.ensemble import GradientBoostingRegressor
 from const import SUB_NAMES, TRIAL_NAMES, COLORS, DATA_COLUMNS_XSENS
@@ -138,7 +136,7 @@ class ProcessorLR:
     # convert the input from list to ndarray
     def convert_input(self, input_all_list, sampling_fre):
         # this method has to be overwritten
-        raise NotImplementedError('this convert_input method has to be overwritten')
+        raise NotImplementedError('this convert_step_input method has to be overwritten')
 
     def linear_regression_solution(self):
         model = LinearRegression()
