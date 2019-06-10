@@ -14,13 +14,14 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 class ProcessorLR:
     def __init__(self, train_sub_and_trials, test_sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=False,
-                 split_train=False, do_input_norm=True):
+                 split_train=False, do_input_norm=True, do_output_norm=True):
         self.train_sub_and_trials = train_sub_and_trials
         self.test_sub_and_trials = test_sub_and_trials
         self.sensor_sampling_fre = sensor_sampling_fre
         self.strike_off_from_IMU = strike_off_from_IMU
         self.split_train = split_train
         self.do_input_norm = do_input_norm
+        self.do_output_norm = do_output_norm
         self.param_name = 'LR'
         train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
         self.train_all_data_list = train_all_data.get_all_data()
@@ -47,6 +48,9 @@ class ProcessorLR:
         # do input normalization
         if self.do_input_norm:
             self.norm_input()
+
+        if self.do_output_norm:
+            self.norm_output()
 
     def find_feature(self):
         train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
@@ -176,7 +180,7 @@ class ProcessorLR:
         return data_resampled
 
     def norm_input(self):
-        main_input_scalar = StandardScaler()
+        main_input_scalar = MinMaxScaler()
         channel_num = self._x_train.shape[2]
         for i_channel in range(channel_num):
             self._x_train[:, :, i_channel] = main_input_scalar.fit_transform(self._x_train[:, :, i_channel])
@@ -188,6 +192,15 @@ class ProcessorLR:
             self._x_train_aux = aux_input_scalar.fit_transform(self._x_train_aux)
             self._x_test_aux = aux_input_scalar.transform(self._x_test_aux)
 
+    def norm_output(self):
+        self.output_standard_scalar = MinMaxScaler()
+        self._y_train = self._y_train.reshape(-1, 1)
+        self._y_train = self.output_standard_scalar.fit_transform(self._y_train)
+
+    def norm_output_reverse(self, output):
+        output = output.reshape(-1, 1)
+        output = self.output_standard_scalar.inverse_transform(output)
+        return output.reshape(-1,)
 
 
 

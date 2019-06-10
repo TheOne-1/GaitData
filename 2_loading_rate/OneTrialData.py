@@ -155,19 +155,14 @@ class OneTrialData:
         return offs, strikes, step_num
 
     @staticmethod
-    def check_step_data(step_data, up_diff_ratio=0.5, down_diff_ratio=0.15):        # check if step length is correct
+    def check_step_data(step_data, up_diff_ratio=0.4, down_diff_ratio=0.3):        # check if step length is correct
         step_num = len(step_data)
         step_lens = np.zeros([step_num])
         for i_step in range(step_num):
             step_lens[i_step] = len(step_data[i_step])
         step_len_mean = np.mean(step_lens)
-        # if step_num != 0:
-        #     acceptable_len_max = step_len_mean * (1+up_diff_ratio)
-        # else:
-        #     acceptable_len_max = 0
-        # acceptable_len_min = step_len_mean * (1-down_diff_ratio)
-        acceptable_len_min, acceptable_len_max = 50, 100
-
+        acceptable_len_max = step_len_mean * (1+up_diff_ratio)
+        acceptable_len_min = step_len_mean * (1-down_diff_ratio)
         step_data_new = []
         for i_step in range(step_num):
             if acceptable_len_min < step_lens[i_step] < acceptable_len_max:

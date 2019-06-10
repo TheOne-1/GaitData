@@ -31,7 +31,7 @@ class HaishengSensorReader(IMUSensorReader):
 
     def _get_sensor_data_processed(self, raw_data_df):
         # remove duplicated samples
-        cleaned_data_df = raw_data_df.drop_duplicates(subset='sample', keep='first', inplace=False)
+        cleaned_data_df = HaishengSensorReader.clean_duplicate_samples(raw_data_df)
         dropped_sample_num = raw_data_df.shape[0] - cleaned_data_df.shape[0]
 
         processed_data_df = pd.DataFrame()
@@ -53,6 +53,19 @@ class HaishengSensorReader(IMUSensorReader):
         print('{drop_num:d} samples dropped, {interpo_num:d} samples interpolated'.
               format(name=self.trial_name, drop_num=dropped_sample_num, interpo_num=interpolated_sample_num))
         return processed_data_df
+
+    @staticmethod
+    def clean_duplicate_samples(raw_data_df):
+        sample_val = raw_data_df['sample'].values
+        data_len = raw_data_df.shape[0]
+        for i_sample in range(data_len - 2):
+            if sample_val[i_sample+1] == sample_val[i_sample] and sample_val[i_sample+2] - sample_val[i_sample+1] == 2:
+                raw_data_df.at[i_sample+1, 'sample'] = sample_val[i_sample+1] + 1
+
+            if sample_val[i_sample+1] == sample_val[i_sample+2] and sample_val[i_sample+1] - sample_val[i_sample] == 2:
+                raw_data_df.at[i_sample+1, 'sample'] = sample_val[i_sample+1] - 1
+        cleaned_data_df = raw_data_df.drop_duplicates(subset='sample', keep='first', inplace=False)
+        return cleaned_data_df
 
     @staticmethod
     def rename_haisheng_sensor_files(sensor_folder, readme_xls):

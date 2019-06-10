@@ -73,8 +73,7 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
             self._y_test = ProcessorLR.convert_output(output_list_test)
 
             if self.do_output_norm:
-                self._y_train = self.norm_output(self._y_train, self._x_train_aux[:, 0])
-                self._x_test_aux_ori = self._x_test_aux.copy()
+                self._y_train = self.norm_output()
 
             # do input normalization
             if self.do_input_norm:
@@ -118,23 +117,6 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
                                   self._x_test_aux)
         y_pred = my_evaluator.evaluate_nn(model)
         if self.do_output_norm:
-            y_pred = self.norm_output_reverse(y_pred, self._x_test_aux_ori[:, 0])
+            y_pred = self.norm_output_reverse(y_pred)
         return y_pred
-
-    def norm_output(self, output, step_len):
-        step_num = output.shape[0]
-        for i_step in range(step_num):
-            output[i_step] = output[i_step] / step_len[i_step]
-        self.standard_scalar = MinMaxScaler()
-        output = output.reshape(-1, 1)
-        output = self.standard_scalar.fit_transform(output)
-        return output.reshape(-1,)
-
-    def norm_output_reverse(self, output, step_len):
-        output = output.reshape(-1, 1)
-        output = self.standard_scalar.inverse_transform(output)
-        step_num = output.shape[0]
-        for i_step in range(step_num):
-            output[i_step] = output[i_step] * step_len[i_step]
-        return output.reshape(-1,)
 

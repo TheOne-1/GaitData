@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
 
 
-class ProcessorLRCNNv3_1(ProcessorLR):
+class ProcessorLRCNNv3_2(ProcessorLR):
     def prepare_data(self):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
         input_list, output_list = train_all_data_list.get_input_output_list()
@@ -34,9 +34,6 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         if self.do_input_norm:
             self.norm_input()
 
-        if self.do_output_norm:
-            self.norm_output()
-
     # convert the input from list to ndarray
     def convert_input(self, input_all_list, sampling_fre):
         """
@@ -56,7 +53,7 @@ class ProcessorLRCNNv3_1(ProcessorLR):
                 aux_input[i_step, 0] = step_len
                 strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
-        aux_input = ProcessorLRCNNv3_1.clean_aux_input(aux_input)
+        aux_input = ProcessorLRCNNv3_2.clean_aux_input(aux_input)
         return step_input, aux_input
 
     @staticmethod
@@ -78,47 +75,43 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         # for each feature, add 20 * 1 cov kernel
-        tower_0 = Conv1D(filters=9, kernel_size=20)(main_input)
-        tower_0 = MaxPool1D(pool_size=6)(tower_0)
+        tower_0 = Conv1D(filters=5, kernel_size=15)(main_input)
+        tower_0 = MaxPool1D(pool_size=11)(tower_0)
 
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=9, kernel_size=15)(main_input)
-        tower_1 = MaxPool1D(pool_size=11)(tower_1)
+        tower_1 = Conv1D(filters=5, kernel_size=5)(main_input)
+        tower_1 = MaxPool1D(pool_size=16)(tower_1)
 
         # for each feature, add 10 * 1 cov kernel
-        tower_2 = Conv1D(filters=9, kernel_size=10)(main_input)
+        tower_2 = Conv1D(filters=5, kernel_size=3)(main_input)
         tower_2 = MaxPool1D(pool_size=16)(tower_2)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=9, kernel_size=5)(main_input)
+        tower_3 = Conv1D(filters=5, kernel_size=5)(main_input)
         tower_3 = MaxPool1D(pool_size=21)(tower_3)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=9, kernel_size=3)(main_input)
+        tower_4 = Conv1D(filters=10, kernel_size=3)(main_input)
         tower_4 = MaxPool1D(pool_size=23)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_5 = Conv1D(filters=9, kernel_size=1)(main_input)
+        tower_5 = Conv1D(filters=10, kernel_size=1)(main_input)
         tower_5 = MaxPool1D(pool_size=25)(tower_5)
 
-        joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=2)
+        joined_outputs = concatenate([tower_0, tower_1, tower_2, tower_3, tower_4, tower_5], axis=2)
         joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
-        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(15, activation='sigmoid')(aux_joined_outputs)
+        # aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)
         y_pred = my_evaluator.evaluate_nn(model)
-        if self.do_output_norm:
-            y_pred = self.norm_output_reverse(y_pred)
-
         if self.split_train:
             my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
         else:
