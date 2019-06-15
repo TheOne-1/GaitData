@@ -9,7 +9,9 @@ from ProcessorLR import ProcessorLR
 from keras.models import Model
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
-
+from convert_model import convert
+from keras.applications.inception_v3 import InceptionV3
+from keras import backend
 
 class ProcessorLRCNNv3_1(ProcessorLR):
     def prepare_data(self):
@@ -43,13 +45,13 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         CNN based algorithm improved
         """
         step_num = len(input_all_list)
-        resample_len = 100
-        data_clip_start, data_clip_end = 50, 75
-        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 4])
+        resample_len = self.sensor_sampling_fre
+        data_clip_start, data_clip_end = int(resample_len * 0.5), int(resample_len * 0.75)
+        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 6])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
-            acc_gyr_data = input_all_list[i_step][:, 2:6]
-            for i_channel in range(4):
+            acc_gyr_data = input_all_list[i_step][:, 0:6]
+            for i_channel in range(6):
                 channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
                 step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
                 step_len = acc_gyr_data.shape[0]
@@ -77,31 +79,28 @@ class ProcessorLRCNNv3_1(ProcessorLR):
     def cnn_solution(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
+        base_size = int(self.sensor_sampling_fre*0.01)
         # for each feature, add 20 * 1 cov kernel
-        tower_0 = Conv1D(filters=9, kernel_size=20)(main_input)
-        tower_0 = MaxPool1D(pool_size=6)(tower_0)
+        tower_0 = Conv1D(filters=9, kernel_size=20*base_size)(main_input)
+        tower_0 = MaxPool1D(pool_size=5*base_size+1)(tower_0)
 
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=9, kernel_size=15)(main_input)
-        tower_1 = MaxPool1D(pool_size=11)(tower_1)
-
-        # for each feature, add 10 * 1 cov kernel
-        tower_2 = Conv1D(filters=9, kernel_size=10)(main_input)
-        tower_2 = MaxPool1D(pool_size=16)(tower_2)
+        tower_1 = Conv1D(filters=9, kernel_size=15*base_size)(main_input)
+        tower_1 = MaxPool1D(pool_size=10*base_size+1)(tower_1)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=9, kernel_size=5)(main_input)
-        tower_3 = MaxPool1D(pool_size=21)(tower_3)
+        tower_3 = Conv1D(filters=9, kernel_size=5*base_size)(main_input)
+        tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=9, kernel_size=3)(main_input)
-        tower_4 = MaxPool1D(pool_size=23)(tower_4)
+        tower_4 = Conv1D(filters=9, kernel_size=3*base_size)(main_input)
+        tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_5 = Conv1D(filters=9, kernel_size=1)(main_input)
-        tower_5 = MaxPool1D(pool_size=25)(tower_5)
+        tower_5 = Conv1D(filters=9, kernel_size=1*base_size)(main_input)
+        tower_5 = MaxPool1D(pool_size=24*base_size+1)(tower_5)
 
-        joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=2)
+        joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
@@ -124,5 +123,14 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES, 'loading rate')
         plt.show()
+        self.model = model
+
+    def save_model(self):
+        # # for test
+        # test_data = self._x_test[0:1, :, :]
+        # test_result = self.model.predict(test_data)
+        # print(test_result)
+        self.model.save('lr_model.h5', include_optimizer=False)
+        convert('lr_model.h5', 'fdeep_model.json')
 
 

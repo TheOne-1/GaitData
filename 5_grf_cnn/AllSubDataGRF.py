@@ -1,9 +1,10 @@
-from const import PROCESSED_DATA_PATH, MOCAP_SAMPLE_RATE
+from const import PROCESSED_DATA_PATH, MOCAP_SAMPLE_RATE, RAW_DATA_PATH
 from OneTrialData import OneTrialData, OneTrialDataStatic
 from AllSubDataStruct import AllSubDataStruct
+import xlrd
 
 
-class AllSubData:
+class AllSubDataGRF:
 
     def __init__(self, sub_and_trials, param_name, sensor_sampling_fre, strike_off_from_IMU=False):
         self._sub_and_trials = sub_and_trials  # subject names and corresponding trials in a dict
@@ -22,6 +23,9 @@ class AllSubData:
     def get_all_data(self):
         all_sub_data_struct = AllSubDataStruct()
         for subject_name in self._sub_names:
+            readme_xls = RAW_DATA_PATH + subject_name + '\\readme\\readme.xlsx'
+            readme_sheet = xlrd.open_workbook(readme_xls).sheet_by_index(0)
+            weight = readme_sheet.cell_value(17, 1)  # in kilos
             static_nike_trial = OneTrialDataStatic(subject_name, 'nike static', self._sensor_sampling_fre)
             static_nike_df = static_nike_trial.get_one_IMU_data(self._side + '_foot', acc=True, mag=True)
             static_mini_trial = OneTrialDataStatic(subject_name, 'mini static', self._sensor_sampling_fre)
@@ -34,8 +38,7 @@ class AllSubData:
                 else:
                     trial_processor = OneTrialData(subject_name, trial_name, self._sensor_sampling_fre,
                                                    static_data_df=static_mini_df)
-                trial_input = trial_processor.get_off_to_off_input(
-                    self._side + '_foot', gyr=True, from_IMU=self._strike_off_from_IMU)
-                trial_output = trial_processor.get_step_param('LR', from_IMU=self._strike_off_from_IMU)
+                trial_input, trial_output = trial_processor.get_grf_input_output(
+                    self._side + '_foot', weight, from_IMU=self._strike_off_from_IMU)
                 all_sub_data_struct.append(trial_input, trial_output, subject_name, trial_name)
         return all_sub_data_struct

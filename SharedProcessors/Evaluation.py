@@ -133,6 +133,23 @@ class Evaluation:
         plt.ylabel('predicted value')
 
     @staticmethod
+    def plot_continuous_result(y_true, y_pred, title=''):
+        # change the shape of data so that no error will be raised during pearsonr analysis
+        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+        plt.figure()
+        plot_true, = plt.plot(y_true[:2000])
+        plot_pred, = plt.plot(y_pred[:2000])
+        RMSE_str = str(RMSE[0])
+        mean_error_str = str(mean_error)
+        pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
+        plt.title(title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +
+                  '  Mean error: ' + mean_error_str)
+        plt.legend([plot_true, plot_pred], ['true values', 'predicted values'])
+        plt.xlabel('Sample number')
+        plt.ylabel('GRF (body weight)')
+
+
+    @staticmethod
     def reset_weights(model):
         session = K.get_session()
         for layer in model.layers:

@@ -4,7 +4,7 @@ cross validation
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
-from ProcessorLRCNNv3 import ProcessorLRCNNv3
+from abondened.ProcessorLRCNNv3 import ProcessorLRCNNv3
 from ProcessorLR import ProcessorLR
 from keras.models import Model
 

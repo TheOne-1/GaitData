@@ -9,6 +9,7 @@ from ProcessorLR import ProcessorLR
 from keras.models import Model
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
+from convert_model import convert
 
 
 class ProcessorLRCNNv3(ProcessorLR):
@@ -111,5 +112,4 @@ class ProcessorLRCNNv3(ProcessorLR):
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES, 'loading rate')
         plt.show()
-
 

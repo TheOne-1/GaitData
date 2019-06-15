@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import *
 from ProcessorLR import ProcessorLR
+from convert_model import convert
 
 
 class ProcessorLRCNNv0(ProcessorLR):
@@ -12,8 +13,8 @@ class ProcessorLRCNNv0(ProcessorLR):
         CNN based algorithm
         """
         step_num = len(input_all_list)
-        sample_before_strike = int(12 * (sampling_fre / 100))
-        sample_after_strike = int(8 * (sampling_fre / 100))
+        sample_before_strike = int(1 * (sampling_fre / 100))
+        sample_after_strike = int(1 * (sampling_fre / 100))
         win_len = sample_after_strike + sample_before_strike        # convolution kernel length
         step_input = np.zeros([step_num, win_len, 2])
         for i_step in range(step_num):
@@ -40,7 +41,13 @@ class ProcessorLRCNNv0(ProcessorLR):
         model.add(Dense(1, activation='linear'))
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test)
         y_pred = my_evaluator.evaluate_nn(model)
+
+        test_data = np.array([[[0.13686751, 0.22877938], [0.63733118, 0.0446376]], [[0.13686751, 0.22877938], [0.63733118, 0.0446376]]])
+        test_result = model.predict(test_data)
+        print(test_result)
+        model.save('lr_model.h5', include_optimizer=False)
+        convert('lr_model.h5', 'fdeep_model.json')
+
         my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
         plt.show()
-
 

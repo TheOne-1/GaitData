@@ -1,7 +1,9 @@
-from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, ROTATION_VIA_STATIC_CALIBRATION,\
-    SPECIFIC_CALI_MATRIX, FILTER_BUFFER
+from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, ROTATION_VIA_STATIC_CALIBRATION, \
+    SPECIFIC_CALI_MATRIX, FILTER_BUFFER, FILTER_WIN_LEN
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from StrikeOffDetectorIMU import StrikeOffDetectorIMUFilter
 
 
 class OneTrialData:
@@ -78,23 +80,59 @@ class OneTrialData:
         dcm_mat = np.array([vector_0, vector_1, vector_2])
         return dcm_mat
 
-    # step_segmentation based on heel strike
-    def get_trial_input(self, IMU_location, acc=True, gyr=False, mag=False, from_IMU=True):
+    def get_grf_input_output(self, IMU_location, weight, from_IMU, acc=True, gyr=True, mag=False, grf_axis='z'):
         """
+        GRFz: from strike to off
+        acc and gyr: from off to off because information before strike might be useful
+        """
+        if from_IMU == 2:
+            filter_delay = int(FILTER_WIN_LEN / 2)
+        else:
+            filter_delay = 0
+        if not from_IMU:
+            offs, step_num = self.get_offs()
+            strikes, step_num = self.get_strikes()
+        else:
+            offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+        grf_data = - self.gait_data_df['f_1_' + grf_axis].values / weight
+        IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
+        step_grf_data, step_imu_data = [], []
+        for i_step in range(step_num):
+            strike_in_between = strikes[offs[i_step] < strikes]
+            strike_in_between = strike_in_between[strike_in_between < offs[i_step+1]]
+            if len(strike_in_between) != 1:
+                continue
+            # give IMU data a padding so that more information can be observed
+            edge_extender = 4
+            imu_start = strike_in_between[0] - edge_extender - filter_delay
+            imu_end = offs[i_step + 1] + edge_extender - filter_delay
+            grf_start = strike_in_between[0] - edge_extender - filter_delay
+            grf_end = offs[i_step+1] + edge_extender - filter_delay
 
-        :param IMU_location:
-        :param acc:
-        :param gyr:
-        :param mag:
-        :param from_IMU:
+            # skip this step if the grf_end exceeds the maximum data length
+            if grf_end > grf_data.shape[0]:
+                continue
+
+            step_imu_data.append(IMU_data[imu_start:imu_end, :])
+            step_grf_data.append(grf_data[grf_start:grf_end])
+        step_imu_data, step_grf_data = self.check_step_input_output(step_imu_data, step_grf_data)
+        return step_imu_data, step_grf_data
+
+    def get_off_to_off_input(self, IMU_location, acc=True, gyr=True, mag=False, from_IMU=True):
+        """
+        :param from_IMU: int, 0 for from force plate, 1 for from filtfilt, 2 for from lfilter
         :return: First three column, acc; second three column, gyr; seventh column, strike; eighth column, strike index
         """
-        if from_IMU:
-            off_time_indexes, strike_time_indexes, step_num = self.get_offs_strikes_from_IMU()
-            strikes = self.gait_param_df['strikes_IMU']
-        else:
+        if not from_IMU:
             off_time_indexes, step_num = self.get_offs()
             strikes = self.gait_param_df[self._side + '_strikes']
+        elif from_IMU == 1:
+            off_time_indexes, strike_time_indexes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+            strikes = self.gait_param_df['strikes_IMU']
+        elif from_IMU == 2:
+            off_time_indexes, strike_time_indexes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+            strikes = self.gait_param_df['strikes_IMU_lfilter']
+
         IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
         strike_index = self.gait_param_df[self._side + '_strike_angle']     # !!! changes, just for testing
         return_data = np.column_stack([IMU_data, strikes, strike_index])
@@ -108,7 +146,7 @@ class OneTrialData:
 
     def get_step_param(self, param_name, from_IMU=True):
         if from_IMU:
-            offs, strikes, step_num = self.get_offs_strikes_from_IMU()
+            offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
         else:
             offs, step_num = self.get_offs()
         column_name = self._side + '_' + param_name
@@ -139,17 +177,23 @@ class OneTrialData:
         step_num = len(offs) - 1
         return offs, step_num
 
-    def get_offs_strikes_from_IMU(self):
+    def get_offs_strikes_from_IMU(self, from_IMU):
         """
         There is no side because by default 100Hz is the right side, 200Hz is the left side.
         :return:
         """
-        off_column = 'offs_IMU'
+        if from_IMU == 1:
+            off_column = 'offs_IMU'
+            strike_column = 'strikes_IMU'
+        elif from_IMU == 2:
+            off_column = 'offs_IMU_lfilter'
+            strike_column = 'strikes_IMU_lfilter'
+        else:
+            raise ValueError('Invalid from_IMU value. from_IMU: 0 for from plate, 1 for filtfilt, 2 for lfilter')
         offs = self.gait_param_df[off_column]
         offs = np.where(offs == 1)[0]
         step_num = len(offs) - 1
 
-        strike_column = 'strikes_IMU'
         strikes = self.gait_param_df[strike_column]
         strikes = np.where(strikes == 1)[0]
         return offs, strikes, step_num
@@ -168,6 +212,22 @@ class OneTrialData:
             if acceptable_len_min < step_lens[i_step] < acceptable_len_max:
                 step_data_new.append(step_data[i_step])
         return step_data_new
+
+    @staticmethod
+    def check_step_input_output(step_input, step_output, up_diff_ratio=0.4, down_diff_ratio=0.3):
+        step_num = len(step_input)
+        step_lens = np.zeros([step_num])
+        for i_step in range(step_num):
+            step_lens[i_step] = len(step_input[i_step])
+        step_len_mean = np.mean(step_lens)
+        acceptable_len_max = step_len_mean * (1+up_diff_ratio)
+        acceptable_len_min = step_len_mean * (1-down_diff_ratio)
+        step_input_new, step_output_new = [], []
+        for i_step in range(step_num):
+            if acceptable_len_min < step_lens[i_step] < acceptable_len_max:
+                step_input_new.append(step_input[i_step])
+                step_output_new.append(step_output[i_step])
+        return step_input_new, step_output_new
 
 
 class OneTrialDataStatic(OneTrialData):

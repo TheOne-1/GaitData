@@ -8,7 +8,7 @@ import xlrd
 from scipy.signal import find_peaks
 from numpy.linalg import norm
 import pickle
-from StrikeOffDetectorIMU import StrikeOffDetectorIMU
+from StrikeOffDetectorIMU import StrikeOffDetectorIMU, StrikeOffDetectorIMUFilter
 
 
 class ParamProcessor:
@@ -31,7 +31,7 @@ class ParamProcessor:
                 self._trials.remove(TRIAL_NAMES[7])
 
     def start_initalization(self, path):
-        print(self._sub_name)
+        print('\n' + self._sub_name)
         fre_100_path = path + '\\' + self._sub_name + '\\100Hz\\'
         fre_200_path = path + '\\' + self._sub_name + '\\200Hz\\'
         fre_1000_path = path + '\\' + self._sub_name + '\\1000Hz\\'
@@ -40,8 +40,7 @@ class ParamProcessor:
         self.nike_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
         self.mini_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[7] + '.csv', index_col=False)
 
-        running_trial_names = self._trials
-        for trial_name in running_trial_names:
+        for trial_name in self._trials:
             print('\n' + trial_name + ' trial')
             self._current_trial = trial_name
             # initialize 100 Hz parameter
@@ -108,10 +107,20 @@ class ParamProcessor:
 
         # get strikes and offs from IMU data
         estimated_strikes, estimated_offs = self.get_strike_off_from_imu(gait_data_df, param_data_df,
-                                                                         sensor_sampling_rate, check_strike_off=True,
-                                                                         plot_the_strike_off=self.__plot_strike_off)
+            sensor_sampling_rate, check_strike_off=False, plot_the_strike_off=False)
         param_data_df.insert(len(param_data_df.columns), 'strikes_IMU', estimated_strikes)
         param_data_df.insert(len(param_data_df.columns), 'offs_IMU', estimated_offs)
+
+        estimated_strikes_lfilter, estimated_offs_lfilter = self.get_strike_off_from_imu_lfilter(gait_data_df,
+            param_data_df, sensor_sampling_rate, check_strike_off=True, plot_the_strike_off=self.__plot_strike_off)
+        param_data_df.insert(len(param_data_df.columns), 'strikes_IMU_lfilter', estimated_strikes_lfilter)
+        param_data_df.insert(len(param_data_df.columns), 'offs_IMU_lfilter', estimated_offs_lfilter)
+
+        # # for debugging !!!
+        # plt.figure()
+        # plt.plot(estimated_strikes, '*')
+        # plt.plot(estimated_strikes_lfilter, '*')
+        # plt.show()
 
         # get loading rate
         l_steps_1000 = self.get_legal_steps(l_strikes_1000, l_offs_1000, 'left', plate_data_1000)
@@ -428,6 +437,33 @@ class ParamProcessor:
             my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot',
                                                MOCAP_SAMPLE_RATE)
             strike_delay, off_delay = 6, 8  # delay from the peak
+        else:
+            raise ValueError('Wrong sensor sampling rate value')
+        estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)
+        if plot_the_strike_off:
+            my_detector.show_IMU_data_and_strike_off(estimated_strike_indexes, estimated_off_indexes)
+        data_len = gait_data_df.shape[0]
+        estimated_strikes, estimated_offs = np.zeros([data_len]), np.zeros([data_len])
+        estimated_strikes[estimated_strike_indexes] = 1
+        estimated_offs[estimated_off_indexes] = 1
+        if check_strike_off:
+            my_detector.true_esti_diff(estimated_strike_indexes, 'strikes')
+            my_detector.true_esti_diff(estimated_off_indexes, 'offs')
+        return estimated_strikes, estimated_offs
+
+    def get_strike_off_from_imu_lfilter(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True,
+                                        plot_the_strike_off=False):
+        """
+        In the filter, lfilter was used so there are delays in the detected events (about 50 samples)
+        """
+        if sensor_sampling_rate == HAISHENG_SENSOR_SAMPLE_RATE:
+            my_detector = StrikeOffDetectorIMUFilter(self._current_trial, gait_data_df, param_data_df, 'r_foot',
+                                                     HAISHENG_SENSOR_SAMPLE_RATE)
+            strike_delay, off_delay = 5, 3  # delay from the peak
+        elif sensor_sampling_rate == MOCAP_SAMPLE_RATE:
+            my_detector = StrikeOffDetectorIMUFilter(self._current_trial, gait_data_df, param_data_df, 'l_foot',
+                                                     MOCAP_SAMPLE_RATE)
+            strike_delay, off_delay = 8, 6  # delay from the peak
         else:
             raise ValueError('Wrong sensor sampling rate value')
         estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)

@@ -6,19 +6,16 @@ cross validation
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
-from ProcessorLRCNNv3 import ProcessorLRCNNv3
+from abondened.ProcessorLRCNNv3 import ProcessorLRCNNv3
 from ProcessorLR import ProcessorLR
 from keras.models import Model
-from sklearn.preprocessing import MinMaxScaler
 from const import SUB_NAMES
 
 
 class ProcessorLRCNNv5(ProcessorLRCNNv3):
-    def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True,
-                 do_output_norm=False):
+    def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True):
         super().__init__(sub_and_trials, None, sensor_sampling_fre, strike_off_from_IMU,
                          split_train=False, do_input_norm=do_input_norm)
-        self.do_output_norm = do_output_norm
 
     # convert the input from list to ndarray
     def convert_input(self, input_all_list, sampling_fre):
