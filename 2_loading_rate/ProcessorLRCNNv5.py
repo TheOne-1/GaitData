@@ -6,38 +6,18 @@ cross validation
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
-from abondened.ProcessorLRCNNv3 import ProcessorLRCNNv3
+from ProcessorLRCNNv3_1 import ProcessorLRCNNv3_1
+from ProcessorLRCNNv3_2 import ProcessorLRCNNv3_2
 from ProcessorLR import ProcessorLR
 from keras.models import Model
+import pandas as pd
 from const import SUB_NAMES
 
 
-class ProcessorLRCNNv5(ProcessorLRCNNv3):
+class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
     def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True):
         super().__init__(sub_and_trials, None, sensor_sampling_fre, strike_off_from_IMU,
                          split_train=False, do_input_norm=do_input_norm)
-
-    # convert the input from list to ndarray
-    def convert_input(self, input_all_list, sampling_fre):
-        """
-        CNN based algorithm improved
-        """
-        step_num = len(input_all_list)
-        resample_len = 100
-        data_clip_start, data_clip_end = 50, 75
-        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 6])
-        aux_input = np.zeros([step_num, 2])
-        for i_step in range(step_num):
-            acc_gyr_data = input_all_list[i_step][:, 0:6]
-            for i_channel in range(6):
-                channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
-                step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
-                step_len = acc_gyr_data.shape[0]
-                aux_input[i_step, 0] = step_len
-                strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
-                aux_input[i_step, 1] = strike_sample_num
-        aux_input = ProcessorLRCNNv3.clean_aux_input(aux_input)
-        return step_input, aux_input
 
     def prepare_data_cross_vali(self, test_set_sub_num=1):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
@@ -49,7 +29,7 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
         sample_num = len(input_list)
         sub_num = len(self.train_sub_and_trials.keys())
         folder_num = int(np.ceil(sub_num / test_set_sub_num))        # the number of cross validation times
-        predict_result_all = np.zeros([0, 1])
+        predict_result_df = pd.DataFrame()
         for i_folder in range(folder_num):
             test_id_list = sub_id_set_tuple[test_set_sub_num*i_folder:test_set_sub_num*(i_folder+1)]
             print('\ntest subjects: ')
@@ -69,36 +49,41 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
             self._x_test, self._x_test_aux = self.convert_input(input_list_test, self.sensor_sampling_fre)
             self._y_test = ProcessorLR.convert_output(output_list_test)
 
-            if self.do_output_norm:
-                self._y_train = self.norm_output()
-
             # do input normalization
             if self.do_input_norm:
                 self.norm_input()
 
             y_pred = self.cnn_solution().reshape([-1, 1])
-            predict_result_all = np.row_stack([predict_result_all, y_pred])
-        predict_result_all = predict_result_all.ravel()
-        y_true = ProcessorLR.convert_output(output_list)
-        Evaluation.plot_nn_result_cate_color(y_true, predict_result_all, sub_id_list, SUB_NAMES, 'loading rate')
+            pearson_coeff, RMSE, mean_error = Evaluation.plot_nn_result(self._y_test, y_pred, title=SUB_NAMES[test_id_list[0]])
+
+            predict_result_df = Evaluation.insert_prediction_result(
+                predict_result_df, SUB_NAMES[test_id_list[0]], pearson_coeff, RMSE, mean_error)
+        Evaluation.export_prediction_result(predict_result_df)
         plt.show()
 
     def cnn_solution(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
-        # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=10, kernel_size=15)(main_input)
-        tower_1 = MaxPool1D(pool_size=11)(tower_1)
+        base_size = int(self.sensor_sampling_fre*0.01)
 
-        # for each feature, add 10 * 1 cov kernel
-        tower_2 = Conv1D(filters=10, kernel_size=10)(main_input)
-        tower_2 = MaxPool1D(pool_size=16)(tower_2)
+        kernel_init = 'lecun_normal'
+        # for each feature, add 20 * 1 cov kernel
+        tower_1 = Conv1D(filters=9, kernel_size=15*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_1 = MaxPool1D(pool_size=10*base_size+1)(tower_1)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=10, kernel_size=5)(main_input)
-        tower_3 = MaxPool1D(pool_size=21)(tower_3)
+        tower_3 = Conv1D(filters=9, kernel_size=5*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
 
-        joined_outputs = concatenate([tower_1, tower_2, tower_3], axis=1)
+        # for each feature, add 5 * 1 cov kernel
+        tower_4 = Conv1D(filters=9, kernel_size=3*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
+
+        # for each feature, add 5 * 1 cov kernel
+        tower_5 = Conv1D(filters=9, kernel_size=1*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_5 = MaxPool1D(pool_size=24*base_size+1)(tower_5)
+
+        joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
@@ -107,13 +92,23 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3):
 
         aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
-        # model.load_weights('model_weights_all_sub.h5')
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)
         y_pred = my_evaluator.evaluate_nn(model)
-        if self.do_output_norm:
-            y_pred = self.norm_output_reverse(y_pred)
         return y_pred
+
+
+
+
+
+
+
+
+
+
+
+
 

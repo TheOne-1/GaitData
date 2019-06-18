@@ -6,15 +6,16 @@ from AllSubData import AllSubData
 from keras.layers import *
 import scipy.interpolate as interpo
 from sklearn.ensemble import GradientBoostingRegressor
-from const import SUB_NAMES, TRIAL_NAMES, COLORS, DATA_COLUMNS_XSENS
+from const import SUB_NAMES, TRIAL_NAMES, COLORS, DATA_COLUMNS_XSENS, DATA_COLUMNS_IMU
 import scipy.stats as stats
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import json
 
 
 class ProcessorLR:
     def __init__(self, train_sub_and_trials, test_sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=False,
-                 split_train=False, do_input_norm=True, do_output_norm=True):
+                 split_train=False, do_input_norm=True, do_output_norm=False):
         self.train_sub_and_trials = train_sub_and_trials
         self.test_sub_and_trials = test_sub_and_trials
         self.sensor_sampling_fre = sensor_sampling_fre
@@ -180,17 +181,30 @@ class ProcessorLR:
         return data_resampled
 
     def norm_input(self):
-        main_input_scalar = MinMaxScaler()
         channel_num = self._x_train.shape[2]
+        # save input scalar parameter
+        main_max_vals,  main_min_vals = [], []
         for i_channel in range(channel_num):
-            self._x_train[:, :, i_channel] = main_input_scalar.fit_transform(self._x_train[:, :, i_channel])
-            self._x_test[:, :, i_channel] = main_input_scalar.transform(self._x_test[:, :, i_channel])
+            max_val = np.max(self._x_train[:, :, i_channel]) * 0.99
+            min_val = np.min(self._x_train[:, :, i_channel]) * 0.99
+            self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val)
+            self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val)
+            main_max_vals.append(max_val)
+            main_min_vals.append(min_val)
 
         if hasattr(self, '_x_train_aux'):
             # MinMaxScaler is more suitable because StandardScalar will make the input greatly differ from each other
             aux_input_scalar = MinMaxScaler()
             self._x_train_aux = aux_input_scalar.fit_transform(self._x_train_aux)
             self._x_test_aux = aux_input_scalar.transform(self._x_test_aux)
+            aux_max_vals = aux_input_scalar.data_max_.tolist()
+            aux_min_vals = aux_input_scalar.data_min_.tolist()
+
+        scalar_param = {'main_max_vals': main_max_vals, 'main_min_vals': main_min_vals,
+                        'aux_max_vals': aux_max_vals, 'aux_min_vals': aux_min_vals}
+        scalar_file = 'scalar_param.json'
+        with open(scalar_file, 'w') as param_file:
+            print(json.dumps(scalar_param, sort_keys=True, indent=4, separators=(',', ': ')), file=param_file)
 
     def norm_output(self):
         self.output_standard_scalar = MinMaxScaler()

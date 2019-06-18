@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from const import RAW_DATA_PATH, TRIAL_NAMES, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, \
     XSENS_SENSOR_LOACTIONS, XSENS_FILE_NAME_DIC, STATIC_STANDING_PERIOD, DATA_COLUMNS_IMU, SEGMENT_MARKERS, \
-    FILTER_BUFFER
+    TRIAL_START_BUFFER
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
 import xlrd
@@ -135,7 +135,7 @@ class SubjectDataInitializer:
             start_vicon, end_vicon = self.__find_running_period(vicon_reader.marker_data_processed_df['LFCC_y'],
                                                                 running_thd=300)
 
-        start_vicon -= 200 * FILTER_BUFFER     # add a 3 seconds (600 samples) buffer for real time filtering
+        start_vicon -= 200 * TRIAL_START_BUFFER     # add a 3 seconds (600 samples) buffer for real time filtering
         # sometimes the subject start walking on the wrong side of the treadmill so overwrite start_vicon was necessary
         # sometimes the xsens lost connection so overwrite end_vicon was necessary
         # overwrite the start_vicon, end_vicon if they are contained in the readme xls
@@ -175,7 +175,7 @@ class SubjectDataInitializer:
         else:  # baseline or strike
             start_vicon, end_vicon = self.__find_running_period(vicon_reader.marker_data_processed_df['LFCC_y'],
                                                                 running_thd=300)
-        start_vicon -= 100 * FILTER_BUFFER  # add a 3 seconds (300 samples) buffer for real time filtering
+        start_vicon -= 100 * TRIAL_START_BUFFER  # add a 3 seconds (300 samples) buffer for real time filtering
         # sometimes the subject start walking on the wrong side of the treadmill so overwrite start_vicon was necessary
         # overwrite the end_vicon if they are contained in the readme xls
         readme_sheet = xlrd.open_workbook(self.__readme_xls).sheet_by_index(0)

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import butter, filtfilt, find_peaks, lfilter, firwin
-from const import FILTER_WIN_LEN, FILTER_BUFFER
+from const import FILTER_WIN_LEN, TRIAL_START_BUFFER
 from scipy import signal
 
 
@@ -268,7 +268,7 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
 
         data_len = acc_data.shape[0]
         strike_list, off_list = [], []
-        trial_start_buffer_sample_num = (FILTER_BUFFER + 1) * self._sampling_fre
+        trial_start_buffer_sample_num = (TRIAL_START_BUFFER + 1) * self._sampling_fre
 
         # find the first off
         peaks, _ = signal.find_peaks(gyr_x_filtered[:trial_start_buffer_sample_num], height=off_gyr_thd,

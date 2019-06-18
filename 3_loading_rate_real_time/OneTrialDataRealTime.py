@@ -2,7 +2,7 @@
 This is for real time processing
 """
 from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, ROTATION_VIA_STATIC_CALIBRATION, \
-    SPECIFIC_CALI_MATRIX, FILTER_BUFFER, MOCAP_SAMPLE_RATE
+    SPECIFIC_CALI_MATRIX, TRIAL_START_BUFFER, MOCAP_SAMPLE_RATE
 import numpy as np
 import scipy.interpolate as interpo
 from scipy import signal
@@ -83,7 +83,7 @@ class OneTrialDataRealTime:
         # last_toe_off = None
         strike_list, off_list = [], []
         abandoned_step_num = 0
-        trial_start_buffer_sample_num = int((1.5 + FILTER_BUFFER) * self._sensor_sampling_fre)
+        trial_start_buffer_sample_num = int((1.5 + TRIAL_START_BUFFER) * self._sensor_sampling_fre)
 
         # find the first strike
         for i_sample in range(trial_start_buffer_sample_num):

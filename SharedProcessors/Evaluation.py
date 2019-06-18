@@ -5,8 +5,10 @@ from numpy import sqrt
 from scipy.stats import pearsonr
 from keras import optimizers
 from keras.callbacks import EarlyStopping
-from const import COLORS, TRIAL_NAMES
+from const import COLORS
 from keras import backend as K
+import pandas as pd
+import os
 
 
 class Evaluation:
@@ -59,7 +61,8 @@ class Evaluation:
         epoch_num = 200
         if self._x_train_aux is not None:
             r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
-                          batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping], verbose=2)
+                          batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
+                          verbose=2)
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
             while n_epochs < early_stopping_patience + 5:
@@ -93,10 +96,11 @@ class Evaluation:
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
-        plt.title(title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +
-                  '  Mean error: ' + mean_error_str)
+        plt.title(title + '\np_correlation: ' + pearson_coeff + '   RMSE: '
+                  + RMSE_str + '  Mean error: ' + mean_error_str)
         plt.xlabel('true value')
         plt.ylabel('predicted value')
+        return pearson_coeff, RMSE, mean_error
 
     @staticmethod
     def plot_nn_result_cate_color(y_true, y_pred, category_id, category_names, title=''):
@@ -110,8 +114,7 @@ class Evaluation:
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
-        title_extended = title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +\
-                         '  Mean error: ' + mean_error_str
+        title_extended = title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str + '  Mean error: ' + mean_error_str
         plt.title(title_extended)
         print(title_extended)
         plt.plot([0, 2.5], [0, 2.5], 'r--')
@@ -126,7 +129,8 @@ class Evaluation:
             else:
                 plot_pattern = '.'
             category_index = np.where(category_id_array == category_id)[0]
-            plt_handle, = plt.plot(y_true[category_index], y_pred[category_index], plot_pattern, color=COLORS[category_id])
+            plt_handle, = plt.plot(y_true[category_index], y_pred[category_index], plot_pattern,
+                                   color=COLORS[category_id])
             plot_handles.append(plt_handle)
         plt.legend(plot_handles, plot_names)
         plt.xlabel('true value')
@@ -148,7 +152,6 @@ class Evaluation:
         plt.xlabel('Sample number')
         plt.ylabel('GRF (body weight)')
 
-
     @staticmethod
     def reset_weights(model):
         session = K.get_session()
@@ -156,13 +159,18 @@ class Evaluation:
             if hasattr(layer, 'kernel_initializer'):
                 layer.kernel.initializer.run(session=session)
 
+    @staticmethod
+    def insert_prediction_result(predict_result_df, sub_name, pearson_coeff, RMSE, mean_error):
+        sub_df = pd.DataFrame([[sub_name, pearson_coeff, RMSE[0], mean_error]])
+        predict_result_df = predict_result_df.append(sub_df)
+        return predict_result_df
 
-
-
-
-
-
-
-
-
-
+    @staticmethod
+    def export_prediction_result(predict_result_df):
+        predict_result_df.columns = ['subject_name', 'correlation', 'RMSE', 'mean_error']
+        file_path = 'result_conclusion/predict_result_conclusion.csv'
+        i_file = 0
+        while os.path.isfile(file_path):
+            i_file += 1
+            file_path = 'result_conclusion/predict_result_conclusion_' + str(i_file) + '.csv'
+        predict_result_df.to_csv(file_path, index=False)

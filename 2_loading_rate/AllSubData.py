@@ -34,8 +34,7 @@ class AllSubData:
                 else:
                     trial_processor = OneTrialData(subject_name, trial_name, self._sensor_sampling_fre,
                                                    static_data_df=static_mini_df)
-                trial_input = trial_processor.get_off_to_off_input(
-                    self._side + '_foot', gyr=True, from_IMU=self._strike_off_from_IMU)
-                trial_output = trial_processor.get_step_param('LR', from_IMU=self._strike_off_from_IMU)
+                trial_input, trial_output = trial_processor.get_lr_input_output(
+                    self._side + '_foot', self._strike_off_from_IMU)
                 all_sub_data_struct.append(trial_input, trial_output, subject_name, trial_name)
         return all_sub_data_struct

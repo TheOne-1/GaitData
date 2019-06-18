@@ -1,5 +1,5 @@
 from const import PROCESSED_DATA_PATH, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, ROTATION_VIA_STATIC_CALIBRATION, \
-    SPECIFIC_CALI_MATRIX, FILTER_BUFFER, FILTER_WIN_LEN
+    SPECIFIC_CALI_MATRIX, TRIAL_START_BUFFER, FILTER_WIN_LEN
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ class OneTrialData:
         # initialize the dataframe of gait parameters, including loading rate, strike index, ...
         gait_param_path = PROCESSED_DATA_PATH + '\\' + subject_name + data_folder + 'param_of_' + trial_name + '.csv'
 
-        buffer_sample_num = self._sensor_sampling_fre * FILTER_BUFFER
+        buffer_sample_num = self._sensor_sampling_fre * TRIAL_START_BUFFER
         self.gait_data_df = self.gait_data_df.loc[buffer_sample_num:, :]        # skip the first several hundred data
         if static_data_df is not None:
             self.gait_param_df = pd.read_csv(gait_param_path, index_col=False)
@@ -118,50 +118,42 @@ class OneTrialData:
         step_imu_data, step_grf_data = self.check_step_input_output(step_imu_data, step_grf_data)
         return step_imu_data, step_grf_data
 
-    def get_off_to_off_input(self, IMU_location, acc=True, gyr=True, mag=False, from_IMU=True):
+    def get_lr_input_output(self, IMU_location, from_IMU, acc=True, gyr=True, mag=False):
         """
-        :param from_IMU: int, 0 for from force plate, 1 for from filtfilt, 2 for from lfilter
-        :return: First three column, acc; second three column, gyr; seventh column, strike; eighth column, strike index
+        GRFz: from strike to off
+        acc and gyr: from off to off because information before strike might be useful
         """
-        if not from_IMU:
-            off_time_indexes, step_num = self.get_offs()
-            strikes = self.gait_param_df[self._side + '_strikes']
-        elif from_IMU == 1:
-            off_time_indexes, strike_time_indexes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
-            strikes = self.gait_param_df['strikes_IMU']
-        elif from_IMU == 2:
-            off_time_indexes, strike_time_indexes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
-            strikes = self.gait_param_df['strikes_IMU_lfilter']
-
-        IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
-        strike_index = self.gait_param_df[self._side + '_strike_angle']     # !!! changes, just for testing
-        return_data = np.column_stack([IMU_data, strikes, strike_index])
-        step_data = []      # each element represent a step
-        for i_step in range(step_num):
-            step_start = off_time_indexes[i_step]
-            step_end = off_time_indexes[i_step+1]
-            step_data.append(return_data[step_start:step_end, :])
-        step_data = self.check_step_data(step_data)
-        return step_data
-
-    def get_step_param(self, param_name, from_IMU=True):
-        if from_IMU:
-            offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+        if from_IMU == 2:
+            filter_delay = int(FILTER_WIN_LEN / 2 - self._sensor_sampling_fre / 50)
         else:
+            filter_delay = 0
+        if not from_IMU:
             offs, step_num = self.get_offs()
-        column_name = self._side + '_' + param_name
-        param_data = self.gait_param_df[column_name].values
-        step_data = []      # each element represent a step
+            strikes, step_num = self.get_strikes()
+        else:
+            offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+        lr_data = self.gait_param_df[self._side + '_LR'].values
+        IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
+        step_lr_data, step_imu_data = [], []
         for i_step in range(step_num):
-            step_start = offs[i_step]
-            step_end = offs[i_step+1]
-            if len(param_data.shape) == 1:
-                step_data.append(param_data[step_start:step_end])
-            else:
-                step_data.append(param_data[step_start:step_end, :])
+            strike_in_between = strikes[offs[i_step] < strikes]
+            strike_in_between = strike_in_between[strike_in_between < offs[i_step+1]]
+            if len(strike_in_between) != 1:
+                continue
+            step_start = offs[i_step] - filter_delay
+            step_end = offs[i_step + 1] - filter_delay
 
-        step_data = self.check_step_data(step_data)
-        return step_data
+            strikes_array = np.zeros([step_end - step_start, 1])
+            strikes_array[strike_in_between - offs[i_step], 0] = 1
+            # skip this step if the step_end exceeds the maximum data length
+            if step_end > lr_data.shape[0]:
+                continue
+
+            step_input = np.column_stack([IMU_data[step_start:step_end, :], strikes_array])
+            step_imu_data.append(step_input)
+            step_lr_data.append(lr_data[step_start:step_end])
+        step_imu_data, step_lr_data = self.check_step_input_output(step_imu_data, step_lr_data)
+        return step_imu_data, step_lr_data
 
     def get_strikes(self):
         strike_column = self._side + '_strikes'

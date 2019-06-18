@@ -115,5 +115,5 @@ SPECIFIC_CALI_MATRIX = {
 
 ROTATION_VIA_STATIC_CALIBRATION = False
 
-FILTER_BUFFER = 3       # 3 seconds filter buffer
+TRIAL_START_BUFFER = 3       # 3 seconds filter buffer
 FILTER_WIN_LEN = 100        # The length of FIR filter window

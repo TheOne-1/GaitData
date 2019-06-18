@@ -14,6 +14,6 @@ train = {'190521GongChangyang': RUNNING_TRIALS}
 # del train['190517ZhangYaqian']
 test = {'190522QinZhun':  RUNNING_TRIALS}
 
-my_GRF_processor = ProcessorGRFv1(train, test, 100, strike_off_from_IMU=1)
+my_GRF_processor = ProcessorGRFv1(train, test, 100, strike_off_from_IMU=2)
 my_GRF_processor.prepare_data()
 my_GRF_processor.export_model()
