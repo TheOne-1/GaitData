@@ -21,11 +21,6 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         self._x_train, self._x_train_aux = self.convert_input(input_list, self.sensor_sampling_fre)
         self._y_train = ProcessorLR.convert_output(output_list)
 
-        # # !!! debugging
-        # for step_data in input_list:
-        #     plt.plot(step_data[:, 2])
-        # plt.show()
-
         if not self.split_train:
             test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list)
             input_list, output_list = test_all_data_list.get_input_output_list()
