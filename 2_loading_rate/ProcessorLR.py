@@ -31,13 +31,13 @@ class ProcessorLR:
             self.test_all_data_list = test_all_data.get_all_data()
 
     def prepare_data(self):
-        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
+        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         self._x_train, feature_names = self.convert_input(input_list, self.sensor_sampling_fre)
         self._y_train = ProcessorLR.convert_output(output_list)
 
         if not self.split_train:
-            test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list)
+            test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list, self.sensor_sampling_fre)
             input_list, output_list = test_all_data_list.get_input_output_list()
             self._x_test, feature_names = self.convert_input(input_list, self.sensor_sampling_fre)
             self._y_test = ProcessorLR.convert_output(output_list)
@@ -56,7 +56,7 @@ class ProcessorLR:
     def find_feature(self):
         train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
         train_all_data_list = train_all_data.get_all_data()
-        train_all_data_list = ProcessorLR.clean_all_data(train_all_data_list)
+        train_all_data_list = ProcessorLR.clean_all_data(train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         x_train, feature_names = self.convert_input(input_list, self.sensor_sampling_fre)
         y_train = ProcessorLR.convert_output(output_list)
@@ -114,17 +114,24 @@ class ProcessorLR:
             plt.legend(plot_list, plot_names)
 
     @staticmethod
-    def clean_all_data(all_sub_data_struct):
+    def clean_all_data(all_sub_data_struct, sensor_sampling_fre):
         i_step = 0
         input_list, output_list = all_sub_data_struct.get_input_output_list()
+        min_time_between_strike_off = int(sensor_sampling_fre * 0.15)
         while i_step < len(all_sub_data_struct):
             # delete steps without a valid loading rate
             strikes = np.where(input_list[i_step][:, 6] == 1)[0]
             if np.max(output_list[i_step]) <= 0:
                 all_sub_data_struct.pop(i_step)
+
             # delete steps without a valid strike time
             elif len(strikes) != 1:
                 all_sub_data_struct.pop(i_step)
+
+            # delete a step if the duration between strike and off is too short
+            elif not min_time_between_strike_off < input_list[i_step].shape[0] - strikes[0]:
+                all_sub_data_struct.pop(i_step)
+
             else:
                 # step number only increase when no pop happens
                 i_step += 1

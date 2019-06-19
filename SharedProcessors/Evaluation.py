@@ -57,7 +57,7 @@ class Evaluation:
         early_stopping = EarlyStopping(monitor='val_loss', patience=early_stopping_patience)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
-        batch_size = 20  # the size of data that be trained together
+        batch_size = 32  # the size of data that be trained together
         epoch_num = 200
         if self._x_train_aux is not None:
             r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
@@ -65,9 +65,9 @@ class Evaluation:
                           verbose=2)
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
-            while n_epochs < early_stopping_patience + 5:
+            while n_epochs < early_stopping_patience + 7:
                 print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
-                Evaluation.reset_weights(model)
+                model.reset_states()
                 r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
                               batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
                               verbose=2)
@@ -154,10 +154,11 @@ class Evaluation:
 
     @staticmethod
     def reset_weights(model):
-        session = K.get_session()
-        for layer in model.layers:
-            if hasattr(layer, 'kernel_initializer'):
-                layer.kernel.initializer.run(session=session)
+        model.reset_states()
+        # session = K.get_session()
+        # for layer in model.layers:
+        #     if hasattr(layer, 'kernel_initializer'):
+        #         layer.kernel.initializer.run(session=session)
 
     @staticmethod
     def insert_prediction_result(predict_result_df, sub_name, pearson_coeff, RMSE, mean_error):

@@ -86,7 +86,7 @@ class OneTrialData:
         acc and gyr: from off to off because information before strike might be useful
         """
         if from_IMU == 2:
-            filter_delay = int(FILTER_WIN_LEN / 2)
+            filter_delay = int(FILTER_WIN_LEN / 2 - self._sensor_sampling_fre / 50)
         else:
             filter_delay = 0
         if not from_IMU:

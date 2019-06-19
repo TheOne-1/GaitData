@@ -16,13 +16,18 @@ from keras import backend
 
 class ProcessorLRCNNv3_1(ProcessorLR):
     def prepare_data(self):
-        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
+        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         self._x_train, self._x_train_aux = self.convert_input(input_list, self.sensor_sampling_fre)
         self._y_train = ProcessorLR.convert_output(output_list)
 
+        # # !!! debugging
+        # for step_data in input_list:
+        #     plt.plot(step_data[:, 2])
+        # plt.show()
+
         if not self.split_train:
-            test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list)
+            test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list, self.sensor_sampling_fre)
             input_list, output_list = test_all_data_list.get_input_output_list()
             self.test_sub_id_list = test_all_data_list.get_sub_id_list()
             self.test_trial_id_list = test_all_data_list.get_trial_id_list()
@@ -59,6 +64,14 @@ class ProcessorLRCNNv3_1(ProcessorLR):
                 aux_input[i_step, 0] = step_len
                 strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
+
+        # # !!! debugging
+        # plt.figure()
+        # for i_step in range(step_num):
+        #     plt.plot(step_input[i_step, :, 2])
+        # plt.grid()
+        # plt.show()
+
         aux_input = ProcessorLRCNNv3_1.clean_aux_input(aux_input)
         return step_input, aux_input
 
@@ -69,6 +82,7 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         :param aux_input:
         :return:
         """
+        # replace zeros
         aux_input_median = np.median(aux_input, axis=0)
         for i_channel in range(aux_input.shape[1]):
             zero_indexes = np.where(aux_input[:, i_channel] == 0)[0]
@@ -76,6 +90,9 @@ class ProcessorLRCNNv3_1(ProcessorLR):
             if len(zero_indexes) != 0:
                 print('Zero encountered in aux input. Replaced by the median')
         return aux_input
+
+    # @staticmethod
+    # def build_model():
 
     def cnn_solution(self):
         main_input_shape = self._x_train.shape
@@ -97,8 +114,8 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_5 = Conv1D(filters=11, kernel_size=1*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_5 = MaxPool1D(pool_size=24*base_size+1)(tower_5)
+        tower_5 = Conv1D(filters=11, kernel_size=1, kernel_regularizer=kernel_regu)(main_input)
+        tower_5 = MaxPool1D(pool_size=50)(tower_5)
 
         joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
@@ -123,7 +140,6 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES,
                                                    'loading rate')
-        plt.show()
         self.model = model
 
     def save_model(self):
@@ -133,5 +149,6 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         # print(test_result)
         self.model.save('lr_model.h5', include_optimizer=False)
         convert('lr_model.h5', 'fdeep_model.json')
+        plt.show()
 
 

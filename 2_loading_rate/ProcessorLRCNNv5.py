@@ -20,7 +20,7 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
                          split_train=False, do_input_norm=do_input_norm)
 
     def prepare_data_cross_vali(self, test_set_sub_num=1):
-        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list)
+        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         sub_id_list = train_all_data_list.get_sub_id_list()
         trial_id_list = train_all_data_list.get_trial_id_list()
@@ -66,22 +66,23 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
         main_input = Input((main_input_shape[1:]), name='main_input')
         base_size = int(self.sensor_sampling_fre*0.01)
 
-        kernel_init = 'lecun_normal'
+        # kernel_init = 'lecun_uniform'
+        kernel_regu = regularizers.l2(0.01)
         # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=9, kernel_size=15*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_1 = Conv1D(filters=11, kernel_size=15*base_size, kernel_regularizer=kernel_regu)(main_input)
         tower_1 = MaxPool1D(pool_size=10*base_size+1)(tower_1)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=9, kernel_size=5*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_3 = Conv1D(filters=11, kernel_size=5*base_size, kernel_regularizer=kernel_regu)(main_input)
         tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=9, kernel_size=3*base_size, kernel_initializer=kernel_init)(main_input)
+        tower_4 = Conv1D(filters=11, kernel_size=3*base_size, kernel_regularizer=kernel_regu)(main_input)
         tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_5 = Conv1D(filters=9, kernel_size=1*base_size, kernel_initializer=kernel_init)(main_input)
-        tower_5 = MaxPool1D(pool_size=24*base_size+1)(tower_5)
+        tower_5 = Conv1D(filters=11, kernel_size=1, kernel_regularizer=kernel_regu)(main_input)
+        tower_5 = MaxPool1D(pool_size=50)(tower_5)
 
         joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
@@ -90,8 +91,8 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
+        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)

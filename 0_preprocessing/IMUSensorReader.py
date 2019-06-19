@@ -1,5 +1,6 @@
 from numpy.linalg import norm
 import abc
+from scipy.signal import butter, filtfilt
 
 
 class IMUSensorReader:
@@ -56,7 +57,7 @@ class IMUSensorReader:
         else:
             raise ValueError('Wrong channel type')
 
-    def get_normalized_gyr(self, processed=True):
+    def get_normalized_gyr(self, processed=True, filtering=True):
         """
         :param processed: boolean, true by default
         :return: 1-d array
@@ -65,7 +66,15 @@ class IMUSensorReader:
             gyr_data = self.data_processed_df[['gyr_x', 'gyr_y', 'gyr_z']]
         else:
             gyr_data = self.data_raw_df[['gyr_x', 'gyr_y', 'gyr_z']]
-        return norm(gyr_data, axis=1)
+
+        gyr_norm = norm(gyr_data, axis=1)
+        if filtering:
+            cut_off_fre = 20
+            filter_order = 4
+            wn = cut_off_fre / self._sampling_rate
+            b, a = butter(filter_order, wn, 'lowpass')
+            gyr_norm = filtfilt(b, a, gyr_norm)
+        return gyr_norm
 
     def get_normalized_acc(self, processed):
         """

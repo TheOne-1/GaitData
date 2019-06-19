@@ -22,6 +22,7 @@ class AllSubData:
     def get_all_data(self):
         all_sub_data_struct = AllSubDataStruct()
         for subject_name in self._sub_names:
+            print('loading data of: ' + subject_name)
             static_nike_trial = OneTrialDataStatic(subject_name, 'nike static', self._sensor_sampling_fre)
             static_nike_df = static_nike_trial.get_one_IMU_data(self._side + '_foot', acc=True, mag=True)
             static_mini_trial = OneTrialDataStatic(subject_name, 'mini static', self._sensor_sampling_fre)

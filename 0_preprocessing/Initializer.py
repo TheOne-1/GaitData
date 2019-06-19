@@ -216,12 +216,12 @@ class SubjectDataInitializer:
         """
         segment_marker_names = SEGMENT_MARKERS[location]
         segment_marker_names_xyz = [name + axis for name in segment_marker_names for axis in ['_x', '_y', '_z']]
-        marker_df_clip = marker_df[segment_marker_names_xyz].copy().reset_index(drop=True).loc[:check_len]
+        marker_df_clip = marker_df[segment_marker_names_xyz].copy().reset_index(drop=True).iloc[-check_len:]
         if location not in ['r_foot', 'trunk', 'l_foot']:
             raise ValueError('Wrong sensor location')
 
         gyr_column_names = [location + '_gyr_' + axis for axis in ['x', 'y', 'z']]
-        sensor_df = sensor_df[gyr_column_names].loc[:check_len]
+        sensor_df = sensor_df[gyr_column_names].iloc[-check_len:]
         # get gyr norm from simulation
         my_nike_gyr_simulator = GyrSimulator(self._subject_folder, location)
         gyr_vicon = my_nike_gyr_simulator.get_gyr(trial_name, marker_df_clip, sampling_rate=sampling_rate)

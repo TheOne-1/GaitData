@@ -9,7 +9,7 @@ from IMUSensorReader import IMUSensorReader
 
 
 class XsensReader(IMUSensorReader):
-    def __init__(self, file, subject_folder, sensor_loc, trial_name, cut_off_fre=20, filter_order=4):
+    def __init__(self, file, subject_folder, sensor_loc, trial_name):
         super().__init__()
         self._file = file
         self._subject_folder = subject_folder
@@ -18,7 +18,7 @@ class XsensReader(IMUSensorReader):
         self._sampling_rate = MOCAP_SAMPLE_RATE
         device, callback, control = self.__initialize_device()
         self.data_raw_df = self._get_raw_data(device, callback, control)
-        self.data_processed_df = self._get_sensor_data_processed(cut_off_fre, filter_order)
+        self.data_processed_df = self._get_sensor_data_processed()
 
     def __initialize_device(self):
         control = xda.XsControl_construct()
@@ -101,20 +101,9 @@ class XsensReader(IMUSensorReader):
         control.close()
         return data_raw_df
 
-    def _get_sensor_data_processed(self, cut_off_fre=20, filter_order=4):
-        """
-        This function is invoked during initialization. Please use self.data_processed_df to get data
-        process include filtering
-        :param cut_off_fre: int, cut-off frequency
-        :param filter_order: int, butterworth filter order
-        :return:
-        """
-        wn = cut_off_fre / (self._sampling_rate / 2)
+    def _get_sensor_data_processed(self):
         data_raw = self.data_raw_df[DATA_COLUMNS_IMU]
-        b_IMU, a_IMU = butter(filter_order, wn, btype='low')
-        data_processed = data_raw.values  # Frame column does not need a filter
-        data_processed = filtfilt(b_IMU, a_IMU, data_processed, axis=0)  # filtering
-        data_processed_df = pd.DataFrame(data_processed, columns=DATA_COLUMNS_IMU)
+        data_processed_df = pd.DataFrame(data_raw, columns=DATA_COLUMNS_IMU)
         return data_processed_df
 
 

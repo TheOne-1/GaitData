@@ -211,7 +211,8 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
 
     @staticmethod
     def data_filt(data, cut_off_fre, sampling_fre, filter_order=4):
-        b = firwin(FILTER_WIN_LEN, 0.1)
+        wn = cut_off_fre / sampling_fre
+        b = firwin(FILTER_WIN_LEN, wn)
         if len(data.shape) == 1:
             data_filt = lfilter(b, 1, data)
         else:
@@ -225,7 +226,8 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
         """
         side = self._IMU_location[0]
         true_event = self._param_data_df[side + '_' + event_name]
-        true_event_indexes = np.where(true_event == 1)[0][:-1] + 50
+        filter_delay = int(FILTER_WIN_LEN / 2 - self._sampling_fre / 50)
+        true_event_indexes = np.where(true_event == 1)[0][:-1] + filter_delay
         true_len = true_event_indexes.shape[0]
         estimated_len = len(estimated_event_indexes)
         diffs = []
@@ -299,8 +301,7 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
                     plt.plot(gyr_x_filtered[last_off:i_sample])
                     plt.grid()
                     plt.show()
-                    last_off = last_off + 70      # skip this step
-
+                    last_off = last_off + int(self._sampling_fre * 0.7)     # skip this step
         return strike_list, off_list
 
     def show_IMU_data_and_strike_off(self, estimated_strike_indexes, estimated_off_indexes):
@@ -310,9 +311,10 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
         """
         side = self._IMU_location[0]
         true_strikes = self._param_data_df[side + '_strikes']
-        true_strike_indexes = np.where(true_strikes == 1)[0][:-1] + 50     # Add the filter delay
+        filter_delay =int(FILTER_WIN_LEN / 2 - self._sampling_fre / 50)
+        true_strike_indexes = np.where(true_strikes == 1)[0][:-1] + filter_delay     # Add the filter delay
         true_offs = self._param_data_df[side + '_offs']
-        true_off_indexes = np.where(true_offs == 1)[0][:-1] + 50     # Add the filter delay
+        true_off_indexes = np.where(true_offs == 1)[0][:-1] + filter_delay     # Add the filter delay
 
         acc_data = self.get_IMU_data(acc=True, gyr=False).values
         acc_z = -acc_data[:, 2]
