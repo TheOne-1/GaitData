@@ -10,8 +10,6 @@ from keras.models import Model
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
 from convert_model import convert
-from keras.applications.inception_v3 import InceptionV3
-from keras import backend
 
 
 class ProcessorLRCNNv3_1(ProcessorLR):

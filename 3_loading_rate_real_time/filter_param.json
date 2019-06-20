@@ -102,7 +102,7 @@
         0.00024052477630890409,
         8.027554386408831e-05
     ],
-    "filter_delay": 48,
+    "filter_delay": 50,
     "filter_win_len": 100,
     "off_delay": 3,
     "start_buffer": 3,

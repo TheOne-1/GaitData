@@ -129,12 +129,6 @@ class ParamProcessor:
         param_data_df.insert(len(param_data_df.columns), 'strikes_IMU_lfilter', estimated_strikes_lfilter)
         param_data_df.insert(len(param_data_df.columns), 'offs_IMU_lfilter', estimated_offs_lfilter)
 
-        # # for debugging !!!
-        # plt.figure()
-        # plt.plot(estimated_strikes, '*')
-        # plt.plot(estimated_strikes_lfilter, '*')
-        # plt.show()
-
         # get loading rate
         l_steps_1000 = self.get_legal_steps(l_strikes_1000, l_offs_1000, 'left', plate_data_1000)
         l_LR = self.get_loading_rate(plate_data_1000, l_steps_1000)

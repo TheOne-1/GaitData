@@ -80,43 +80,43 @@ class OneTrialData:
         dcm_mat = np.array([vector_0, vector_1, vector_2])
         return dcm_mat
 
-    def get_grf_input_output(self, IMU_location, weight, from_IMU, acc=True, gyr=True, mag=False, grf_axis='z'):
-        """
-        GRFz: from strike to off
-        acc and gyr: from off to off because information before strike might be useful
-        """
-        if from_IMU == 2:
-            filter_delay = int(FILTER_WIN_LEN / 2 - self._sensor_sampling_fre / 50)
-        else:
-            filter_delay = 0
-        if not from_IMU:
-            offs, step_num = self.get_offs()
-            strikes, step_num = self.get_strikes()
-        else:
-            offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
-        grf_data = - self.gait_data_df['f_1_' + grf_axis].values / weight
-        IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
-        step_grf_data, step_imu_data = [], []
-        for i_step in range(step_num):
-            strike_in_between = strikes[offs[i_step] < strikes]
-            strike_in_between = strike_in_between[strike_in_between < offs[i_step+1]]
-            if len(strike_in_between) != 1:
-                continue
-            # give IMU data a padding so that more information can be observed
-            edge_extender = 4
-            imu_start = strike_in_between[0] - edge_extender - filter_delay
-            imu_end = offs[i_step + 1] + edge_extender - filter_delay
-            grf_start = strike_in_between[0] - edge_extender - filter_delay
-            grf_end = offs[i_step+1] + edge_extender - filter_delay
-
-            # skip this step if the grf_end exceeds the maximum data length
-            if grf_end > grf_data.shape[0]:
-                continue
-
-            step_imu_data.append(IMU_data[imu_start:imu_end, :])
-            step_grf_data.append(grf_data[grf_start:grf_end])
-        step_imu_data, step_grf_data = self.check_step_input_output(step_imu_data, step_grf_data)
-        return step_imu_data, step_grf_data
+    # def get_grf_input_output(self, IMU_location, weight, from_IMU, acc=True, gyr=True, mag=False, grf_axis='z'):
+    #     """
+    #     GRFz: from strike to off
+    #     acc and gyr: from off to off because information before strike might be useful
+    #     """
+    #     if from_IMU == 2:
+    #         filter_delay = int(FILTER_WIN_LEN / 2)
+    #     else:
+    #         filter_delay = 0
+    #     if not from_IMU:
+    #         offs, step_num = self.get_offs()
+    #         strikes, step_num = self.get_strikes()
+    #     else:
+    #         offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
+    #     grf_data = - self.gait_data_df['f_1_' + grf_axis].values / weight
+    #     IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
+    #     step_grf_data, step_imu_data = [], []
+    #     for i_step in range(step_num):
+    #         strike_in_between = strikes[offs[i_step] < strikes]
+    #         strike_in_between = strike_in_between[strike_in_between < offs[i_step+1]]
+    #         if len(strike_in_between) != 1:
+    #             continue
+    #         # give IMU data a padding so that more information can be observed
+    #         edge_extender = 4
+    #         imu_start = strike_in_between[0] - edge_extender - filter_delay
+    #         imu_end = offs[i_step + 1] + edge_extender - filter_delay
+    #         grf_start = strike_in_between[0] - edge_extender - filter_delay
+    #         grf_end = offs[i_step+1] + edge_extender - filter_delay
+    #
+    #         # skip this step if the grf_end exceeds the maximum data length
+    #         if grf_end > grf_data.shape[0]:
+    #             continue
+    #
+    #         step_imu_data.append(IMU_data[imu_start:imu_end, :])
+    #         step_grf_data.append(grf_data[grf_start:grf_end])
+    #     step_imu_data, step_grf_data = self.check_step_input_output(step_imu_data, step_grf_data)
+    #     return step_imu_data, step_grf_data
 
     def get_lr_input_output(self, IMU_location, from_IMU, acc=True, gyr=True, mag=False):
         """
@@ -124,7 +124,7 @@ class OneTrialData:
         acc and gyr: from off to off because information before strike might be useful
         """
         if from_IMU == 2:
-            filter_delay = int(FILTER_WIN_LEN / 2 - self._sensor_sampling_fre / 50)
+            filter_delay = int(FILTER_WIN_LEN / 2)
         else:
             filter_delay = 0
         if not from_IMU:

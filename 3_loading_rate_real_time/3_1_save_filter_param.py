@@ -21,7 +21,7 @@ wn = cut_off_fre / sampling_fre
 b = signal.firwin(filter_win_len, wn)
 a = 1
 
-filter_delay = int(FILTER_WIN_LEN / 2 - 2)
+filter_delay = int(FILTER_WIN_LEN / 2)
 # main_input_shape = [25, 6]
 # aux_input_shape = 2
 

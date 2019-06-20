@@ -117,3 +117,13 @@ ROTATION_VIA_STATIC_CALIBRATION = False
 
 TRIAL_START_BUFFER = 3       # 3 seconds filter buffer
 FILTER_WIN_LEN = 100        # The length of FIR filter window
+
+
+FONT_SIZE = 18
+FONT_DICT = {'fontsize': FONT_SIZE, 'fontname': 'DejaVu Sans'}
+FONT_DICT_SMALL = {'fontsize': 16, 'fontname': 'DejaVu Sans'}
+LINE_WIDTH = 2
+
+
+
+
