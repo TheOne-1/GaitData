@@ -1,9 +1,7 @@
-import numpy as np
-from Initializer import ViconReader, HaishengSensorReader, XsensReader, GyrSimulator
-from const import RAW_DATA_PATH, FILE_NAMES, XSENS_FILE_NAME_DIC, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, \
+from Initializer import ViconReader, HaishengSensorReader, GyrSimulator
+from const import RAW_DATA_PATH, TRIAL_NAMES, HAISHENG_SENSOR_SAMPLE_RATE, MOCAP_SAMPLE_RATE, \
     PROCESSED_DATA_PATH
 import matplotlib.pyplot as plt
-import sklearn.svm as svm
 from numpy.linalg import norm
 import os
 
@@ -13,7 +11,7 @@ subject_folder = '190414WangDianxin'
 if not os.path.exists(PROCESSED_DATA_PATH + subject_folder):
     os.makedirs(PROCESSED_DATA_PATH + subject_folder)
 
-for trial_name in FILE_NAMES[1:]:
+for trial_name in TRIAL_NAMES[1:]:
     file_path_xsens = '{path}{sub_folder}\\{sensor}\\{trial_folder}\\'.format(
         path=RAW_DATA_PATH, sub_folder=subject_folder, sensor='xsens', trial_folder=trial_name)
     file_path_vicon = '{path}{sub_folder}\\{sensor}\\{file_name}.csv'.format(

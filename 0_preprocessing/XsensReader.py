@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.signal import butter, filtfilt
-from const import DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE, DATA_COLUMNS_IMU
+from const import DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE, DATA_COLUMNS_IMU, XSENS_ROTATION_CORRECTION_NIKE
 import xsensdeviceapi.xsensdeviceapi_py36_64 as xda
 from threading import Lock
 import time
@@ -9,13 +9,16 @@ from IMUSensorReader import IMUSensorReader
 
 
 class XsensReader(IMUSensorReader):
-    def __init__(self, file, cut_off_fre=20, filter_order=4):
+    def __init__(self, file, subject_folder, sensor_loc, trial_name):
         super().__init__()
         self._file = file
+        self._subject_folder = subject_folder
+        self._sensor_loc = sensor_loc
+        self._trial_name = trial_name
         self._sampling_rate = MOCAP_SAMPLE_RATE
         device, callback, control = self.__initialize_device()
         self.data_raw_df = self._get_raw_data(device, callback, control)
-        self.data_processed_df = self._get_sensor_data_processed(cut_off_fre, filter_order)
+        self.data_processed_df = self._get_sensor_data_processed()
 
     def __initialize_device(self):
         control = xda.XsControl_construct()
@@ -60,6 +63,15 @@ class XsensReader(IMUSensorReader):
     def _get_raw_data(self, device, callback, control):
         # Get total number of samples
         packetCount = device.getDataPacketCount()
+        # rotation correction
+        do_rotation = False
+        if 'nike' in self._trial_name:
+            if self._subject_folder in XSENS_ROTATION_CORRECTION_NIKE.keys():
+                sub_rota_dict = XSENS_ROTATION_CORRECTION_NIKE[self._subject_folder]
+                if self._sensor_loc in sub_rota_dict.keys():
+                    do_rotation = True
+                    rotation_mat = sub_rota_dict[self._sensor_loc]
+
         # Export the data
         data_mat = np.zeros([packetCount, 13])
         for index in range(packetCount):
@@ -68,10 +80,19 @@ class XsensReader(IMUSensorReader):
             acc = packet.calibratedAcceleration()
             gyr = packet.calibratedGyroscopeData()
             mag = packet.calibratedMagneticField()
+
+            # skip the mag if it does not exist
             if len(mag) != 3:
                 data_mat[index, 0:6] = np.concatenate([acc, gyr])
+                data_mat[index, 6:9] = data_mat[index - 1, 6:9]
             else:
                 data_mat[index, 0:9] = np.concatenate([acc, gyr, mag])
+            # correct the placement error
+            if do_rotation:
+                for i_channel in range(3):
+                    data_mat[index, 3*i_channel:3*(i_channel+1)] = np.matmul(
+                        rotation_mat, data_mat[index, 3*i_channel:3*(i_channel+1)])
+
             quaternion = packet.orientationQuaternion()
             data_mat[index, 9:13] = quaternion
         data_raw_df = pd.DataFrame(data_mat)
@@ -80,20 +101,9 @@ class XsensReader(IMUSensorReader):
         control.close()
         return data_raw_df
 
-    def _get_sensor_data_processed(self, cut_off_fre=20, filter_order=4):
-        """
-        This function is invoked during initialization. Please use self.data_processed_df to get data
-        process include filtering
-        :param cut_off_fre: int, cut-off frequency
-        :param filter_order: int, butterworth filter order
-        :return:
-        """
-        wn = cut_off_fre / (self._sampling_rate / 2)
+    def _get_sensor_data_processed(self):
         data_raw = self.data_raw_df[DATA_COLUMNS_IMU]
-        b_IMU, a_IMU = butter(filter_order, wn, btype='low')
-        data_processed = data_raw.values  # Frame column does not need a filter
-        data_processed = filtfilt(b_IMU, a_IMU, data_processed, axis=0)  # filtering
-        data_processed_df = pd.DataFrame(data_processed, columns=DATA_COLUMNS_IMU)
+        data_processed_df = pd.DataFrame(data_raw, columns=DATA_COLUMNS_IMU)
         return data_processed_df
 
 

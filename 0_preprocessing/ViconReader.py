@@ -204,3 +204,13 @@ class ViconReader:
         plate_df = self.get_plate_data_resampled()
         all_data_df = pd.concat([plate_df, self.marker_data_processed_df], axis=1)
         return all_data_df
+
+
+
+
+
+
+
+
+
+

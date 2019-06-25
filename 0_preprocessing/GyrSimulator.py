@@ -1,5 +1,5 @@
 import numpy as np
-from const import RAW_DATA_PATH, FILE_NAMES, MOCAP_SAMPLE_RATE
+from const import RAW_DATA_PATH, TRIAL_NAMES, MOCAP_SAMPLE_RATE
 import matplotlib.pyplot as plt
 import scipy.interpolate as interpo
 from ViconReader import ViconReader
@@ -16,9 +16,9 @@ class GyrSimulator:
         :param static_end: int, the end time of calibration
         """
         self._subject_folder = subject_folder
-        nike_static_mat = self.initialize_static_marker_df(FILE_NAMES[0], segment).values
+        nike_static_mat = self.initialize_static_marker_df(TRIAL_NAMES[0], segment).values
         self._nike_cali_matrix = GyrSimulator.get_marker_cali_matrix(nike_static_mat, static_start, static_end)
-        mini_static_mat = self.initialize_static_marker_df(FILE_NAMES[7], segment).values
+        mini_static_mat = self.initialize_static_marker_df(TRIAL_NAMES[7], segment).values
         self._mini_cali_matrix = GyrSimulator.get_marker_cali_matrix(mini_static_mat, static_start, static_end)
 
     @staticmethod
