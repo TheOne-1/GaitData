@@ -190,37 +190,33 @@ class ProcessorLR:
     def norm_input(self):
         channel_num = self._x_train.shape[2]
         # save input scalar parameter
-        main_max_vals,  main_min_vals = [], []
+        self.main_max_vals,  self.main_min_vals = [], []
         for i_channel in range(channel_num):
             max_val = np.max(self._x_train[:, :, i_channel]) * 0.99
             min_val = np.min(self._x_train[:, :, i_channel]) * 0.99
             self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val)
             self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val)
-            main_max_vals.append(max_val)
-            main_min_vals.append(min_val)
+            self.main_max_vals.append(max_val)
+            self.main_min_vals.append(min_val)
 
         if hasattr(self, '_x_train_aux'):
             # MinMaxScaler is more suitable because StandardScalar will make the input greatly differ from each other
             aux_input_scalar = MinMaxScaler()
             self._x_train_aux = aux_input_scalar.fit_transform(self._x_train_aux)
             self._x_test_aux = aux_input_scalar.transform(self._x_test_aux)
-            aux_max_vals = aux_input_scalar.data_max_.tolist()
-            aux_min_vals = aux_input_scalar.data_min_.tolist()
-
-        scalar_param = {'main_max_vals': main_max_vals, 'main_min_vals': main_min_vals,
-                        'aux_max_vals': aux_max_vals, 'aux_min_vals': aux_min_vals}
-        scalar_file = 'scalar_param.json'
-        with open(scalar_file, 'w') as param_file:
-            print(json.dumps(scalar_param, sort_keys=True, indent=4, separators=(',', ': ')), file=param_file)
+            self.aux_max_vals = aux_input_scalar.data_max_.tolist()
+            self.aux_min_vals = aux_input_scalar.data_min_.tolist()
 
     def norm_output(self):
-        self.output_standard_scalar = MinMaxScaler()
+        self.output_minmax_scalar = MinMaxScaler(feature_range=(1, 3))
         self._y_train = self._y_train.reshape(-1, 1)
-        self._y_train = self.output_standard_scalar.fit_transform(self._y_train)
+        self._y_train = self.output_minmax_scalar.fit_transform(self._y_train)
+        self.result_max_vals = self.output_minmax_scalar.data_max_[0]
+        self.result_min_vals = self.output_minmax_scalar.data_min_[0]
 
     def norm_output_reverse(self, output):
         output = output.reshape(-1, 1)
-        output = self.output_standard_scalar.inverse_transform(output)
+        output = self.output_minmax_scalar.inverse_transform(output)
         return output.reshape(-1,)
 
 

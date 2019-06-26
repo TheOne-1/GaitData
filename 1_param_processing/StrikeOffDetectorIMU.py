@@ -226,7 +226,7 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
         """
         side = self._IMU_location[0]
         true_event = self._param_data_df[side + '_' + event_name]
-        filter_delay = int(FILTER_WIN_LEN / 2 - self._sampling_fre / 50)
+        filter_delay = int(FILTER_WIN_LEN / 2)
         true_event_indexes = np.where(true_event == 1)[0][:-1] + filter_delay
         true_len = true_event_indexes.shape[0]
         estimated_len = len(estimated_event_indexes)
@@ -311,7 +311,7 @@ class StrikeOffDetectorIMUFilter(StrikeOffDetectorIMU):
         """
         side = self._IMU_location[0]
         true_strikes = self._param_data_df[side + '_strikes']
-        filter_delay =int(FILTER_WIN_LEN / 2 - self._sampling_fre / 50)
+        filter_delay =int(FILTER_WIN_LEN / 2)
         true_strike_indexes = np.where(true_strikes == 1)[0][:-1] + filter_delay     # Add the filter delay
         true_offs = self._param_data_df[side + '_offs']
         true_off_indexes = np.where(true_offs == 1)[0][:-1] + filter_delay     # Add the filter delay

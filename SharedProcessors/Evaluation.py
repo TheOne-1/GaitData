@@ -92,7 +92,7 @@ class Evaluation:
         R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plt.plot(y_true, y_pred, 'b.')
-        plt.plot([0, 2.5], [0, 2.5], 'r--')
+        plt.plot([0, 250], [0, 250], 'r--')
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
@@ -117,7 +117,7 @@ class Evaluation:
         title_extended = title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str + '  Mean error: ' + mean_error_str
         plt.title(title_extended)
         print(title_extended)
-        plt.plot([0, 2.5], [0, 2.5], 'r--')
+        plt.plot([0, 250], [0, 250], 'r--')
         category_list = set(category_id)
         category_id_array = np.array(category_id)
         plot_handles, plot_names = [], []

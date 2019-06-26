@@ -17,7 +17,7 @@ test = {'190521GongChangyang':  RUNNING_TRIALS}
 my_LR_processor = ProcessorLRCNNv3_1(train, test, 100, strike_off_from_IMU=2, split_train=False, do_output_norm=False)
 predict_result_all = my_LR_processor.prepare_data()
 my_LR_processor.cnn_solution()
-my_LR_processor.save_model()
+my_LR_processor.save_model_and_param()
 
 # cross validation
 # my_LR_processor = ProcessorLRCNNv5(SUB_AND_RUNNING_TRIALS, 100, strike_off_from_IMU=True, do_input_norm=True,

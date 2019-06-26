@@ -33,7 +33,7 @@ def main():
     save_model('densenet121', keras.applications.densenet.DenseNet121())
     save_model('densenet169', keras.applications.densenet.DenseNet169())
     save_model('densenet201', keras.applications.densenet.DenseNet201())
-    # save_model('inceptionresnetv2', keras.applications.inception_resnet_v2.InceptionResNetV2(input_shape=(299, 299, 3)))  # lambda
+    # save_model_and_param('inceptionresnetv2', keras.applications.inception_resnet_v2.InceptionResNetV2(input_shape=(299, 299, 3)))  # lambda
     save_model('inceptionv3', keras.applications.inception_v3.InceptionV3(input_shape=(299, 299, 3)))
     save_model('mobilenet', keras.applications.mobilenet.MobileNet())
     save_model('mobilenetv2', keras.applications.mobilenet_v2.MobileNetV2())

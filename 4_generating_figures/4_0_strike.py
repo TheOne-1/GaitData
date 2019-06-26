@@ -34,8 +34,9 @@ plt.legend([esti_plot, real_plot], ['estimated strikes', 'real strikes'], fontsi
 plt.xlabel('time', fontdict=FONT_DICT_SMALL)
 plt.ylabel('vertical acceleration', fontdict=FONT_DICT_SMALL)
 ax = plt.gca()
-ax.set_xlim(4750, 5150)
-ax.set_xticks(range(4750, 5151, 100))
+start_sample = 8520
+ax.set_xlim(start_sample, start_sample + 400)
+ax.set_xticks(range(start_sample, start_sample + 401, 100))
 ax.set_xticklabels(['0s', '0.5s', '1s', '1.5s', '2s'], fontdict=FONT_DICT_SMALL)
 
 ax.set_ylim(-24, 23)
