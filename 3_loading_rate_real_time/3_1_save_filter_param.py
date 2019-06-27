@@ -14,7 +14,7 @@ def write_text_file(path, text):
 
 
 cut_off_fre = 10
-sampling_fre = 100
+sampling_fre = 200
 filter_win_len = 100
 param_file = 'filter_param.json'
 wn = cut_off_fre / sampling_fre
@@ -22,11 +22,9 @@ b = signal.firwin(filter_win_len, wn)
 a = 1
 
 filter_delay = int(FILTER_WIN_LEN / 2)
-# main_input_shape = [25, 6]
-# aux_input_shape = 2
 
 filter_param = {'wn': wn, 'b': b.tolist(), 'a': a, 'filter_win_len': filter_win_len,
-                'filter_delay': filter_delay, 'strike_delay': 5, 'off_delay': 3, 'start_buffer': TRIAL_START_BUFFER}
+                'filter_delay': filter_delay, 'strike_delay': 8, 'off_delay': 6, 'start_buffer': TRIAL_START_BUFFER}
 with open(param_file, 'w') as param_file:
     print(json.dumps(filter_param, sort_keys=True, indent=4, separators=(',', ': ')), file=param_file)
 

@@ -15,9 +15,9 @@ from const import SUB_NAMES
 
 
 class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
-    def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True):
+    def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True, do_output_norm=True):
         super().__init__(sub_and_trials, None, sensor_sampling_fre, strike_off_from_IMU,
-                         split_train=False, do_input_norm=do_input_norm)
+                         split_train=False, do_input_norm=do_input_norm, do_output_norm=do_output_norm)
 
     def prepare_data_cross_vali(self, test_set_sub_num=1):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
@@ -53,7 +53,12 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
             if self.do_input_norm:
                 self.norm_input()
 
+            if self.do_output_norm:
+                self.norm_output()
+
             y_pred = self.cnn_solution().reshape([-1, 1])
+            if self.do_output_norm:
+                y_pred = self.norm_output_reverse(y_pred)
             pearson_coeff, RMSE, mean_error = Evaluation.plot_nn_result(self._y_test, y_pred, title=SUB_NAMES[test_id_list[0]])
 
             predict_result_df = Evaluation.insert_prediction_result(
@@ -77,8 +82,8 @@ class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
         tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=11, kernel_size=3*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
+        tower_4 = Conv1D(filters=11, kernel_size=2*base_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_4 = MaxPool1D(pool_size=23*base_size+1)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
         tower_5 = Conv1D(filters=11, kernel_size=1, kernel_regularizer=kernel_regu)(main_input)

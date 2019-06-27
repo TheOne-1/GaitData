@@ -10,6 +10,8 @@ from keras.models import Model
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
 from convert_model import convert
+from scipy.stats import pearsonr
+import json
 
 
 class ProcessorLRCNNv3_1(ProcessorLR):
@@ -108,8 +110,8 @@ class ProcessorLRCNNv3_1(ProcessorLR):
         tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
 
         # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=11, kernel_size=3*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPool1D(pool_size=22*base_size+1)(tower_4)
+        tower_4 = Conv1D(filters=11, kernel_size=2*base_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_4 = MaxPool1D(pool_size=23*base_size+1)(tower_4)
 
         # for each feature, add 5 * 1 cov kernel
         tower_5 = Conv1D(filters=11, kernel_size=1, kernel_regularizer=kernel_regu)(main_input)
@@ -140,13 +142,25 @@ class ProcessorLRCNNv3_1(ProcessorLR):
                                                    'loading rate')
         self.model = model
 
-    def save_model(self):
-        # # for test
-        # test_data = self._x_test[0:1, :, :]
-        # test_result = self.model.predict(test_data)
-        # print(test_result)
+    def save_model_and_param(self):
         self.model.save('lr_model.h5', include_optimizer=False)
         convert('lr_model.h5', 'fdeep_model.json')
+
+        scalar_param = {'main_max_vals': self.main_max_vals, 'main_min_vals': self.main_min_vals,
+                        'aux_max_vals': self.aux_max_vals, 'aux_min_vals': self.aux_min_vals,
+                        'result_scale': self.output_minmax_scalar.scale_[0],
+                        'result_min': self.output_minmax_scalar.min_[0]}
+
+        scalar_file = 'scalar_param.json'
+        with open(scalar_file, 'w') as param_file:
+            print(json.dumps(scalar_param, sort_keys=True, indent=4, separators=(',', ': ')), file=param_file)
+
         plt.show()
+
+    def to_generate_figure(self):
+        y_pred = self.model.predict(x={'main_input': self._x_test, 'aux_input': self._x_test_aux}).ravel()
+        if self.do_output_norm:
+            y_pred = self.norm_output_reverse(y_pred)
+        return self._y_test, y_pred
 
 

@@ -52,7 +52,7 @@ class ParamProcessor:
                 grf_1000_df = pd.read_csv(fre_1000_path + trial_name + '.csv', index_col=False)
                 trial_param_df_100, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_100_df, grf_1000_df,
                                                                                         HAISHENG_SENSOR_SAMPLE_RATE)
-                self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
+                # self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
                 plt.show()
 
         if self.__initialize_200Hz:
@@ -69,7 +69,7 @@ class ParamProcessor:
                 trial_param_df_200, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_200_df, grf_1000_df,
                                                                                         MOCAP_SAMPLE_RATE)
                 l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
-                self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
+                # self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
                 plt.show()
 
     @staticmethod
@@ -356,9 +356,9 @@ class ParamProcessor:
                 plt.plot([start_index, end_index], [grf_z_step[start_index], grf_z_step[end_index]], 'r-')
                 plt.show()
                 continue  # continue without recording loading rate
-            loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) / (end_index - start_index)
+            loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) * PLATE_SAMPLE_RATE / (end_index - start_index)
             if LOADING_RATE_NORMALIZATION:
-                loading_rate = - loading_rate / self.__weight
+                loading_rate = - loading_rate / (self.__weight * 10)
             marker_frame = plate_data.loc[round((step[0] + step[1]) / 2), 'marker_frame']
             loading_rates.append([loading_rate, marker_frame])
         return loading_rates
@@ -443,7 +443,7 @@ class ParamProcessor:
         elif sensor_sampling_rate == MOCAP_SAMPLE_RATE:
             my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot',
                                                MOCAP_SAMPLE_RATE)
-            strike_delay, off_delay = 6, 8  # delay from the peak
+            strike_delay, off_delay = 8, 6  # delay from the peak
         else:
             raise ValueError('Wrong sensor sampling rate value')
         estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)
