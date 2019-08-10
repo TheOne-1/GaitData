@@ -40,6 +40,7 @@ with open('..\\configuration.txt', 'r') as config:
 
 path_index = RAW_DATA_PATH.rfind('\\', 0, len(RAW_DATA_PATH) - 2)
 PROCESSED_DATA_PATH = RAW_DATA_PATH[:path_index] + '\\ProcessedData'
+HUAWEI_DATA_PATH = RAW_DATA_PATH[:path_index] + '\\DataForHuawei'
 
 LOADING_RATE_NORMALIZATION = True
 
@@ -73,11 +74,11 @@ SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAM
                   # trial 6 and 11 was abandoned because Haisheng's sensor was broken
                   '190510HeMing': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:6] + TRIAL_NAMES[7:11] + TRIAL_NAMES[12:],
                   '190511ZhuJiayi':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
-                  '190513YangYicheng':  TRIAL_NAMES[0:3] + TRIAL_NAMES[4:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   '190514QiuYue':  TRIAL_NAMES[0:4] + TRIAL_NAMES[5:8] + TRIAL_NAMES[9:],
                   '190514XieJie':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[5:9] + TRIAL_NAMES[10:],
                   '190517FuZhenzhen':  TRIAL_NAMES[0:1] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
-                  '190513OuYangjue':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  # '190513YangYicheng': TRIAL_NAMES[0:3] + TRIAL_NAMES[4:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
+                  # '190513OuYangjue':  TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:9] + TRIAL_NAMES[10:12] + TRIAL_NAMES[13:],
                   }
 
 SUB_NAMES = tuple(SUB_AND_TRIALS.keys())
@@ -123,6 +124,15 @@ FONT_SIZE = 18
 FONT_DICT = {'fontsize': FONT_SIZE, 'fontname': 'DejaVu Sans'}
 FONT_DICT_SMALL = {'fontsize': 16, 'fontname': 'DejaVu Sans'}
 LINE_WIDTH = 2
+
+COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z',
+                     'LFCC_x', 'LFCC_y', 'LFCC_z', 'LFM5_x', 'LFM5_y', 'LFM5_z', 'LFM2_x', 'LFM2_y', 'LFM2_z',
+                     'RFCC_x', 'RFCC_y', 'RFCC_z', 'RFM5_x', 'RFM5_y', 'RFM5_z', 'RFM2_x', 'RFM2_y', 'RFM2_z',
+                     'l_foot_acc_x', 'l_foot_acc_y', 'l_foot_acc_z', 'l_foot_gyr_x', 'l_foot_gyr_y', 'l_foot_gyr_z',
+                     'l_foot_mag_x', 'l_foot_mag_y', 'l_foot_mag_z']
+
+COLUMN_FOR_HUAWEI_1000 = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z']
+
 
 
 

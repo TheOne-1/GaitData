@@ -16,6 +16,7 @@ class HaishengSensorReader(IMUSensorReader):
         self.trial_name = file[file.rfind('\\'):]
         self.data_raw_df = self._get_raw_data()
         self.data_processed_df = self._get_sensor_data_processed(self.data_raw_df)
+        self._sampling_rate = HAISHENG_SENSOR_SAMPLE_RATE
 
     def _get_raw_data(self):
         """

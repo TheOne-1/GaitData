@@ -52,7 +52,7 @@ class ParamProcessor:
                 grf_1000_df = pd.read_csv(fre_1000_path + trial_name + '.csv', index_col=False)
                 trial_param_df_100, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_100_df, grf_1000_df,
                                                                                         HAISHENG_SENSOR_SAMPLE_RATE)
-                # self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
+                self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
                 plt.show()
 
         if self.__initialize_200Hz:
@@ -69,7 +69,7 @@ class ParamProcessor:
                 trial_param_df_200, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_200_df, grf_1000_df,
                                                                                         MOCAP_SAMPLE_RATE)
                 l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
-                # self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
+                self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
                 plt.show()
 
     @staticmethod
@@ -295,22 +295,69 @@ class ParamProcessor:
         plt.plot(data_trunk_swag)
         plt.title('trunk swag')
 
-    def get_strike_index_all(self, gait_data_df):
-        l_foot_data = gait_data_df[['LFM2_y', 'LFCC_y', 'c_1_y']].values
-        l_foot_length = l_foot_data[:, 0] - l_foot_data[:, 1]
-        l_cop_length = l_foot_data[:, 2] - l_foot_data[:, 1]
-        l_index = l_cop_length / l_foot_length
+    @staticmethod
+    def get_strike_index_all(gait_data_df):
+        l_toe = gait_data_df[['LFM2_x', 'LFM2_y']].values
+        l_heel = gait_data_df[['LFCC_x', 'LFCC_y']].values
+        cop = gait_data_df[['c_1_x', 'c_1_y']].values
+        data_len = gait_data_df.shape[0]
+        l_index = np.zeros([data_len])
+        for i_sample in range(data_len):
+            l_toe_sample = l_toe[i_sample, :]
+            l_heel_sample = l_heel[i_sample, :]
+            projected_point = ParamProcessor.get_projected_points(l_toe_sample, l_heel_sample, cop[i_sample, :])
+            projected_point = np.array([projected_point[0, 0], projected_point[0, 1]])
+            l_index[i_sample] = ParamProcessor.get_strike_index(l_toe_sample, l_heel_sample, projected_point)
+
+        r_toe = gait_data_df[['RFM2_x', 'RFM2_y']].values
+        r_heel = gait_data_df[['RFCC_x', 'RFCC_y']].values
+        data_len = gait_data_df.shape[0]
+        r_index = np.zeros([data_len])
+        for i_sample in range(data_len):
+            r_toe_sample = r_toe[i_sample, :]
+            r_heel_sample = r_heel[i_sample, :]
+            projected_point = ParamProcessor.get_projected_points(r_toe_sample, r_heel_sample, cop[i_sample, :])
+            projected_point = np.array([projected_point[0, 0], projected_point[0, 1]])
+            r_index[i_sample] = ParamProcessor.get_strike_index(r_toe_sample, r_heel_sample, projected_point)
+
         l_index[l_index < 0] = 0
         l_index[l_index > 1] = 1
-
-        r_foot_data = gait_data_df[['RFM2_y', 'RFCC_y', 'c_1_y']].values
-        r_foot_length = r_foot_data[:, 0] - r_foot_data[:, 1]
-        r_cop_length = r_foot_data[:, 2] - r_foot_data[:, 1]
-        r_index = r_cop_length / r_foot_length
         r_index[r_index < 0] = 0
         r_index[r_index > 1] = 1
 
         return np.column_stack([l_index, r_index])
+
+    @staticmethod
+    def get_strike_index(toe, heel, projected_point):
+        strike_index = (projected_point[1] - heel[1]) / (toe[1] - heel[1])
+        return strike_index
+        # foot_vect = toe - heel
+        # foot_length = np.sqrt(foot_vect[0]**2 + foot_vect[1]**2)
+        # cop_vect = projected_point - heel
+        # cop_length = np.sqrt(cop_vect[0]**2 + cop_vect[1]**2)
+        # return cop_length / foot_length
+
+    @staticmethod
+    def get_projected_points(p0, p1, p2):
+        """
+        :param p0: Coordinates of the toe
+        :param p1: Coordinates of the heel
+        :param p2: Coordinates of the COP
+        :return:
+        """
+        [a0, b0] = p0
+        [a1, b1] = p1
+        [a2, b2] = p2
+
+        try:
+
+            the_mat = np.matrix([[a0 - a1, b0 - b1],
+                                 [b1 - b0, a0 - a1]])
+            the_array = np.array([a0 * a2 - a1 * a2 + b0 * b2 - b1 * b2, a0 * b1 - a1 * b1 - b0 * a1 + a1 * b1])
+            projected_point = np.matmul(the_mat.I, the_array.T)
+        except ValueError:
+            x = 1
+        return projected_point
 
     # this program use 1000Hz force plate data
     def get_loading_rate(self, plate_data, steps):
@@ -356,7 +403,8 @@ class ParamProcessor:
                 plt.plot([start_index, end_index], [grf_z_step[start_index], grf_z_step[end_index]], 'r-')
                 plt.show()
                 continue  # continue without recording loading rate
-            loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) * PLATE_SAMPLE_RATE / (end_index - start_index)
+            loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) * PLATE_SAMPLE_RATE / (
+                    end_index - start_index)
             if LOADING_RATE_NORMALIZATION:
                 loading_rate = - loading_rate / (self.__weight * 10)
             marker_frame = plate_data.loc[round((step[0] + step[1]) / 2), 'marker_frame']

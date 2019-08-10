@@ -114,7 +114,7 @@ class ViconReader:
         plate_data_raw = plate_reader._get_plate_data_raw_resampled()
         center_plate = plate_data_raw[['Cx', 'Cy', 'Cz']].values
         cop_offset = np.mean(center_plate - center_vicon, axis=0)
-        cop_offset += COP_DIFFERENCE
+        # cop_offset += COP_DIFFERENCE
         return cop_offset
 
     def _get_plate_raw(self):
@@ -135,13 +135,14 @@ class ViconReader:
         # calibrate COP differences between force plate and vicon
         plate_offsets = self._get_plate_calibration(self._file)
         for channel in range(4, 7):  # Minus the COP offset of the first plate
-            plate_data_raw[:, channel] = COP_DIFFERENCE[channel - 4] - plate_offsets[channel - 4]
+            plate_data_raw[:, channel] = plate_data_raw[:, channel] - plate_offsets[channel - 4]
 
         # filter the force data
         plate_data = plate_data_raw[:, 1:]
         wn_plate = cut_off_fre / (PLATE_SAMPLE_RATE / 2)
         b_force_plate, a_force_plate = butter(filter_order, wn_plate, btype='low')
         plate_data_filtered = filtfilt(b_force_plate, a_force_plate, plate_data, axis=0)  # filtering
+
         plate_data_filtered = np.column_stack((plate_data_raw[:, 0], plate_data_filtered))  # stack the time sample
         plate_data_df = pd.DataFrame(plate_data_filtered, columns=FORCE_NAMES)
         return plate_data_df
