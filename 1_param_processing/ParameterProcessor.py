@@ -331,11 +331,6 @@ class ParamProcessor:
     def get_strike_index(toe, heel, projected_point):
         strike_index = (projected_point[1] - heel[1]) / (toe[1] - heel[1])
         return strike_index
-        # foot_vect = toe - heel
-        # foot_length = np.sqrt(foot_vect[0]**2 + foot_vect[1]**2)
-        # cop_vect = projected_point - heel
-        # cop_length = np.sqrt(cop_vect[0]**2 + cop_vect[1]**2)
-        # return cop_length / foot_length
 
     @staticmethod
     def get_projected_points(p0, p1, p2):
@@ -471,16 +466,6 @@ class ParamProcessor:
         data_file_str = '{folder_path}\\param_of_{trial_name}.csv'.format(
             folder_path=folder_path, trial_name=trial_name)
         data_all_df.to_csv(data_file_str, index=False)
-        # save steps
-        step_file_str = '{folder_path}\\step_l_of_{trial_name}.pkl'.format(
-            folder_path=folder_path, trial_name=trial_name)
-        with open(step_file_str, 'wb') as file:
-            pickle.dump(l_steps, file)
-
-        step_file_str = '{folder_path}\\step_r_of_{trial_name}.pkl'.format(
-            folder_path=folder_path, trial_name=trial_name)
-        with open(step_file_str, 'wb') as file:
-            pickle.dump(r_steps, file)
 
     def get_strike_off_from_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True,
                                 plot_the_strike_off=False):

@@ -6,5 +6,5 @@ for subject_folder in SUB_NAMES:
     readme_xls = RAW_DATA_PATH + subject_folder + '\\readme\\readme.xlsx'
     my_initializer = SubjectDataInitializer(PROCESSED_DATA_PATH, subject_folder, trials_100hz, readme_xls,
                                             initialize_100Hz=True,
-                                            initialize_200Hz=True, initialize_1000Hz=True, check_sync=False,
+                                            initialize_200Hz=False, initialize_1000Hz=True, check_sync=False,
                                             check_running_period=False)

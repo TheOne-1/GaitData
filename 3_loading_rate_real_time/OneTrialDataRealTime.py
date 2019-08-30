@@ -228,7 +228,7 @@ class OneTrialDataRealTime:
 
         dcm_mat = np.array([vector_0, vector_1, vector_2])
         return dcm_mat
-
+d
     def check_strike_off(self, acc_z, gyr_x, IMU_location, estimated_strike_indexes, estimated_off_indexes):
         plt.figure()
         plt.title(self._trial_name + '   ' + IMU_location + '   acc_z')
