@@ -6,15 +6,14 @@ cross validation
 from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
-from ProcessorLRCNNv3_1 import ProcessorLRCNNv3_1
-from ProcessorLRCNNv3_2 import ProcessorLRCNNv3_2
+from ProcessorLR import ProcessorLR
 from ProcessorLR import ProcessorLR
 from keras.models import Model
 import pandas as pd
 from const import SUB_NAMES
 
 
-class ProcessorLRCNNv5(ProcessorLRCNNv3_1):
+class ProcessorLRCrossVali(ProcessorLR):
     def __init__(self, sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=True, do_input_norm=True, do_output_norm=True):
         super().__init__(sub_and_trials, None, sensor_sampling_fre, strike_off_from_IMU,
                          split_train=False, do_input_norm=do_input_norm, do_output_norm=do_output_norm)

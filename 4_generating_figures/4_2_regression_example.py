@@ -3,7 +3,7 @@ Notes:
     1. In leave one out testing, yangcan's result was good.
 """
 from plot_funcs import format_subplot
-from ProcessorLRCNNv3_1 import ProcessorLRCNNv3_1
+from ProcessorLR import ProcessorLR
 from const import RUNNING_TRIALS, TRIAL_NAMES, FONT_DICT_SMALL, FONT_DICT, FONT_SIZE, SUB_AND_RUNNING_TRIALS
 import copy
 from Evaluation import Evaluation
@@ -19,7 +19,7 @@ del train['190513YangYicheng']
 del train['190513OuYangjue']
 test = {'190423LiuSensen':  TRIAL_NAMES[1:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:7] + TRIAL_NAMES[8:14]}
 
-my_LR_processor = ProcessorLRCNNv3_1(train, test, 200, strike_off_from_IMU=2, split_train=False, do_output_norm=True)
+my_LR_processor = ProcessorLR(train, test, 200, strike_off_from_IMU=2, split_train=False, do_output_norm=True)
 predict_result_all = my_LR_processor.prepare_data()
 my_LR_processor.cnn_solution()
 
