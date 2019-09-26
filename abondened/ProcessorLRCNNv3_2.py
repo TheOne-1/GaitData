@@ -80,7 +80,7 @@ class ProcessorLRCNNv3_2(ProcessorLR):
                 print('Zero encountered in aux input. Replaced by the median')
         return aux_input
 
-    def cnn_solution(self):
+    def define_cnn_model(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         base_size = int(self.sensor_sampling_fre*0.01)

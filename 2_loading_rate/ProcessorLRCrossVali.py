@@ -7,7 +7,6 @@ from Evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.layers import *
 from ProcessorLR import ProcessorLR
-from ProcessorLR import ProcessorLR
 from keras.models import Model
 import pandas as pd
 from const import SUB_NAMES
@@ -55,7 +54,7 @@ class ProcessorLRCrossVali(ProcessorLR):
             if self.do_output_norm:
                 self.norm_output()
 
-            y_pred = self.cnn_solution().reshape([-1, 1])
+            y_pred = self.define_cnn_model().reshape([-1, 1])
             if self.do_output_norm:
                 y_pred = self.norm_output_reverse(y_pred)
             pearson_coeff, RMSE, mean_error = Evaluation.plot_nn_result(self._y_test, y_pred, title=SUB_NAMES[test_id_list[0]])
@@ -65,7 +64,7 @@ class ProcessorLRCrossVali(ProcessorLR):
         Evaluation.export_prediction_result(predict_result_df)
         plt.show()
 
-    def cnn_solution(self):
+    def define_cnn_model(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         base_size = int(self.sensor_sampling_fre*0.01)

@@ -21,7 +21,7 @@ test = {'190423LiuSensen':  TRIAL_NAMES[1:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:
 
 my_LR_processor = ProcessorLR(train, test, 200, strike_off_from_IMU=2, split_train=False, do_output_norm=True)
 predict_result_all = my_LR_processor.prepare_data()
-my_LR_processor.cnn_solution()
+my_LR_processor.define_cnn_model()
 
 y_true, y_pred = my_LR_processor.to_generate_figure()
 

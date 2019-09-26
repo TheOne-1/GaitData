@@ -5,7 +5,7 @@ Conv template, improvements:
 import matplotlib.pyplot as plt
 from AllSubData import AllSubData
 import scipy.interpolate as interpo
-from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS
+from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE
 import scipy.stats as stats
 from sklearn.preprocessing import MinMaxScaler
 from Evaluation import Evaluation
@@ -16,32 +16,41 @@ from const import TRIAL_NAMES
 
 
 class ProcessorLR:
-    def __init__(self, train_sub_and_trials, test_sub_and_trials, sensor_sampling_fre, strike_off_from_IMU=False,
+    def __init__(self, train_sub_and_trials, test_sub_and_trials, imu_locations, strike_off_from_IMU=False,
                  split_train=False, do_input_norm=True, do_output_norm=False):
+        """
+
+        :param train_sub_and_trials:
+        :param test_sub_and_trials:
+        :param imu_locations:
+        :param strike_off_from_IMU: 0 for from plate, 1 for filtfilt, 2 for lfilter
+        :param split_train:
+        :param do_input_norm:
+        :param do_output_norm:
+        """
         self.train_sub_and_trials = train_sub_and_trials
         self.test_sub_and_trials = test_sub_and_trials
-        self.sensor_sampling_fre = sensor_sampling_fre
+        self.imu_locations = imu_locations
+        self.sensor_sampling_fre = MOCAP_SAMPLE_RATE
         self.strike_off_from_IMU = strike_off_from_IMU
         self.split_train = split_train
         self.do_input_norm = do_input_norm
         self.do_output_norm = do_output_norm
         self.param_name = 'LR'
-        train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+        train_all_data = AllSubData(self.train_sub_and_trials, imu_locations, self.param_name, self.sensor_sampling_fre,
+                                    self.strike_off_from_IMU)
         self.train_all_data_list = train_all_data.get_all_data()
         if test_sub_and_trials is not None:
-            test_all_data = AllSubData(self.test_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+            test_all_data = AllSubData(self.test_sub_and_trials, imu_locations, self.param_name,
+                                       self.sensor_sampling_fre, self.strike_off_from_IMU)
             self.test_all_data_list = test_all_data.get_all_data()
 
     def prepare_data(self):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
+        self.channel_num = input_list[0].shape[1] - 1
         self._x_train, self._x_train_aux = self.convert_input(input_list, self.sensor_sampling_fre)
         self._y_train = ProcessorLR.convert_output(output_list)
-
-        # # !!! debugging
-        # for step_data in input_list:
-        #     plt.plot(step_data[:, 2])
-        # plt.show()
 
         if not self.split_train:
             test_all_data_list = ProcessorLR.clean_all_data(self.test_all_data_list, self.sensor_sampling_fre)
@@ -70,24 +79,17 @@ class ProcessorLR:
         step_num = len(input_all_list)
         resample_len = self.sensor_sampling_fre
         data_clip_start, data_clip_end = int(resample_len * 0.5), int(resample_len * 0.75)
-        step_input = np.zeros([step_num, data_clip_end - data_clip_start, 6])
+        step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
-            acc_gyr_data = input_all_list[i_step][:, 0:6]
-            for i_channel in range(6):
+            acc_gyr_data = input_all_list[i_step][:, 0:self.channel_num]
+            for i_channel in range(self.channel_num):
                 channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
                 step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
                 step_len = acc_gyr_data.shape[0]
                 aux_input[i_step, 0] = step_len
-                strike_sample_num = np.where(input_all_list[i_step][:, 6] == 1)[0]
+                strike_sample_num = np.where(input_all_list[i_step][:, -1] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
-
-        # # !!! debugging
-        # plt.figure()
-        # for i_step in range(step_num):
-        #     plt.plot(step_input[i_step, :, 2])
-        # plt.grid()
-        # plt.show()
 
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input
@@ -109,6 +111,12 @@ class ProcessorLR:
         return aux_input
 
     def cnn_solution(self):
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.save_cnn_model()
+        plt.show()
+
+    def define_cnn_model(self):
         main_input_shape = self._x_train.shape
         main_input = Input((main_input_shape[1:]), name='main_input')
         base_size = int(self.sensor_sampling_fre*0.01)
@@ -143,9 +151,12 @@ class ProcessorLR:
         aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
+        self.model = model
+
+    def evaluate_cnn_model(self):
         my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
                                   self._x_test_aux)
-        y_pred = my_evaluator.evaluate_nn(model)
+        y_pred = my_evaluator.evaluate_nn(self.model)
         if self.do_output_norm:
             y_pred = self.norm_output_reverse(y_pred)
 
@@ -154,10 +165,9 @@ class ProcessorLR:
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES,
                                                    'loading rate')
-        self.model = model
 
-    def save_model(self):
-        self.model.save('lr_model.h5', include_optimizer=False)
+    def save_cnn_model(self, model_name='lr_model'):
+        self.model.save(model_name + '.h5', include_optimizer=False)
 
     def to_generate_figure(self):
         y_pred = self.model.predict(x={'main_input': self._x_test, 'aux_input': self._x_test_aux}).ravel()
@@ -174,13 +184,13 @@ class ProcessorLR:
         y_train = ProcessorLR.convert_output(output_list)
         sub_id_list = train_all_data_list.get_sub_id_list()
         trial_id_list = train_all_data_list.get_trial_id_list()
-        ProcessorLR.gait_phase_and_correlation(input_list, y_train, channels=range(6))
+        ProcessorLR.gait_phase_and_correlation(input_list, y_train, channels=range(self.channel_num))
         ProcessorLR.draw_correlation(x_train, y_train, sub_id_list, SUB_NAMES, feature_names)
         ProcessorLR.draw_correlation(x_train, y_train, trial_id_list, TRIAL_NAMES, feature_names)
         plt.show()
 
     @staticmethod
-    def gait_phase_and_correlation(input_list, output_array, channels=range(6)):
+    def gait_phase_and_correlation(input_list, output_array, channels):
         sample_num = len(input_list)
         resample_len = 100
         plt.figure()
@@ -232,7 +242,7 @@ class ProcessorLR:
         min_time_between_strike_off = int(sensor_sampling_fre * 0.15)
         while i_step < len(all_sub_data_struct):
             # delete steps without a valid loading rate
-            strikes = np.where(input_list[i_step][:, 6] == 1)[0]
+            strikes = np.where(input_list[i_step][:, -1] == 1)[0]
             if np.max(output_list[i_step]) <= 0:
                 all_sub_data_struct.pop(i_step)
 

@@ -5,12 +5,16 @@ from const import SUB_AND_RUNNING_TRIALS, RUNNING_TRIALS
 import copy
 
 
-# train = {'190521GongChangyang': RUNNING_TRIALS}
+IMU_locations = ['trunk', 'l_foot']
+
+
 train = copy.deepcopy(SUB_AND_RUNNING_TRIALS)
 del train['190522QinZhun']
-test = {'190522QinZhun':  RUNNING_TRIALS}
+# train = {'190521GongChangyang': RUNNING_TRIALS[:1]}
 
-my_LR_processor = ProcessorLR(train, test, 200, strike_off_from_IMU=2, split_train=False, do_output_norm=True)
+test = {'190522QinZhun':  RUNNING_TRIALS[:1]}
+
+my_LR_processor = ProcessorLR(train, test, IMU_locations, strike_off_from_IMU=2, do_output_norm=True)
 predict_result_all = my_LR_processor.prepare_data()
 my_LR_processor.cnn_solution()
 

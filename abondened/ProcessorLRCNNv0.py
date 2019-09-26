@@ -29,7 +29,7 @@ class ProcessorLRCNNv0(ProcessorLR):
         feature_names = None
         return step_input, feature_names
 
-    def cnn_solution(self):
+    def define_cnn_model(self):
         model = Sequential()
         # debug kernel_size = 1, 看下下一层有几个输入
         # deliberately set kernel_size equal to input_shape[0] so that
