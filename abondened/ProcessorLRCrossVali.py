@@ -10,6 +10,7 @@ from ProcessorLR import ProcessorLR
 from keras.models import Model
 import pandas as pd
 from const import SUB_NAMES
+import numpy as np
 
 
 class ProcessorLRCrossVali(ProcessorLR):

@@ -9,10 +9,13 @@ from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE
 import scipy.stats as stats
 from sklearn.preprocessing import MinMaxScaler
 from Evaluation import Evaluation
+from keras import regularizers
 from keras.layers import *
 from keras.models import Model
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
+import numpy as np
+import pandas as pd
 
 
 class ProcessorLR:
@@ -45,6 +48,67 @@ class ProcessorLR:
                                        self.sensor_sampling_fre, self.strike_off_from_IMU)
             self.test_all_data_list = test_all_data.get_all_data()
 
+    def cnn_train_test(self):
+        """
+        The very basic condition, use the train set to train and use the test set to test.
+        :return:
+        """
+        self.prepare_data()
+        self.do_normalization()
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.save_cnn_model()
+        plt.show()
+
+    def cnn_cross_vali(self, test_set_sub_num=1):
+        train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
+        input_list, output_list = train_all_data_list.get_input_output_list()
+        trial_ids = train_all_data_list.get_trial_id_list()
+        self.channel_num = input_list[0].shape[1] - 1
+        sub_id_list = train_all_data_list.get_sub_id_list()
+
+        sub_id_set_tuple = tuple(set(sub_id_list))
+        sample_num = len(input_list)
+        sub_num = len(self.train_sub_and_trials.keys())
+        folder_num = int(np.ceil(sub_num / test_set_sub_num))        # the number of cross validation times
+        predict_result_df = pd.DataFrame()
+        for i_folder in range(folder_num):
+            test_id_list = sub_id_set_tuple[test_set_sub_num*i_folder:test_set_sub_num*(i_folder+1)]
+            print('\ntest subjects: ')
+            for test_id in test_id_list:
+                print(SUB_NAMES[test_id])
+            input_list_train, input_list_test, output_list_train, output_list_test, test_trial_ids = [], [], [], [], []
+            for i_sample in range(sample_num):
+                if sub_id_list[i_sample] in test_id_list:
+                    input_list_test.append(input_list[i_sample])
+                    output_list_test.append(output_list[i_sample])
+                    test_trial_ids.append(trial_ids[i_sample])
+                else:
+                    input_list_train.append(input_list[i_sample])
+                    output_list_train.append(output_list[i_sample])
+
+            self._x_train, self._x_train_aux = self.convert_input(input_list_train, self.sensor_sampling_fre)
+            self._y_train = ProcessorLR.convert_output(output_list_train)
+            self._x_test, self._x_test_aux = self.convert_input(input_list_test, self.sensor_sampling_fre)
+            self._y_test = ProcessorLR.convert_output(output_list_test)
+
+            self.do_normalization()
+            self.define_cnn_model()
+
+            my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
+                                      self._x_test_aux)
+            y_pred = my_evaluator.evaluate_nn(self.model)
+            if self.do_output_norm:
+                y_pred = self.norm_output_reverse(y_pred)
+            my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, test_trial_ids,
+                                                   TRIAL_NAMES, title=SUB_NAMES[test_id_list[0]])
+
+            pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
+            predict_result_df = Evaluation.insert_prediction_result(
+                predict_result_df, SUB_NAMES[test_id_list[0]], pearson_coeff, RMSE, mean_error)
+        Evaluation.export_prediction_result(predict_result_df)
+        plt.show()
+
     def prepare_data(self):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
@@ -64,6 +128,7 @@ class ProcessorLR:
             self._x_train, self._x_test, self._x_train_aux, self._x_test_aux, self._y_train, self._y_test =\
                 train_test_split(self._x_train, self._x_train_aux, self._y_train, test_size=0.33)
 
+    def do_normalization(self):
         # do input normalization
         if self.do_input_norm:
             self.norm_input()
@@ -109,12 +174,6 @@ class ProcessorLR:
             if len(zero_indexes) != 0:
                 print('Zero encountered in aux input. Replaced by the median')
         return aux_input
-
-    def cnn_solution(self):
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.save_cnn_model()
-        plt.show()
 
     def define_cnn_model(self):
         main_input_shape = self._x_train.shape
@@ -165,6 +224,7 @@ class ProcessorLR:
         else:
             my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES,
                                                    'loading rate')
+        return y_pred
 
     def save_cnn_model(self, model_name='lr_model'):
         self.model.save(model_name + '.h5', include_optimizer=False)
@@ -252,6 +312,9 @@ class ProcessorLR:
 
             # delete a step if the duration between strike and off is too short
             elif not min_time_between_strike_off < input_list[i_step].shape[0] - strikes[0]:
+                all_sub_data_struct.pop(i_step)
+
+            elif np.isnan(input_list[i_step]).any():
                 all_sub_data_struct.pop(i_step)
 
             else:

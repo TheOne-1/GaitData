@@ -21,9 +21,9 @@ class AllSubData:
         for subject_name in self._sub_names:
             print('loading data of: ' + subject_name)
             static_nike_trial = OneTrialDataStatic(subject_name, 'nike static', self._sensor_sampling_fre)
-            static_nike_df = static_nike_trial.get_multi_IMU_data(self.imu_locations, acc=True, mag=True)
+            static_nike_df = static_nike_trial.get_multi_IMU_data_df(self.imu_locations, acc=True, mag=True)
             static_mini_trial = OneTrialDataStatic(subject_name, 'mini static', self._sensor_sampling_fre)
-            static_mini_df = static_mini_trial.get_multi_IMU_data(self.imu_locations, acc=True, mag=True)
+            static_mini_df = static_mini_trial.get_multi_IMU_data_df(self.imu_locations, acc=True, mag=True)
             trials = self._sub_and_trials[subject_name]
             for trial_name in trials:
                 if 'nike' in trial_name:

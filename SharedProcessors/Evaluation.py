@@ -6,7 +6,6 @@ from scipy.stats import pearsonr
 from keras import optimizers
 from keras.callbacks import EarlyStopping
 from const import COLORS
-from keras import backend as K
 import pandas as pd
 import os
 
@@ -21,36 +20,22 @@ class Evaluation:
         self._x_test_aux = x_test_aux
 
     @staticmethod
-    def _get_all_scores(y_test, y_pred, precision=None):
-        R2 = r2_score(y_test, y_pred, multioutput='raw_values')
+    def get_all_scores(y_test, y_pred, precision=None):
+        pearson_coeff = pearsonr(y_test, y_pred)[0]
         RMSE = sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
         errors = y_test - y_pred
         mean_error = np.mean(errors, axis=0)
         if precision:
-            R2 = np.round(R2, precision)
+            pearson_coeff = np.round(pearson_coeff, precision)
             RMSE = np.round(RMSE, precision)
             mean_error = np.round(mean_error, precision)
-        return R2, RMSE, mean_error
-
-    def evaluate_sklearn(self, model, title=''):
-        model.fit(self._x_train, self._y_train)
-        y_pred = model.predict(self._x_test)
-        R2, RMSE, mean_error = Evaluation._get_all_scores(self._y_test, y_pred, precision=3)
-
-        plt.figure()
-        plt.plot(self._y_test, y_pred, 'b.')
-        RMSE_str = str(RMSE[0])
-        mean_error_str = str(mean_error)
-        pearson_coeff = str(pearsonr(self._y_test, y_pred))[1:6]
-        plt.title(title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +
-                  '  Mean error: ' + mean_error_str)
-        plt.xlabel('true value')
-        plt.ylabel('predicted value')
+        return pearson_coeff, RMSE, mean_error
 
     def evaluate_nn(self, model):
         # train NN
         # lr = learning rate, the other params are default values
         optimizer = optimizers.Nadam(lr=0.0002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+        # optimizer = optimizers.Adam()
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
         early_stopping_patience = 5
@@ -63,9 +48,11 @@ class Evaluation:
             r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
                           batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
                           verbose=2)
+            if np.isnan(r.history['loss'][0]):
+                raise ValueError('Loss is Nan')
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
-            while n_epochs < early_stopping_patience + 7:
+            while n_epochs < early_stopping_patience + 5:
                 print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
                 model.reset_states()
                 r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
@@ -89,7 +76,7 @@ class Evaluation:
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
 
-        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plt.plot(y_true, y_pred, 'b.')
         plt.plot([0, 250], [0, 250], 'r--')
@@ -110,7 +97,7 @@ class Evaluation:
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
         plt.figure()
-        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         RMSE_str = str(RMSE[0])
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
@@ -139,7 +126,7 @@ class Evaluation:
     @staticmethod
     def plot_continuous_result(y_true, y_pred, title=''):
         # change the shape of data so that no error will be raised during pearsonr analysis
-        R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plot_true, = plt.plot(y_true[:2000])
         plot_pred, = plt.plot(y_pred[:2000])
@@ -169,6 +156,10 @@ class Evaluation:
     @staticmethod
     def export_prediction_result(predict_result_df):
         predict_result_df.columns = ['subject_name', 'correlation', 'RMSE', 'mean_error']
+        result_abs_mean = np.mean(abs(predict_result_df.iloc[:, 1:]))
+        mean_value_list = ['absolute mean']
+        mean_value_list.extend(result_abs_mean.tolist())
+        predict_result_df.loc[-1] = mean_value_list
         file_path = 'result_conclusion/predict_result_conclusion.csv'
         i_file = 0
         while os.path.isfile(file_path):

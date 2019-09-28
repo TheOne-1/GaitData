@@ -37,8 +37,12 @@ class OneTrialData:
         if mag:
             column_names += [IMU_location + '_mag_' + axis for axis in ['x', 'y', 'z']]
 
-        data = self.gait_data_df[column_names].values
+        data_df = self.gait_data_df[column_names]
+        if np.isnan(data_df.values).any():
+            print('Trial ' + self._trial_name + ', ' + IMU_location + ' contains Nan')
+
         if ROTATION_VIA_STATIC_CALIBRATION:
+            data = data_df.values
             data_rotated = np.zeros(data.shape)
             if self._subject_name in SPECIFIC_CALI_MATRIX.keys() and\
                     IMU_location in SPECIFIC_CALI_MATRIX[self._subject_name].keys():
@@ -53,16 +57,19 @@ class OneTrialData:
                     data_rotated[i_sample, 3:6] = np.matmul(dcm_mat, data[i_sample, 3:6])
                 if mag:
                     data_rotated[i_sample, 6:9] = np.matmul(dcm_mat, data[i_sample, 6:9])
-            return data_rotated
+            data_rotated_df = pd.DataFrame(data_rotated)
+            data_rotated_df.columns = data_df.columns
+            return data_rotated_df
         else:
-            return data
+            return data_df
 
-    def get_multi_IMU_data(self, imu_locations, acc=True, gyr=False, mag=False):
+    def get_multi_IMU_data_df(self, imu_locations, acc=True, gyr=False, mag=False):
         # without a data shape, the data can only be appended in a list and stacked together later
-        all_IMU_data_list = []
+        all_IMU_data_list, column_name_list = [], []
         for IMU_location in imu_locations:
             one_IMU_data = self.get_one_IMU_data(IMU_location, acc, gyr, mag)
             all_IMU_data_list.append(one_IMU_data)
+            column_name_list.extend(one_IMU_data.columns)
 
         # stack all the IMU data together
         data_len = all_IMU_data_list[0].shape[0]
@@ -71,7 +78,9 @@ class OneTrialData:
         all_IMU_data = np.zeros([data_len, one_IMU_col_num * imu_num])
         for i_imu in range(imu_num):
             all_IMU_data[:, one_IMU_col_num*i_imu:one_IMU_col_num*(i_imu+1)] = all_IMU_data_list[i_imu]
-        return all_IMU_data
+        all_IMU_data_df = pd.DataFrame(all_IMU_data)
+        all_IMU_data_df.columns = column_name_list
+        return all_IMU_data_df
 
     def get_rotation_via_static_cali(self, IMU_location):
         axis_name_gravity = [IMU_location + '_acc_' + axis for axis in ['x', 'y', 'z']]
@@ -115,7 +124,7 @@ class OneTrialData:
         else:
             offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
         lr_data = self.gait_param_df[self._side + '_LR'].values
-        IMU_data = self.get_multi_IMU_data(imu_locations, acc, gyr, mag)
+        IMU_data = self.get_multi_IMU_data_df(imu_locations, acc, gyr, mag).values
         step_lr_data, step_imu_data = [], []
         for i_step in range(step_num):
             strike_in_between = strikes[offs[i_step] < strikes]

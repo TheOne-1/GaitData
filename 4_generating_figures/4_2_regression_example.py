@@ -26,7 +26,7 @@ my_LR_processor.define_cnn_model()
 y_true, y_pred = my_LR_processor.to_generate_figure()
 
 
-R2, RMSE, mean_error = Evaluation._get_all_scores(y_true, y_pred, precision=3)
+R2, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
 
 plt.figure(figsize=(9, 6))
 plt.plot(y_true, y_pred, 'b.')
