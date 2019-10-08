@@ -2,6 +2,9 @@ from const import PROCESSED_DATA_PATH, MOCAP_SAMPLE_RATE, ROTATION_VIA_STATIC_CA
     SPECIFIC_CALI_MATRIX, TRIAL_START_BUFFER, FILTER_WIN_LEN
 import numpy as np
 import pandas as pd
+from transforms3d.euler import mat2euler
+import matplotlib.pyplot as plt
+from StrikeOffDetectorIMU import StrikeOffDetectorIMU
 
 
 class OneTrialData:
@@ -48,7 +51,7 @@ class OneTrialData:
                     IMU_location in SPECIFIC_CALI_MATRIX[self._subject_name].keys():
                     dcm_mat = SPECIFIC_CALI_MATRIX[self._subject_name][IMU_location]
             else:
-                dcm_mat = self.get_rotation_via_static_cali(IMU_location)
+                dcm_mat = self.get_rotation_via_acc_mag_cali(IMU_location)
             data_len = data.shape[0]
             for i_sample in range(data_len):
                 if acc:
@@ -82,17 +85,16 @@ class OneTrialData:
         all_IMU_data_df.columns = column_name_list
         return all_IMU_data_df
 
-    def get_rotation_via_static_cali(self, IMU_location):
+    def get_rotation_via_acc_mag_cali(self, IMU_location):
         axis_name_gravity = [IMU_location + '_acc_' + axis for axis in ['x', 'y', 'z']]
         data_gravity = self._static_data_df[axis_name_gravity]
-        vector_gravity = np.mean(data_gravity.values, axis=0)
+        data_gravity = StrikeOffDetectorIMU.data_filt(data_gravity, 2, MOCAP_SAMPLE_RATE)
+        vector_gravity = np.mean(data_gravity, axis=0)
 
         axis_name_mag = [IMU_location + '_mag_' + axis for axis in ['x', 'y', 'z']]
-        try:
-            data_mag = self._static_data_df[axis_name_mag]
-        except KeyError:
-            pass
-        vector_mag = np.mean(data_mag.values, axis=0)
+        data_mag = self._static_data_df[axis_name_mag]
+        data_mag = StrikeOffDetectorIMU.data_filt(data_mag, 2, MOCAP_SAMPLE_RATE)
+        vector_mag = np.mean(data_mag, axis=0)
 
         vector_2 = vector_gravity / np.linalg.norm(vector_gravity)
         vector_0 = np.cross(vector_mag, vector_gravity)
@@ -101,6 +103,14 @@ class OneTrialData:
         vector_1 = vector_1 / np.linalg.norm(vector_1)
 
         dcm_mat = np.array([vector_0, vector_1, vector_2])
+        # """ Test """
+        # if self._trial_name in ['nike SI 24', 'mini SI 24']:
+        #     dcm_mat_sawp = np.swapaxes(dcm_mat, 0, 1)        # take the transpose of rotation matrix
+        #     euler_angles = mat2euler(dcm_mat_sawp)
+        #     euler_angles = [round(np.rad2deg(angle), 2) for angle in euler_angles]
+        #     print(IMU_location + ' ' + str(euler_angles), end='')
+        #     if IMU_location == 'l_foot':
+        #         print()
         return dcm_mat
 
     def get_lr_input_output(self, imu_locations, from_IMU, acc=True, gyr=True, mag=False):

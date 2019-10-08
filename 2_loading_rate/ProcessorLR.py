@@ -57,8 +57,38 @@ class ProcessorLR:
         self.do_normalization()
         self.define_cnn_model()
         self.evaluate_cnn_model()
-        self.save_cnn_model()
+        self.show_weights()
+
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.show_weights()
+
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.show_weights()
+
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.show_weights()
+
+        self.define_cnn_model()
+        self.evaluate_cnn_model()
+        self.show_weights()
+
         plt.show()
+
+    def show_weights(self):
+        """
+        Show weights of the first Dense layer.
+        :return:
+        """
+        for layer in self.model.layers:
+            if isinstance(layer, Dense):
+                weights = layer.get_weights()
+                weights_sum = np.linalg.norm(weights[0], axis=1)
+                plt.figure()
+                plt.plot(weights_sum)
+                break
 
     def cnn_cross_vali(self, test_set_sub_num=1):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
@@ -131,10 +161,15 @@ class ProcessorLR:
     def do_normalization(self):
         # do input normalization
         if self.do_input_norm:
-            self.norm_input()
+            self.norm_input(feature_range=(-1, 1))
 
         if self.do_output_norm:
             self.norm_output()
+
+        # reshape the input to fit tensorflow
+        main_input_shape = list(self._x_train.shape)
+        self._x_train = self._x_train.reshape(main_input_shape[0], main_input_shape[1], main_input_shape[2], 1)
+        self._x_test = self._x_test.reshape(self._x_test.shape[0], main_input_shape[1], main_input_shape[2], 1)
 
     # convert the input from list to ndarray
     def convert_input(self, input_all_list, sampling_fre):
@@ -174,6 +209,55 @@ class ProcessorLR:
             if len(zero_indexes) != 0:
                 print('Zero encountered in aux input. Replaced by the median')
         return aux_input
+
+    def define_cnn_model_2(self):
+        """
+        Convolution kernel shape changed from 1D to 2D.
+        :return:
+        """
+        main_input_shape = list(self._x_train.shape)
+        main_input = Input((main_input_shape[1:]), name='main_input')
+        # base_size = int(self.sensor_sampling_fre*0.01)
+
+        # kernel_init = 'lecun_uniform'
+        kernel_regu = regularizers.l2(0.01)
+        # for each feature, add 20 * 1 cov kernel
+        tower_1 = Conv2D(filters=6, kernel_size=(35, 3), kernel_regularizer=kernel_regu)(main_input)
+        tower_1 = MaxPooling2D(pool_size=(16, main_input_shape[2]+1-3))(tower_1)
+
+        # for each feature, add 20 * 1 cov kernel
+        tower_2 = Conv2D(filters=6, kernel_size=(20, 3), kernel_regularizer=kernel_regu)(main_input)
+        tower_2 = MaxPooling2D(pool_size=(31, main_input_shape[2]+1-3))(tower_2)
+
+        # # for each feature, add 20 * 1 cov kernel
+        # tower_3 = Conv2D(filters=6, kernel_size=(10, 1), kernel_regularizer=kernel_regu)(main_input)
+        # tower_3 = MaxPooling2D(pool_size=(41, main_input_shape[2]+1-1))(tower_3)
+
+        # for each feature, add 20 * 1 cov kernel
+        tower_4 = Conv2D(filters=6, kernel_size=(10, 3), kernel_regularizer=kernel_regu)(main_input)
+        tower_4 = MaxPooling2D(pool_size=(41, main_input_shape[2]+1-3))(tower_4)
+
+        # for each feature, add 20 * 1 cov kernel
+        tower_5 = Conv2D(filters=6, kernel_size=(3, 1), kernel_regularizer=kernel_regu)(main_input)
+        tower_5 = MaxPooling2D(pool_size=(48, main_input_shape[2]+1-1))(tower_5)
+
+        # for each feature, add 20 * 1 cov kernel
+        tower_6 = Conv2D(filters=6, kernel_size=(3, 3), kernel_regularizer=kernel_regu)(main_input)
+        tower_6 = MaxPooling2D(pool_size=(48, main_input_shape[2]+1-3))(tower_6)
+
+        joined_outputs = concatenate([tower_1, tower_2, tower_4, tower_5, tower_6], axis=-1)
+        joined_outputs = Activation('relu')(joined_outputs)
+        main_outputs = Flatten()(joined_outputs)
+
+        aux_input = Input(shape=(2,), name='aux_input')
+        aux_joined_outputs = concatenate([main_outputs, aux_input])
+
+        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
+        model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
+        self.model = model
 
     def define_cnn_model(self):
         main_input_shape = self._x_train.shape
@@ -311,6 +395,7 @@ class ProcessorLR:
                 all_sub_data_struct.pop(i_step)
 
             # delete a step if the duration between strike and off is too short
+            # this can ensure the sample number after strike is larger than 30
             elif not min_time_between_strike_off < input_list[i_step].shape[0] - strikes[0]:
                 all_sub_data_struct.pop(i_step)
 
@@ -341,15 +426,15 @@ class ProcessorLR:
         data_resampled = interpo.splev(resampled_step, tck, der=0)[0]
         return data_resampled
 
-    def norm_input(self):
+    def norm_input(self, feature_range=(0, 1)):
         channel_num = self._x_train.shape[2]
         # save input scalar parameter
         self.main_max_vals,  self.main_min_vals = [], []
         for i_channel in range(channel_num):
             max_val = np.max(self._x_train[:, :, i_channel]) * 0.99
             min_val = np.min(self._x_train[:, :, i_channel]) * 0.99
-            self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val)
-            self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val)
+            self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
+            self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
             self.main_max_vals.append(max_val)
             self.main_min_vals.append(min_val)
 

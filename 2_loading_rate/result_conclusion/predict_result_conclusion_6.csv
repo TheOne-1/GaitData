@@ -1,0 +1,6 @@
+subject_name,correlation,RMSE,mean_error
+190521GongChangyang,0.319,-50.0,10.0
+190521GongChangyang,0.052,-50.0,20.0
+190521GongChangyang,0.31,-40.0,10.0
+190521GongChangyang,0.416,-40.0,20.0
+absolute mean,0.27425,45.0,15.0

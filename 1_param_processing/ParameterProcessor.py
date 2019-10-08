@@ -424,7 +424,8 @@ class ParamProcessor:
 
     def get_legal_steps(self, strikes, offs, side, plate_data=None):
         """
-            Sometimes subjects have their both feet on the ground so it is necessary to do step check.
+        Step starts from strike and ends at off
+        Sometimes subjects have their both feet on the ground so it is necessary to do step check.
         :param strikes:
         :param offs:
         :param side:

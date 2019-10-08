@@ -22,7 +22,7 @@ class Evaluation:
     @staticmethod
     def get_all_scores(y_test, y_pred, precision=None):
         pearson_coeff = pearsonr(y_test, y_pred)[0]
-        RMSE = sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
+        RMSE = sqrt(mean_squared_error(y_test, y_pred))
         errors = y_test - y_pred
         mean_error = np.mean(errors, axis=0)
         if precision:
@@ -34,11 +34,11 @@ class Evaluation:
     def evaluate_nn(self, model):
         # train NN
         # lr = learning rate, the other params are default values
-        optimizer = optimizers.Nadam(lr=0.0002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+        optimizer = optimizers.Nadam(lr=0.0008, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
         # optimizer = optimizers.Adam()
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
-        early_stopping_patience = 5
+        early_stopping_patience = 4
         early_stopping = EarlyStopping(monitor='val_loss', patience=early_stopping_patience)
         # epochs is the maximum training round, validation split is the size of the validation set,
         # callback stops the training if the validation was not approved
@@ -52,7 +52,7 @@ class Evaluation:
                 raise ValueError('Loss is Nan')
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
-            while n_epochs < early_stopping_patience + 5:
+            while n_epochs < early_stopping_patience:
                 print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
                 model.reset_states()
                 r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
@@ -80,7 +80,7 @@ class Evaluation:
         plt.figure()
         plt.plot(y_true, y_pred, 'b.')
         plt.plot([0, 250], [0, 250], 'r--')
-        RMSE_str = str(RMSE[0])
+        RMSE_str = str(RMSE)
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
         plt.title(title + '\np_correlation: ' + pearson_coeff + '   RMSE: '
@@ -98,7 +98,7 @@ class Evaluation:
             y_pred = y_pred.ravel()
         plt.figure()
         pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
-        RMSE_str = str(RMSE[0])
+        RMSE_str = str(RMSE)
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
         title_extended = title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str + '  Mean error: ' + mean_error_str
@@ -130,7 +130,7 @@ class Evaluation:
         plt.figure()
         plot_true, = plt.plot(y_true[:2000])
         plot_pred, = plt.plot(y_pred[:2000])
-        RMSE_str = str(RMSE[0])
+        RMSE_str = str(RMSE)
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
         plt.title(title + '\ncorrelation: ' + pearson_coeff + '   RMSE: ' + RMSE_str +
@@ -149,7 +149,7 @@ class Evaluation:
 
     @staticmethod
     def insert_prediction_result(predict_result_df, sub_name, pearson_coeff, RMSE, mean_error):
-        sub_df = pd.DataFrame([[sub_name, pearson_coeff, RMSE[0], mean_error]])
+        sub_df = pd.DataFrame([[sub_name, pearson_coeff, RMSE, mean_error]])
         predict_result_df = predict_result_df.append(sub_df)
         return predict_result_df
 

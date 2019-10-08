@@ -55,6 +55,9 @@ COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', '
 RUNNING_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28',
                   'mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
 
+RUNNING_TRIALS_NO_BASELINE = ('nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28',
+                              'mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28')
+
 NIKE_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28')
 
 MINI_TRIALS = ('mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
@@ -101,6 +104,12 @@ for key in SUB_AND_MINI_TRIALS.keys():
         if 'nike' in trial_name:
             SUB_AND_MINI_TRIALS[key].remove(trial_name)
 
+SUB_AND_RUNNING_TRIALS_NO_BASELINE = copy.deepcopy(SUB_AND_RUNNING_TRIALS)
+for key in SUB_AND_RUNNING_TRIALS_NO_BASELINE.keys():
+    for trial_name in SUB_AND_RUNNING_TRIALS_NO_BASELINE[key]:
+        if 'baseline' in trial_name:
+            SUB_AND_RUNNING_TRIALS_NO_BASELINE[key].remove(trial_name)
+
 # The orientation of left foot xsens sensor was wrong
 XSENS_ROTATION_CORRECTION_NIKE = {
     '190511ZhuJiayi': {'l_foot': [[-1, 0, 0],
@@ -113,11 +122,10 @@ SPECIFIC_CALI_MATRIX = {
                                      [-0.37081009, 0.80245287, -0.46751393],
                                      [-0.04712714, 0.48649496, 0.87241142]]}}
 
-ROTATION_VIA_STATIC_CALIBRATION = False
+ROTATION_VIA_STATIC_CALIBRATION = True
 
-TRIAL_START_BUFFER = 3       # 3 seconds filter buffer
-FILTER_WIN_LEN = 100        # The length of FIR filter window
-
+TRIAL_START_BUFFER = 3  # 3 seconds filter buffer
+FILTER_WIN_LEN = 100  # The length of FIR filter window
 
 FONT_SIZE = 18
 FONT_DICT = {'fontsize': FONT_SIZE, 'fontname': 'DejaVu Sans'}
@@ -131,8 +139,3 @@ COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y'
                      'l_foot_mag_x', 'l_foot_mag_y', 'l_foot_mag_z']
 
 COLUMN_FOR_HUAWEI_1000 = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z']
-
-
-
-
-
