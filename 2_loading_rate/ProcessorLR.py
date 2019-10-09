@@ -136,6 +136,7 @@ class ProcessorLR:
             pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
             predict_result_df = Evaluation.insert_prediction_result(
                 predict_result_df, SUB_NAMES[test_id_list[0]], pearson_coeff, RMSE, mean_error)
+            plt.savefig('exported_figures/lr_' + SUB_NAMES[test_id_list[0]] + '.png')
         Evaluation.export_prediction_result(predict_result_df)
         plt.show()
 
@@ -178,7 +179,7 @@ class ProcessorLR:
         """
         step_num = len(input_all_list)
         resample_len = self.sensor_sampling_fre
-        data_clip_start, data_clip_end = int(resample_len * 0.5), int(resample_len * 0.75)
+        data_clip_start, data_clip_end = 104, 151
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
@@ -210,7 +211,7 @@ class ProcessorLR:
                 print('Zero encountered in aux input. Replaced by the median')
         return aux_input
 
-    def define_cnn_model_2(self):
+    def define_cnn_model(self):
         """
         Convolution kernel shape changed from 1D to 2D.
         :return:
@@ -221,76 +222,39 @@ class ProcessorLR:
 
         # kernel_init = 'lecun_uniform'
         kernel_regu = regularizers.l2(0.01)
-        # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv2D(filters=6, kernel_size=(35, 3), kernel_regularizer=kernel_regu)(main_input)
-        tower_1 = MaxPooling2D(pool_size=(16, main_input_shape[2]+1-3))(tower_1)
+        kernel_regu = regularizers.l2(0.001)
+        kernel_regu = None
+
+        kernel_size = np.array([3, main_input_shape[2]])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_2 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_2 = MaxPooling2D(pool_size=pool_size)(tower_2)
+
+        kernel_size = np.array([10, 1])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_3 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_3 = MaxPooling2D(pool_size=pool_size)(tower_3)
+
+        kernel_size = np.array([3, 1])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_4 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_4 = MaxPooling2D(pool_size=pool_size)(tower_4)
 
         # for each feature, add 20 * 1 cov kernel
-        tower_2 = Conv2D(filters=6, kernel_size=(20, 3), kernel_regularizer=kernel_regu)(main_input)
-        tower_2 = MaxPooling2D(pool_size=(31, main_input_shape[2]+1-3))(tower_2)
+        kernel_size = np.array([1, main_input_shape[2]])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_5 = Conv2D(filters=20, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_5 = MaxPooling2D(pool_size=pool_size)(tower_5)
 
-        # # for each feature, add 20 * 1 cov kernel
-        # tower_3 = Conv2D(filters=6, kernel_size=(10, 1), kernel_regularizer=kernel_regu)(main_input)
-        # tower_3 = MaxPooling2D(pool_size=(41, main_input_shape[2]+1-1))(tower_3)
-
-        # for each feature, add 20 * 1 cov kernel
-        tower_4 = Conv2D(filters=6, kernel_size=(10, 3), kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPooling2D(pool_size=(41, main_input_shape[2]+1-3))(tower_4)
-
-        # for each feature, add 20 * 1 cov kernel
-        tower_5 = Conv2D(filters=6, kernel_size=(3, 1), kernel_regularizer=kernel_regu)(main_input)
-        tower_5 = MaxPooling2D(pool_size=(48, main_input_shape[2]+1-1))(tower_5)
-
-        # for each feature, add 20 * 1 cov kernel
-        tower_6 = Conv2D(filters=6, kernel_size=(3, 3), kernel_regularizer=kernel_regu)(main_input)
-        tower_6 = MaxPooling2D(pool_size=(48, main_input_shape[2]+1-3))(tower_6)
-
-        joined_outputs = concatenate([tower_1, tower_2, tower_4, tower_5, tower_6], axis=-1)
+        joined_outputs = concatenate([tower_2, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
         aux_input = Input(shape=(2,), name='aux_input')
         aux_joined_outputs = concatenate([main_outputs, aux_input])
 
-        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
-        model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
-        self.model = model
-
-    def define_cnn_model(self):
-        main_input_shape = self._x_train.shape
-        main_input = Input((main_input_shape[1:]), name='main_input')
-        base_size = int(self.sensor_sampling_fre*0.01)
-
-        # kernel_init = 'lecun_uniform'
-        kernel_regu = regularizers.l2(0.01)
-        # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv1D(filters=11, kernel_size=15*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_1 = MaxPool1D(pool_size=10*base_size+1)(tower_1)
-
-        # for each feature, add 5 * 1 cov kernel
-        tower_3 = Conv1D(filters=11, kernel_size=5*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_3 = MaxPool1D(pool_size=20*base_size+1)(tower_3)
-
-        # for each feature, add 5 * 1 cov kernel
-        tower_4 = Conv1D(filters=11, kernel_size=2*base_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPool1D(pool_size=23*base_size+1)(tower_4)
-
-        # for each feature, add 5 * 1 cov kernel
-        tower_5 = Conv1D(filters=11, kernel_size=1, kernel_regularizer=kernel_regu)(main_input)
-        tower_5 = MaxPool1D(pool_size=50)(tower_5)
-
-        joined_outputs = concatenate([tower_1, tower_3, tower_4, tower_5], axis=-1)
-        joined_outputs = Activation('relu')(joined_outputs)
-        main_outputs = Flatten()(joined_outputs)
-
-        aux_input = Input(shape=(2,), name='aux_input')
-        aux_joined_outputs = concatenate([main_outputs, aux_input])
-
-        aux_joined_outputs = Dense(20, activation='relu')(aux_joined_outputs)
-        aux_joined_outputs = Dense(15, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(50, activation='relu')(aux_joined_outputs)
+        aux_joined_outputs = Dense(50, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(10, activation='relu')(aux_joined_outputs)
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)

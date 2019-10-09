@@ -53,7 +53,7 @@ class ParamProcessor:
                 trial_param_df_100, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_100_df, grf_1000_df,
                                                                                         HAISHENG_SENSOR_SAMPLE_RATE)
                 self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
-                plt.show()
+                # plt.show()
 
         if self.__initialize_200Hz:
             self.nike_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
@@ -70,7 +70,7 @@ class ParamProcessor:
                                                                                         MOCAP_SAMPLE_RATE)
                 l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
                 self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
-                plt.show()
+                # plt.show()
 
     @staticmethod
     def resample_steps(steps_1000, sample_fre):
@@ -377,7 +377,7 @@ class ParamProcessor:
                 plt.figure()
                 plt.plot(grf_z_step)
                 plt.plot(peaks, grf_z_step[peaks], 'r*')
-                plt.show()
+                # plt.show()
                 continue  # continue without recording loading rate
             peak_index = int(round(impact_peak_sample_num))
             impact_peak_force = grf_z_step[peak_index]
@@ -396,13 +396,13 @@ class ParamProcessor:
                 plt.figure()
                 plt.plot(grf_z_step)
                 plt.plot([start_index, end_index], [grf_z_step[start_index], grf_z_step[end_index]], 'r-')
-                plt.show()
+                # plt.show()
                 continue  # continue without recording loading rate
             loading_rate = (grf_z_step[end_index] - grf_z_step[start_index]) * PLATE_SAMPLE_RATE / (
                     end_index - start_index)
             if LOADING_RATE_NORMALIZATION:
                 loading_rate = - loading_rate / (self.__weight * 10)
-            marker_frame = plate_data.loc[round((step[0] + step[1]) / 2), 'marker_frame']
+            marker_frame = plate_data.loc[step[0], 'marker_frame']      # place the valid loading rate at strike sample
             loading_rates.append([loading_rate, marker_frame])
         return loading_rates
 

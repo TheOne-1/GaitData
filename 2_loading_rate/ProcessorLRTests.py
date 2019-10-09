@@ -9,7 +9,6 @@ from keras import regularizers
 from keras.layers import *
 from keras.models import Model
 from ProcessorLR import ProcessorLR
-from const import TRIAL_NAMES
 import numpy as np
 import keras
 import pandas as pd
@@ -18,6 +17,7 @@ import pandas as pd
 class ProcessorLR2DConv(ProcessorLR):
     def define_cnn_model(self):
         """
+        This model is pretty much the best in ProcessorLRTests.
         Convolution kernel shape changed from 1D to 2D.
         :return:
         """
@@ -26,29 +26,31 @@ class ProcessorLR2DConv(ProcessorLR):
         # base_size = int(self.sensor_sampling_fre*0.01)
 
         # kernel_init = 'lecun_uniform'
-        kernel_regu = regularizers.l2(0.01)
+        # kernel_regu = regularizers.l2(0.01)
         kernel_regu = None
-        # for each feature, add 20 * 1 cov kernel
-        tower_1 = Conv2D(filters=12, kernel_size=(35, 1), kernel_regularizer=kernel_regu)(main_input)
-        tower_1 = MaxPooling2D(pool_size=(16, main_input_shape[2]+1-1))(tower_1)
+
+        kernel_size = np.array([3, main_input_shape[2]])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_2 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_2 = MaxPooling2D(pool_size=pool_size)(tower_2)
+
+        kernel_size = np.array([10, 1])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_3 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_3 = MaxPooling2D(pool_size=pool_size)(tower_3)
+
+        kernel_size = np.array([3, 1])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_4 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_4 = MaxPooling2D(pool_size=pool_size)(tower_4)
 
         # for each feature, add 20 * 1 cov kernel
-        tower_2 = Conv2D(filters=12, kernel_size=(20, 1), kernel_regularizer=kernel_regu)(main_input)
-        tower_2 = MaxPooling2D(pool_size=(31, main_input_shape[2]+1-1))(tower_2)
+        kernel_size = np.array([1, main_input_shape[2]])
+        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
+        tower_5 = Conv2D(filters=20, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
+        tower_5 = MaxPooling2D(pool_size=pool_size)(tower_5)
 
-        # for each feature, add 20 * 1 cov kernel
-        tower_3 = Conv2D(filters=12, kernel_size=(10, 1), kernel_regularizer=kernel_regu)(main_input)
-        tower_3 = MaxPooling2D(pool_size=(41, main_input_shape[2]+1-1))(tower_3)
-
-        # for each feature, add 20 * 1 cov kernel
-        tower_4 = Conv2D(filters=12, kernel_size=(3, 1), kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPooling2D(pool_size=(48, main_input_shape[2]+1-1))(tower_4)
-
-        # for each feature, add 20 * 1 cov kernel
-        tower_5 = Conv2D(filters=20, kernel_size=(1, main_input_shape[2]), kernel_regularizer=kernel_regu)(main_input)
-        tower_5 = MaxPooling2D(pool_size=(50, 1))(tower_5)
-
-        joined_outputs = concatenate([tower_1, tower_2, tower_3, tower_4, tower_5], axis=-1)
+        joined_outputs = concatenate([tower_2, tower_3, tower_4, tower_5], axis=-1)
         joined_outputs = Activation('relu')(joined_outputs)
         main_outputs = Flatten()(joined_outputs)
 
@@ -433,6 +435,58 @@ class ProcessorLRNoResampleGridSearch(ProcessorLR):
         self._y_test = ProcessorLR.convert_output(output_list)
 
 
+class ProcessorLR2DConvGridSearch(ProcessorLRNoResampleGridSearch):
+
+    # convert the input from list to ndarray
+    def convert_input(self, input_all_list, sampling_fre, data_clip_start, data_clip_end):
+        """
+        CNN based algorithm improved
+        """
+        step_num = len(input_all_list)
+        resample_len = self.sensor_sampling_fre
+        # data_clip_start, data_clip_end = int(resample_len * 0.5), int(resample_len * 0.75)
+        step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
+        aux_input = np.zeros([step_num, 2])
+        for i_step in range(step_num):
+            acc_gyr_data = input_all_list[i_step][:, 0:self.channel_num]
+            for i_channel in range(self.channel_num):
+                channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
+                step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
+                step_len = acc_gyr_data.shape[0]
+                aux_input[i_step, 0] = step_len
+                strike_sample_num = np.where(input_all_list[i_step][:, -1] == 1)[0]
+                aux_input[i_step, 1] = strike_sample_num
+
+        aux_input = ProcessorLR.clean_aux_input(aux_input)
+        return step_input, aux_input
+
+    def cnn_train_test(self):
+        """
+        The very basic condition, use the train set to train and use the test set to test.
+        :return:
+        """
+        predict_result_df = pd.DataFrame()
+        result = np.zeros([10, 5])
+        i_row, i_col = -1, -1
+        for data_clip_start in range(100, 120, 2):
+            i_row += 1
+            i_col = -1
+            for data_clip_end in range(148, 153, 1):
+                print('start: ' + str(data_clip_start) + '  end: ' + str(data_clip_end))
+                i_col += 1
+                self.prepare_data(data_clip_start, data_clip_end)
+                self.do_normalization()
+                self.define_cnn_model()
+                y_pred = self.evaluate_cnn_model()
+                pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
+                predict_result_df = Evaluation.insert_prediction_result(
+                    predict_result_df, SUB_NAMES[0], pearson_coeff, data_clip_start, data_clip_end)
+                result[i_row, i_col] = pearson_coeff
+        Evaluation.export_prediction_result(predict_result_df)
+        plt.imshow(result, cmap='RdBu')
+        plt.show()
+
+
 class ProcessorLRCrazyKernel(ProcessorLR):
     def define_cnn_model(self):
         """
@@ -446,7 +500,6 @@ class ProcessorLRCrazyKernel(ProcessorLR):
 
         # kernel_init = 'lecun_uniform'
         kernel_regu = None
-        # kernel_regu = None
         # for each feature, add 20 * 1 cov kernel
         tower_1 = Conv2D(filters=30, kernel_size=(50, main_input_shape[2]), kernel_regularizer=kernel_regu)(main_input)
 

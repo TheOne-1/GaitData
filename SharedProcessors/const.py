@@ -33,7 +33,7 @@ XSENS_FILE_NAME_DIC = {'trunk': 'MT_0370064E_000.mtb', 'pelvis': 'MT_0370064C_00
 HAISHENG_SENSOR_SAMPLE_RATE = 100
 MOCAP_SAMPLE_RATE = 200
 PLATE_SAMPLE_RATE = 1000
-STATIC_STANDING_PERIOD = 10  # unit: second
+STATIC_STANDING_PERIOD = 8  # unit: second
 
 with open('..\\configuration.txt', 'r') as config:
     RAW_DATA_PATH = config.readline()
@@ -55,8 +55,8 @@ COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', '
 RUNNING_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28',
                   'mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
 
-RUNNING_TRIALS_NO_BASELINE = ('nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28',
-                              'mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28')
+SI_SR_TRIALS = ('nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28',
+                'mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28')
 
 NIKE_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28')
 
@@ -66,10 +66,15 @@ _24_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'mini baseline 24'
 
 _28_TRIALS = ('nike baseline 28', 'nike SI 28', 'nike SR 28', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
 
-SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAMES,
+SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAMES, '190522SunDongxiao': TRIAL_NAMES,
                   '190522QinZhun': TRIAL_NAMES, '190522YangCan': TRIAL_NAMES, '190521LiangJie': TRIAL_NAMES,
                   '190517ZhangYaqian': TRIAL_NAMES, '190518MouRongzi': TRIAL_NAMES, '190518FuZhinan': TRIAL_NAMES,
-                  '190522SunDongxiao': TRIAL_NAMES,
+                  '190414WangDianxin': TRIAL_NAMES,
+                  '190423LiuSensen': TRIAL_NAMES,
+                  '190424XuSen': TRIAL_NAMES,
+                  '190426YuHongzhe': TRIAL_NAMES,
+                  '190510HeMing': TRIAL_NAMES,
+                  '190514XieJie': TRIAL_NAMES,
                   # '190414WangDianxin': TRIAL_NAMES[0:4] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:12] + TRIAL_NAMES[13:],
                   # '190423LiuSensen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:13],
                   # '190424XuSen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:],
@@ -92,6 +97,12 @@ for key in SUB_AND_RUNNING_TRIALS.keys():
     if 'nike static' in SUB_AND_RUNNING_TRIALS[key]:
         SUB_AND_RUNNING_TRIALS[key].remove('nike static')
 
+SUB_AND_SI_SR_TRIALS = copy.deepcopy(SUB_AND_RUNNING_TRIALS)
+for key in SUB_AND_SI_SR_TRIALS.keys():
+    for trial_name in SUB_AND_SI_SR_TRIALS[key]:
+        if 'baseline' in trial_name:
+            SUB_AND_SI_SR_TRIALS[key].remove(trial_name)
+
 SUB_AND_NIKE_TRIALS = copy.deepcopy(SUB_AND_RUNNING_TRIALS)
 for key in SUB_AND_NIKE_TRIALS.keys():
     for trial_name in SUB_AND_NIKE_TRIALS[key]:
@@ -103,12 +114,6 @@ for key in SUB_AND_MINI_TRIALS.keys():
     for trial_name in SUB_AND_MINI_TRIALS[key]:
         if 'nike' in trial_name:
             SUB_AND_MINI_TRIALS[key].remove(trial_name)
-
-SUB_AND_RUNNING_TRIALS_NO_BASELINE = copy.deepcopy(SUB_AND_RUNNING_TRIALS)
-for key in SUB_AND_RUNNING_TRIALS_NO_BASELINE.keys():
-    for trial_name in SUB_AND_RUNNING_TRIALS_NO_BASELINE[key]:
-        if 'baseline' in trial_name:
-            SUB_AND_RUNNING_TRIALS_NO_BASELINE[key].remove(trial_name)
 
 # The orientation of left foot xsens sensor was wrong
 XSENS_ROTATION_CORRECTION_NIKE = {

@@ -14,7 +14,7 @@ import os
 
 
 class SubjectDataInitializer:
-    def __init__(self, processed_data_path, subject_folder, trials_100hz, readme_xls, check_sync=False,
+    def __init__(self, processed_data_path, subject_folder, trials_to_init, readme_xls, check_sync=False,
                  check_running_period=False, initialize_100Hz=False, initialize_200Hz=False, initialize_1000Hz=False):
         print('Subject: ' + subject_folder)
         self.__processed_data_path = processed_data_path
@@ -28,7 +28,7 @@ class SubjectDataInitializer:
         if initialize_100Hz:
             HaishengSensorReader.rename_haisheng_sensor_files(RAW_DATA_PATH + subject_folder + '\\haisheng',
                                                               readme_xls)
-            for trial_name in trials_100hz:
+            for trial_name in trials_to_init:
                 print('Initializing {trial_name} trial, vicon and Haisheng, 100 Hz...'.format(trial_name=trial_name))
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = \
                     self.initialize_vicon_resampled(trial_name, HAISHENG_SENSOR_SAMPLE_RATE, check_running_period)
@@ -43,7 +43,7 @@ class SubjectDataInitializer:
 
         # initialize 200 Hz data
         if initialize_200Hz:
-            for trial_name in TRIAL_NAMES:
+            for trial_name in trials_to_init:
                 print('Initializing {trial_name} trial, vicon and xsens, 200 Hz...'.format(trial_name=trial_name))
                 vicon_all_df, l_foot_marker_df, r_foot_marker_df, start_vicon, end_vicon = \
                     self.initialize_vicon(trial_name, check_running_period=check_running_period)
@@ -57,7 +57,7 @@ class SubjectDataInitializer:
 
         # initialzed 1000 Hz GRFz data, all the data was saved
         if initialize_1000Hz:
-            for trial_name in TRIAL_NAMES:
+            for trial_name in trials_to_init:
                 print('Initializing {trial_name} trial, z-axis of GRF, 1000 Hz...'.format(trial_name=trial_name))
                 file_path_vicon = '{path}{sub_folder}\\{sensor}\\{file_name}.csv'.format(
                     path=RAW_DATA_PATH, sub_folder=self._subject_folder, sensor='vicon', file_name=trial_name)
@@ -127,7 +127,7 @@ class SubjectDataInitializer:
 
         if 'static' in trial_name:
             # 4 second preparation time
-            start_vicon, end_vicon = 5 * MOCAP_SAMPLE_RATE, STATIC_STANDING_PERIOD * MOCAP_SAMPLE_RATE
+            start_vicon, end_vicon = 7 * MOCAP_SAMPLE_RATE, STATIC_STANDING_PERIOD * MOCAP_SAMPLE_RATE
         elif 'SI' in trial_name:
             start_vicon, end_vicon = self.__find_three_pattern_period(
                 vicon_reader.get_plate_data_resampled(), self.__readme_xls, trial_name, MOCAP_SAMPLE_RATE)
@@ -135,7 +135,7 @@ class SubjectDataInitializer:
             start_vicon, end_vicon = self.__find_running_period(vicon_reader.marker_data_processed_df['LFCC_y'],
                                                                 running_thd=300)
 
-        start_vicon -= 200 * TRIAL_START_BUFFER     # add a 3 seconds (600 samples) buffer for real time filtering
+        start_vicon -= MOCAP_SAMPLE_RATE * TRIAL_START_BUFFER     # add a 3 seconds (600 samples) buffer for real time filtering
         # sometimes the subject start walking on the wrong side of the treadmill so overwrite start_vicon was necessary
         # sometimes the xsens lost connection so overwrite end_vicon was necessary
         # overwrite the start_vicon, end_vicon if they are contained in the readme xls
@@ -168,7 +168,7 @@ class SubjectDataInitializer:
 
         if 'static' in trial_name:
             # 4 second preparation time
-            start_vicon, end_vicon = 5 * MOCAP_SAMPLE_RATE, STATIC_STANDING_PERIOD * MOCAP_SAMPLE_RATE
+            start_vicon, end_vicon = 7 * MOCAP_SAMPLE_RATE, STATIC_STANDING_PERIOD * MOCAP_SAMPLE_RATE
         elif 'SI' in trial_name:
             start_vicon, end_vicon = self.__find_three_pattern_period(
                 vicon_reader.get_plate_data_resampled(), self.__readme_xls, trial_name, HAISHENG_SENSOR_SAMPLE_RATE)
