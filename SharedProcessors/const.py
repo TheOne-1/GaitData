@@ -75,6 +75,7 @@ SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAM
                   '190426YuHongzhe': TRIAL_NAMES,
                   '190510HeMing': TRIAL_NAMES,
                   '190514XieJie': TRIAL_NAMES,
+                  '190517FuZhenzhen': TRIAL_NAMES,
                   # '190414WangDianxin': TRIAL_NAMES[0:4] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:12] + TRIAL_NAMES[13:],
                   # '190423LiuSensen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:13],
                   # '190424XuSen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:],
