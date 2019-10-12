@@ -1,1 +1,8 @@
 configuration.txt
+*.xlsx
+*.png
+*.csv
+*.xml
+*.pyc
+*/__pycache__
+.idea

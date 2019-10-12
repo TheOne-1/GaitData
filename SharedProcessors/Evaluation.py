@@ -5,9 +5,10 @@ from numpy import sqrt
 from scipy.stats import pearsonr
 from keras import optimizers
 from keras.callbacks import EarlyStopping
-from const import COLORS
+from const import COLORS, SI_SR_TRIALS
 import pandas as pd
 import os
+import openpyxl
 
 
 class Evaluation:
@@ -25,11 +26,13 @@ class Evaluation:
         RMSE = sqrt(mean_squared_error(y_test, y_pred))
         errors = y_test - y_pred
         mean_error = np.mean(errors, axis=0)
+        absolute_mean_error = np.mean(abs(errors))
         if precision:
             pearson_coeff = np.round(pearson_coeff, precision)
             RMSE = np.round(RMSE, precision)
             mean_error = np.round(mean_error, precision)
-        return pearson_coeff, RMSE, mean_error
+            absolute_mean_error = np.round(absolute_mean_error, precision)
+        return pearson_coeff, RMSE, mean_error, absolute_mean_error
 
     def evaluate_nn(self, model):
         # train NN
@@ -76,7 +79,7 @@ class Evaluation:
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
 
-        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error, _ = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plt.plot(y_true, y_pred, 'b.')
         plt.plot([0, 250], [0, 250], 'r--')
@@ -97,7 +100,7 @@ class Evaluation:
         if y_pred.shape != 1:
             y_pred = y_pred.ravel()
         plt.figure()
-        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error, _ = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         RMSE_str = str(RMSE)
         mean_error_str = str(mean_error)
         pearson_coeff = str(pearsonr(y_true, y_pred))[1:6]
@@ -126,7 +129,7 @@ class Evaluation:
     @staticmethod
     def plot_continuous_result(y_true, y_pred, title=''):
         # change the shape of data so that no error will be raised during pearsonr analysis
-        pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(y_true, y_pred, precision=3)
+        pearson_coeff, RMSE, mean_error, _ = Evaluation.get_all_scores(y_true, y_pred, precision=3)
         plt.figure()
         plot_true, = plt.plot(y_true[:2000])
         plot_pred, = plt.plot(y_pred[:2000])
@@ -154,15 +157,23 @@ class Evaluation:
         return predict_result_df
 
     @staticmethod
-    def export_prediction_result(predict_result_df):
-        predict_result_df.columns = ['subject_name', 'correlation', 'RMSE', 'mean_error']
-        result_abs_mean = np.mean(abs(predict_result_df.iloc[:, 1:]))
-        mean_value_list = ['absolute mean']
-        mean_value_list.extend(result_abs_mean.tolist())
-        predict_result_df.loc[-1] = mean_value_list
-        file_path = 'result_conclusion/predict_result_conclusion.csv'
-        i_file = 0
-        while os.path.isfile(file_path):
-            i_file += 1
-            file_path = 'result_conclusion/predict_result_conclusion_' + str(i_file) + '.csv'
-        predict_result_df.to_csv(file_path, index=False)
+    def export_prediction_result(predict_result_df, test_name):
+        column_names = ['subject name', 'parameter name']
+        column_names.extend(SI_SR_TRIALS)
+        column_names.extend(['All trials'])
+        predict_result_df.columns = column_names
+
+        for param_name in ['pearson correlation', 'RMSE', 'mean error', 'absolute mean error']:
+            param_df = predict_result_df[predict_result_df['parameter name'] == param_name]
+            result_abs_mean = np.mean(abs(param_df.iloc[:, 2:]))
+            mean_value_list = ['absolute mean', param_name]
+            mean_value_list.extend(result_abs_mean.tolist())
+            predict_result_df.loc[-1] = mean_value_list
+            predict_result_df = predict_result_df.reset_index(drop=True)
+
+        file_path = 'result_conclusion/' + test_name + '.xlsx'
+        # i_file = 0
+        # while os.path.isfile(file_path):
+        #     i_file += 1
+        #     file_path = 'result_conclusion/predict_result_conclusion_' + str(i_file) + '.xlsx'
+        predict_result_df.to_excel(file_path, index=False)

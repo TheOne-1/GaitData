@@ -398,7 +398,7 @@ class ProcessorLRNoResampleGridSearch(ProcessorLR):
                 self.do_normalization()
                 self.define_cnn_model()
                 y_pred = self.evaluate_cnn_model()
-                pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
+                pearson_coeff, RMSE, mean_error, _ = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
                 predict_result_df = Evaluation.insert_prediction_result(
                     predict_result_df, SUB_NAMES[0], pearson_coeff, data_clip_start, data_clip_end)
 
@@ -478,7 +478,7 @@ class ProcessorLR2DConvGridSearch(ProcessorLRNoResampleGridSearch):
                 self.do_normalization()
                 self.define_cnn_model()
                 y_pred = self.evaluate_cnn_model()
-                pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
+                pearson_coeff, RMSE, mean_error, _ = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
                 predict_result_df = Evaluation.insert_prediction_result(
                     predict_result_df, SUB_NAMES[0], pearson_coeff, data_clip_start, data_clip_end)
                 result[i_row, i_col] = pearson_coeff

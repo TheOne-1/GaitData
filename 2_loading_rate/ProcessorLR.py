@@ -5,22 +5,103 @@ Conv template, improvements:
 import matplotlib.pyplot as plt
 from AllSubData import AllSubData
 import scipy.interpolate as interpo
-from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE
+from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE, SI_SR_TRIALS
 import scipy.stats as stats
 from sklearn.preprocessing import MinMaxScaler
 from Evaluation import Evaluation
 from keras import regularizers
 from keras.layers import *
 from keras.models import Model
+import keras
 from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
 import numpy as np
 import pandas as pd
+import copy
+
+
+class ComboGenerator:
+    @staticmethod
+    def all_combos(train, date, c51=False, c52=False, c53=False, c54=False, c55=False):
+        """
+
+        :param train: dict. Train subjects and trials.
+        :param date: str. Used as the head of result file names
+        :param c51: bool. Whether to run through each sensor
+        :param c52: bool. Whether to run through combinations of two sensors
+        :param c53: bool. Whether to run through combinations of three sensors
+        :param c54: bool. Whether to run through combinations of four sensors
+        :param c55: bool. Whether to run using all five sensors
+        :return:
+        """
+        segments = ['trunk', 'pelvis', 'l_thigh', 'l_shank', 'l_foot']
+        if c51:
+            print('\n\nDoing C51')
+            for segment in segments:
+                print('\nCurrent segment: ' + segment)
+                cross_vali_LR_processor = ProcessorLR(train, {}, [segment])
+                cross_vali_LR_processor.cnn_cross_vali(test_name=date + '_' + segment, plot=False)
+                keras.backend.clear_session()
+
+        if c52:
+            print('\n\nDoing C52')
+            segment_combos = ComboGenerator.combinations_by_subset(segments, 2)
+            for combo in segment_combos:
+                print('\nCurrent segments: ' + str(combo))
+                cross_vali_LR_processor = ProcessorLR(train, {}, combo)
+                test_name = date
+                for segment in combo:
+                    test_name = test_name + '_' + segment
+                cross_vali_LR_processor.cnn_cross_vali(test_name=test_name, plot=False)
+                keras.backend.clear_session()
+
+        if c53:
+            print('\n\nDoing C53')
+            segment_combos = ComboGenerator.combinations_by_subset(segments, 3)
+            for combo in segment_combos:
+                print('\nCurrent segments: ' + str(combo))
+                cross_vali_LR_processor = ProcessorLR(train, {}, combo)
+                test_name = date
+                for segment in combo:
+                    test_name = test_name + '_' + segment
+                cross_vali_LR_processor.cnn_cross_vali(test_name=test_name, plot=False)
+                keras.backend.clear_session()
+
+        if c54:
+            print('\n\nDoing C54')
+            for segment in segments[2:]:
+                segment_list = copy.deepcopy(segments)
+                segment_list.remove(segment)
+                print('\nCurrent segments: ' + str(segment_list))
+                cross_vali_LR_processor = ProcessorLR(train, {}, segment_list)
+                test_name = date
+                for segment in segment_list:
+                    test_name = test_name + '_' + segment
+                cross_vali_LR_processor.cnn_cross_vali(test_name=test_name, plot=False)
+                keras.backend.clear_session()
+
+        if c55:
+            print('\n\nDoing all segment')
+            cross_vali_LR_processor = ProcessorLR(train, {}, segments)
+            test_name = date
+            for segment in segments:
+                test_name = test_name + '_' + segment
+            cross_vali_LR_processor.cnn_cross_vali(test_name=test_name, plot=False)
+            keras.backend.clear_session()
+
+    @staticmethod
+    def combinations_by_subset(seq, r):
+        if r:
+            for i in range(r - 1, len(seq)):
+                for cl in ComboGenerator.combinations_by_subset(seq[:i], r - 1):
+                    yield cl + [seq[i], ]
+        else:
+            yield list()
 
 
 class ProcessorLR:
-    def __init__(self, train_sub_and_trials, test_sub_and_trials, imu_locations, strike_off_from_IMU=False,
-                 split_train=False, do_input_norm=True, do_output_norm=False):
+    def __init__(self, train_sub_and_trials, test_sub_and_trials, imu_locations, strike_off_from_IMU=1,
+                 split_train=False, do_input_norm=True, do_output_norm=True):
         """
 
         :param train_sub_and_trials:
@@ -58,22 +139,27 @@ class ProcessorLR:
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
+        keras.backend.clear_session()
 
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
+        keras.backend.clear_session()
 
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
+        keras.backend.clear_session()
 
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
+        keras.backend.clear_session()
 
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
+        keras.backend.clear_session()
 
         plt.show()
 
@@ -90,7 +176,7 @@ class ProcessorLR:
                 plt.plot(weights_sum)
                 break
 
-    def cnn_cross_vali(self, test_set_sub_num=1):
+    def cnn_cross_vali(self, test_name='test', test_set_sub_num=1, plot=True):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         trial_ids = train_all_data_list.get_trial_id_list()
@@ -130,15 +216,51 @@ class ProcessorLR:
             y_pred = my_evaluator.evaluate_nn(self.model)
             if self.do_output_norm:
                 y_pred = self.norm_output_reverse(y_pred)
-            my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, test_trial_ids,
-                                                   TRIAL_NAMES, title=SUB_NAMES[test_id_list[0]])
 
-            pearson_coeff, RMSE, mean_error = Evaluation.get_all_scores(self._y_test, y_pred, precision=3)
-            predict_result_df = Evaluation.insert_prediction_result(
-                predict_result_df, SUB_NAMES[test_id_list[0]], pearson_coeff, RMSE, mean_error)
-            plt.savefig('exported_figures/lr_' + SUB_NAMES[test_id_list[0]] + '.png')
-        Evaluation.export_prediction_result(predict_result_df)
-        plt.show()
+            if plot:
+                my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, test_trial_ids,
+                                                       TRIAL_NAMES, title=SUB_NAMES[test_id_list[0]])
+                plt.savefig('exported_figures/lr_' + SUB_NAMES[test_id_list[0]] + '.png')
+
+            predict_result_df = self.save_detailed_results(predict_result_df, SUB_NAMES[test_id_list[0]],
+                                                           self._y_test, y_pred, test_trial_ids)
+        Evaluation.export_prediction_result(predict_result_df, test_name)
+
+    @staticmethod
+    def save_detailed_results(predict_result_df, sub_name, y_true, y_pred, test_trial_ids):
+        """
+        Record the result of each subject and each trial.
+        :return:
+        """
+        test_trial_ids_np = np.array(test_trial_ids)
+        pearson_coeff_list, RMSE_list, mean_error_list, abs_mean_error_list = [], [], [], []
+
+        # result of each trial
+        for trial_name in SI_SR_TRIALS:
+            the_trial_id = TRIAL_NAMES.index(trial_name)
+            y_true_trial = y_true[test_trial_ids_np == the_trial_id]
+            y_pred_trial = y_pred[test_trial_ids_np == the_trial_id]
+            pearson_coeff, RMSE, mean_error, abs_mean_error = Evaluation.get_all_scores(
+                y_true_trial, y_pred_trial, precision=3)
+            pearson_coeff_list.append(pearson_coeff)
+            RMSE_list.append(RMSE)
+            mean_error_list.append(mean_error)
+            abs_mean_error_list.append(abs_mean_error)
+
+        # overall result
+        pearson_coeff, RMSE, mean_error, abs_mean_error = Evaluation.get_all_scores(
+            y_true, y_pred, precision=3)
+        pearson_coeff_list.append(pearson_coeff)
+        RMSE_list.append(RMSE)
+        mean_error_list.append(mean_error)
+        abs_mean_error_list.append(abs_mean_error)
+
+        sub_df_0 = pd.DataFrame([[sub_name, 'pearson correlation'] + pearson_coeff_list])
+        sub_df_1 = pd.DataFrame([[sub_name, 'RMSE'] + RMSE_list])
+        sub_df_2 = pd.DataFrame([[sub_name, 'mean error'] + mean_error_list])
+        sub_df_3 = pd.DataFrame([[sub_name, 'absolute mean error'] + abs_mean_error_list])
+
+        return pd.concat([predict_result_df, sub_df_0, sub_df_1, sub_df_2, sub_df_3])
 
     def prepare_data(self):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
@@ -221,9 +343,7 @@ class ProcessorLR:
         # base_size = int(self.sensor_sampling_fre*0.01)
 
         # kernel_init = 'lecun_uniform'
-        kernel_regu = regularizers.l2(0.01)
         kernel_regu = regularizers.l2(0.001)
-        kernel_regu = None
 
         kernel_size = np.array([3, main_input_shape[2]])
         pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size

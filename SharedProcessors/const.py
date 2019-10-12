@@ -128,7 +128,7 @@ SPECIFIC_CALI_MATRIX = {
                                      [-0.37081009, 0.80245287, -0.46751393],
                                      [-0.04712714, 0.48649496, 0.87241142]]}}
 
-ROTATION_VIA_STATIC_CALIBRATION = True
+ROTATION_VIA_STATIC_CALIBRATION = False
 
 TRIAL_START_BUFFER = 3  # 3 seconds filter buffer
 FILTER_WIN_LEN = 100  # The length of FIR filter window
