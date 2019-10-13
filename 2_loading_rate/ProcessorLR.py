@@ -97,7 +97,7 @@ class ProcessorLR:
                 plt.plot(weights_sum)
                 break
 
-    def cnn_cross_vali(self, test_name='test', test_set_sub_num=1, plot=True):
+    def cnn_cross_vali(self, test_date, test_name, test_set_sub_num=1, plot=True):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
         trial_ids = train_all_data_list.get_trial_id_list()
@@ -109,6 +109,7 @@ class ProcessorLR:
         sub_num = len(self.train_sub_and_trials.keys())
         folder_num = int(np.ceil(sub_num / test_set_sub_num))        # the number of cross validation times
         predict_result_df = pd.DataFrame()
+        predicted_value_df = pd.DataFrame()     # save all the predicted values in case reviewer ask for more analysis
         for i_folder in range(folder_num):
             test_id_list = sub_id_set_tuple[test_set_sub_num*i_folder:test_set_sub_num*(i_folder+1)]
             print('\ntest subjects: ')
@@ -145,7 +146,19 @@ class ProcessorLR:
 
             predict_result_df = self.save_detailed_results(predict_result_df, SUB_NAMES[test_id_list[0]],
                                                            self._y_test, y_pred, test_trial_ids)
-        Evaluation.export_prediction_result(predict_result_df, test_name)
+            predicted_value_df = self.save_all_predicted_values(predicted_value_df, self._y_test, y_pred,
+                                                                test_id_list[0], test_trial_ids)
+        Evaluation.export_prediction_result(predict_result_df, test_date, test_name)
+        Evaluation.export_predicted_values(predicted_value_df, test_date, test_name)
+
+    @staticmethod
+    def save_all_predicted_values(predicted_value_df, y_true, y_pred, sub_id, test_trial_ids):
+        data_len = len(test_trial_ids)
+        test_sub_ids_np = np.full([data_len], sub_id)
+        test_trial_ids_np = np.array(test_trial_ids)
+        current_df = pd.DataFrame(np.column_stack([test_sub_ids_np, test_trial_ids_np, y_true, y_pred]))
+        predicted_value_df = predicted_value_df.append(current_df)
+        return predicted_value_df
 
     @staticmethod
     def save_detailed_results(predict_result_df, sub_name, y_true, y_pred, test_trial_ids):

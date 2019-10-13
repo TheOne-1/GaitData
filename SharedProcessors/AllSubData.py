@@ -16,7 +16,7 @@ class AllSubData:
         # initialize the dataframe of gait data, including force plate, marker and IMU data
         self.__gait_data_path = PROCESSED_DATA_PATH + '\\'
 
-    def get_all_data(self):
+    def get_all_data(self, imu_cut_off_fre=None):
         all_sub_data_struct = AllSubDataStruct()
         for subject_name in self._sub_names:
             print('loading data of: ' + subject_name)
@@ -33,6 +33,6 @@ class AllSubData:
                     trial_processor = OneTrialData(subject_name, trial_name, self._sensor_sampling_fre,
                                                    static_data_df=static_mini_df)
                 trial_input, trial_output = trial_processor.get_lr_input_output(
-                    self.imu_locations, self._strike_off_from_IMU)
+                    self.imu_locations, self._strike_off_from_IMU, imu_cut_off_fre=imu_cut_off_fre)
                 all_sub_data_struct.append(trial_input, trial_output, subject_name, trial_name)
         return all_sub_data_struct

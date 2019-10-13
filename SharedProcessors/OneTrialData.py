@@ -135,6 +135,8 @@ class OneTrialData:
             offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
         lr_data = self.gait_param_df[self._side + '_LR'].values
         IMU_data = self.get_multi_IMU_data_df(imu_locations, acc, gyr, mag).values
+        if imu_cut_off_fre is not None:
+            IMU_data = StrikeOffDetectorIMU.data_filt(IMU_data, imu_cut_off_fre, self._sensor_sampling_fre, 2)
         step_lr_data, step_imu_data = [], []
         for i_step in range(step_num):
             strike_in_between = strikes[offs[i_step] < strikes]

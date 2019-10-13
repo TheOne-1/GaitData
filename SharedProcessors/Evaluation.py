@@ -157,7 +157,7 @@ class Evaluation:
         return predict_result_df
 
     @staticmethod
-    def export_prediction_result(predict_result_df, test_name):
+    def export_prediction_result(predict_result_df, test_date, test_name):
         column_names = ['subject name', 'parameter name']
         column_names.extend(SI_SR_TRIALS)
         column_names.extend(['All trials'])
@@ -171,9 +171,12 @@ class Evaluation:
             predict_result_df.loc[-1] = mean_value_list
             predict_result_df = predict_result_df.reset_index(drop=True)
 
-        file_path = 'result_conclusion/' + test_name + '.xlsx'
-        # i_file = 0
-        # while os.path.isfile(file_path):
-        #     i_file += 1
-        #     file_path = 'result_conclusion/predict_result_conclusion_' + str(i_file) + '.xlsx'
+        file_path = 'result_conclusion/' + test_date + '/trial_summary/' + test_name + '.xlsx'
         predict_result_df.to_excel(file_path, index=False)
+
+    @staticmethod
+    def export_predicted_values(predicted_value_df, test_date, test_name):
+        predicted_value_df.columns = ['subject id', 'trial id', 'true LR', 'predicted LR']
+        file_path = 'result_conclusion/' + test_date + '/step_result/' + test_name + '.csv'
+        predicted_value_df.to_csv(file_path, index=False)
+
