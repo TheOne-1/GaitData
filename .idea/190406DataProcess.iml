@@ -12,7 +12,8 @@
       <sourceFolder url="file://$MODULE_DIR$/abondened/5_grf_cnn" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/abondened/6_to_cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/7_fdeep" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/4_generating_figures" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/4_hw_report_figures" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/3_LR_paper_figures" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.6" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

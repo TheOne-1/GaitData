@@ -113,7 +113,7 @@ class OneTrialData:
         #         print()
         return dcm_mat
 
-    def get_lr_input_output(self, imu_locations, from_IMU, acc=True, gyr=True, mag=False):
+    def get_lr_input_output(self, imu_locations, from_IMU, acc=True, gyr=True, mag=False, imu_cut_off_fre=None):
         """
         GRFz: from strike to off
         acc and gyr: from off to off because information before strike might be useful

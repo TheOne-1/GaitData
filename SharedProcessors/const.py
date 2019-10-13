@@ -69,7 +69,6 @@ _28_TRIALS = ('nike baseline 28', 'nike SI 28', 'nike SR 28', 'mini baseline 28'
 SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAMES, '190522SunDongxiao': TRIAL_NAMES,
                   '190522QinZhun': TRIAL_NAMES, '190522YangCan': TRIAL_NAMES, '190521LiangJie': TRIAL_NAMES,
                   '190517ZhangYaqian': TRIAL_NAMES, '190518MouRongzi': TRIAL_NAMES, '190518FuZhinan': TRIAL_NAMES,
-                  '190414WangDianxin': TRIAL_NAMES,
                   '190423LiuSensen': TRIAL_NAMES,
                   '190424XuSen': TRIAL_NAMES,
                   '190426YuHongzhe': TRIAL_NAMES,
