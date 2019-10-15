@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c92c1fa7-68af-461c-8a81-398298ffad5f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/3_LR_paper_figures/3_0_print_tableI.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2_loading_rate/ComboGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/ComboGenerator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/AllSubData.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/AllSubData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SharedProcessors/OneTrialData.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/OneTrialData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LR_paper_figures/3_0_best_of_combos.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,48 +22,36 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py">
+        <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_0_print_tableI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="12" column="20" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+            <state relative-caret-position="176">
+              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="13" />
               <folding>
-                <element signature="e#99#137#0" expanded="true" />
+                <element signature="e#114#132#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/ComboGenerator.py">
+        <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="26" column="28" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="28" />
+            <state relative-caret-position="330">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
               <folding>
-                <element signature="e#0#35#0" expanded="true" />
+                <element signature="e#1#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
+        <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2353">
-              <caret line="149" column="96" selection-start-line="149" selection-start-column="96" selection-end-line="149" selection-end-column="96" />
+            <state relative-caret-position="64">
+              <caret line="115" column="6" selection-start-line="115" selection-start-column="6" selection-end-line="115" selection-end-column="6" />
               <folding>
-                <element signature="e#110#141#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="179" column="91" lean-forward="true" selection-start-line="179" selection-start-column="91" selection-end-line="179" selection-end-column="91" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#0#45#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -150,8 +138,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/0_preprocessing/XsensReader.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/AllSubData.py" />
         <option value="$PROJECT_DIR$/3_loading_rate_real_time/filter_param.json" />
         <option value="$PROJECT_DIR$/4_generating_figures/4_0_strike_off.py" />
         <option value="$PROJECT_DIR$/4_generating_figures/funcs.py" />
@@ -192,8 +178,6 @@
         <option value="$PROJECT_DIR$/2_loading_rate/result_conclusion/test.py" />
         <option value="$PROJECT_DIR$/SharedProcessors/const.py" />
         <option value="$PROJECT_DIR$/3_LR_paper_figures/0_best_of_combos.py" />
-        <option value="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" />
-        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_0_best_of_combos.py" />
         <option value="$PROJECT_DIR$/SharedProcessors/AllSubData.py" />
         <option value="$PROJECT_DIR$/SharedProcessors/OneTrialData.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" />
@@ -201,11 +185,15 @@
         <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/ComboGenerator.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_0_best_of_combos.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_0_print_tableI.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1902" />
+    <option name="x" value="-1959" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -217,23 +205,12 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
               <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-              <item name="0_preprocessing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
-              <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-              <item name="2_loading_rate" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
@@ -249,6 +226,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -283,7 +261,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.2_0_lr_all_combos">
+  <component name="RunManager" selected="Python.3_1_print_tableII">
     <configuration name="0_initialize_data" type="PythonConfigurationType" factoryName="Python" singleton="false">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -347,27 +325,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="2_0_lr_cross_vali" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
-      <module name="190406DataProcess" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="3_0_best_of_combos" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -380,7 +337,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_LR_paper_figures/3_0_best_of_combos.py" />
+      <option name="SCRIPT_NAME" value="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\3_LR_paper_figures\3_0_print_tableI.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="3_1_print_tableII" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="190406DataProcess" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/3_LR_paper_figures" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -413,18 +391,18 @@
     <list>
       <item itemvalue="Python.0_initialize_data" />
       <item itemvalue="Python.2_0_lr_base" />
-      <item itemvalue="Python.2_0_lr_cross_vali" />
       <item itemvalue="Python.2_0_lr_all_combos" />
       <item itemvalue="Python.test" />
       <item itemvalue="Python.3_0_best_of_combos" />
+      <item itemvalue="Python.3_1_print_tableII" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.2_0_lr_all_combos" />
+        <item itemvalue="Python.3_1_print_tableII" />
         <item itemvalue="Python.3_0_best_of_combos" />
+        <item itemvalue="Python.2_0_lr_all_combos" />
         <item itemvalue="Python.2_0_lr_base" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.2_0_lr_cross_vali" />
       </list>
     </recent_temporary>
   </component>
@@ -454,12 +432,12 @@
     <frame x="-1928" y="0" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.13962065" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.13962065" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5041322" side_tool="true" weight="0.13382508" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49841937" visible="true" weight="0.30802602" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49841937" visible="true" weight="0.30802602" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49894625" weight="0.37635574" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -532,11 +510,15 @@
           <line>18</line>
           <option name="timeStamp" value="629" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py</url>
+          <line>15</line>
+          <option name="timeStamp" value="644" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/test.py" />
     <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/keras_applications/imagenet_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="410">
@@ -734,26 +716,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_0_best_of_combos.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="31" lean-forward="true" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="808">
-          <caret line="39" column="87" selection-start-line="39" selection-start-column="87" selection-end-line="39" selection-end-column="87" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SharedProcessors/const.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -814,32 +776,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="19" column="29" lean-forward="true" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
-          <folding>
-            <element signature="e#1#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/0_preprocessing/Initializer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-7">
           <caret line="281" column="40" lean-forward="true" selection-start-line="281" selection-start-column="40" selection-end-line="292" selection-end-column="38" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="20" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
-          <folding>
-            <element signature="e#99#137#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -856,20 +798,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2353">
-          <caret line="149" column="96" selection-start-line="149" selection-start-column="96" selection-end-line="149" selection-end-column="96" />
+        <state relative-caret-position="-207">
+          <caret line="163" column="8" selection-start-line="163" selection-start-column="8" selection-end-line="163" selection-end-column="8" />
           <folding>
             <element signature="e#110#141#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="19" column="29" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
+          <folding>
+            <element signature="e#1#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="25" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
+          <folding>
+            <element signature="e#99#140#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/2_loading_rate/ComboGenerator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="26" column="28" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="28" />
+        <state relative-caret-position="240">
+          <caret line="119" column="35" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="115" column="6" selection-start-line="115" selection-start-column="6" selection-end-line="115" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_0_print_tableI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="13" />
+          <folding>
+            <element signature="e#114#132#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_1_print_tableII.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

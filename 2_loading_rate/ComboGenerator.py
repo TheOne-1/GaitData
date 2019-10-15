@@ -117,7 +117,7 @@ class ComboGenerator:
 
         if c54:
             print('\n\nDoing C54')
-            for segment in segments[2:]:
+            for segment in segments:
                 segment_list = copy.deepcopy(segments)
                 segment_list.remove(segment)
                 print('\nCurrent segments: ' + str(segment_list))
