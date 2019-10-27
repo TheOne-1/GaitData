@@ -1,14 +1,10 @@
 import pandas as pd
 import numpy as np
 
-
-def combinations_by_subset(seq, r):
-    if r:
-        for i in range(r - 1, len(seq)):
-            for cl in combinations_by_subset(seq[:i], r - 1):
-                yield cl + (seq[i],)
-    else:
-        yield tuple()
+tt = (sm-m)/np.sqrt(sv/float(n))  # t-statistic for mean
+pval = stats.t.sf(np.abs(tt), n-1)*2  # two-sided pvalue = Prob(abs(t)>tt)
+print 't-statistic = %6.3f pvalue = %6.4f' % (tt, pval)
+t-statistic =  0.391 pvalue = 0.6955
 
 # segments = ['trunk', 'pelvis', 'l_thigh', 'l_shank', 'l_foot']
 segments = 'ABCD'

@@ -28,7 +28,7 @@ class ProcessorLR:
         :param train_sub_and_trials:
         :param test_sub_and_trials:
         :param imu_locations:
-        :param strike_off_from_IMU: 0 for from plate, 1 for filtfilt, 2 for lfilter
+        :param strike_off_from_IMU: 0 for from plate, 1 for foot IMU, 2 for shank IMU
         :param split_train:
         :param do_input_norm:
         :param do_output_norm:
@@ -56,17 +56,8 @@ class ProcessorLR:
         :return:
         """
         self.prepare_data()
+        plt.show()
         self.do_normalization()
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.show_weights()
-        keras.backend.clear_session()
-
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.show_weights()
-        keras.backend.clear_session()
-
         self.define_cnn_model()
         self.evaluate_cnn_model()
         self.show_weights()
@@ -233,9 +224,12 @@ class ProcessorLR:
         """
         CNN based algorithm improved
         """
+        # plt.figure()        # !!!
+
         step_num = len(input_all_list)
         resample_len = self.sensor_sampling_fre
-        data_clip_start, data_clip_end = 104, 151
+        data_clip_start, data_clip_end = 104, 166       # 104, 151 for strike off from foot IMU
+        # data_clip_start, data_clip_end = 94, 161       # 104, 151 for strike off from foot IMU
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
@@ -247,6 +241,8 @@ class ProcessorLR:
                 aux_input[i_step, 0] = step_len
                 strike_sample_num = np.where(input_all_list[i_step][:, -1] == 1)[0]
                 aux_input[i_step, 1] = strike_sample_num
+
+            # plt.plot(step_input[i_step, :, 2])      # !!!
 
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input

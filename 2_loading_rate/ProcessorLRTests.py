@@ -235,10 +235,12 @@ class ProcessorLR2DMultiLayer(ProcessorLR):
 
 
 class ProcessorLRNoResample(ProcessorLR):
-    def convert_input(self, input_all_list, sampling_fre, data_clip_start=-20, data_clip_end=10):
+    def convert_input(self, input_all_list, sampling_fre, data_clip_start=-12, data_clip_end=30):
         """
         input start from strike-20 to strike+20
         """
+        # plt.figure()            # !!!
+
         step_num = len(input_all_list)
         # data_clip_start, data_clip_end = -40, 25
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
@@ -250,6 +252,8 @@ class ProcessorLRNoResample(ProcessorLR):
             strike_sample_num = int(np.where(input_all_list[i_step][:, -1] == 1)[0])
             aux_input[i_step, 1] = strike_sample_num
             step_input[i_step, :, :] = acc_gyr_data[strike_sample_num+data_clip_start:strike_sample_num+data_clip_end, :]
+
+            # plt.plot(step_input[i_step, :, 2])      # !!!
 
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input
@@ -264,86 +268,7 @@ class ProcessorLRNoResample(ProcessorLR):
         # base_size = int(self.sensor_sampling_fre*0.01)
 
         # kernel_init = 'lecun_uniform'
-        # kernel_regu = regularizers.l2(0.01)
-        kernel_regu = None
-
-        # for each feature, add 35 * 1 cov kernel
-        kernel_size = np.array([3, main_input_shape[2]])
-        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        tower_1 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_1 = MaxPooling2D(pool_size=pool_size)(tower_1)
-
-        kernel_size = np.array([20, 1])
-        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        tower_2 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_2 = MaxPooling2D(pool_size=pool_size)(tower_2)
-
-        kernel_size = np.array([10, 1])
-        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        tower_3 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_3 = MaxPooling2D(pool_size=pool_size)(tower_3)
-
-        kernel_size = np.array([3, 1])
-        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        tower_4 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_4 = MaxPooling2D(pool_size=pool_size)(tower_4)
-
-        # for each feature, add 20 * 1 cov kernel
-        kernel_size = np.array([1, main_input_shape[2]])
-        pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        tower_5 = Conv2D(filters=20, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        tower_5 = MaxPooling2D(pool_size=pool_size)(tower_5)
-
-        joined_outputs = concatenate([tower_1, tower_2, tower_3, tower_4, tower_5], axis=-1)
-        joined_outputs = Activation('relu')(joined_outputs)
-        main_outputs = Flatten()(joined_outputs)
-
-        main_outputs = Dense(50, activation='relu')(main_outputs)
-        main_outputs = Dense(50, activation='relu')(main_outputs)
-        main_outputs = Dense(10, activation='relu')(main_outputs)
-        main_outputs = Dense(1, activation='linear')(main_outputs)
-        model = Model(inputs=main_input, outputs=main_outputs)
-        self.model = model
-
-
-class ProcessorLRNoResampleGridSearch(ProcessorLR):
-
-    def convert_input(self, input_all_list, sampling_fre, data_clip_start=-40, data_clip_end=25):
-        """
-        input start from strike-20 to strike+20
-        """
-        step_num = len(input_all_list)
-        # data_clip_start, data_clip_end = -40, 25
-        step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
-        aux_input = np.zeros([step_num, 2])
-        for i_step in range(step_num):
-            acc_gyr_data = input_all_list[i_step][:, 0:self.channel_num]
-            step_len = acc_gyr_data.shape[0]
-            aux_input[i_step, 0] = step_len
-            strike_sample_num = int(np.where(input_all_list[i_step][:, -1] == 1)[0])
-            aux_input[i_step, 1] = strike_sample_num
-            step_input[i_step, :, :] = acc_gyr_data[strike_sample_num+data_clip_start:strike_sample_num+data_clip_end, :]
-
-        aux_input = ProcessorLR.clean_aux_input(aux_input)
-        return step_input, aux_input
-
-    def define_cnn_model(self):
-        """
-        Designed for grid search.
-        :return:
-        """
-        main_input_shape = list(self._x_train.shape)
-        main_input = Input((main_input_shape[1:]), name='main_input')
-        # base_size = int(self.sensor_sampling_fre*0.01)
-
-        # kernel_init = 'lecun_uniform'
-        kernel_regu = None
-
-        # # for each feature, add 35 * 1 cov kernel
-        # kernel_size = np.array([35, 1])
-        # pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
-        # tower_1 = Conv2D(filters=12, kernel_size=kernel_size, kernel_regularizer=kernel_regu)(main_input)
-        # tower_1 = MaxPooling2D(pool_size=pool_size)(tower_1)
+        kernel_regu = regularizers.l2(0.001)
 
         kernel_size = np.array([3, main_input_shape[2]])
         pool_size = main_input_shape[1:3] + np.array([1, 1]) - kernel_size
@@ -380,6 +305,9 @@ class ProcessorLRNoResampleGridSearch(ProcessorLR):
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         self.model = model
 
+
+class ProcessorLRNoResampleGridSearch(ProcessorLRNoResample):
+
     def cnn_train_test(self):
         """
         The very basic condition, use the train set to train and use the test set to test.
@@ -404,11 +332,8 @@ class ProcessorLRNoResampleGridSearch(ProcessorLR):
 
                 result[i_row, i_col] = pearson_coeff
 
-        Evaluation.export_prediction_result(predict_result_df)
+        predict_result_df.to_csv('result_conclusion/no_resample_grid_search.csv')
         plt.imshow(result, cmap='RdBu')
-        # ax = plt.gca()
-        # ax.set_yticklabels([x for x in range(-50, -30, 10)])
-        # ax.set_xticklabels([x for x in range(10, 30, 10)])
         plt.show()
 
     def evaluate_cnn_model(self):
@@ -466,12 +391,12 @@ class ProcessorLR2DConvGridSearch(ProcessorLRNoResampleGridSearch):
         :return:
         """
         predict_result_df = pd.DataFrame()
-        result = np.zeros([10, 5])
+        result = np.zeros([10, 10])
         i_row, i_col = -1, -1
-        for data_clip_start in range(100, 120, 2):
+        for data_clip_start in range(103, 110, 10):
             i_row += 1
             i_col = -1
-            for data_clip_end in range(148, 153, 1):
+            for data_clip_end in range(156, 166, 1):
                 print('start: ' + str(data_clip_start) + '  end: ' + str(data_clip_end))
                 i_col += 1
                 self.prepare_data(data_clip_start, data_clip_end)
@@ -482,9 +407,9 @@ class ProcessorLR2DConvGridSearch(ProcessorLRNoResampleGridSearch):
                 predict_result_df = Evaluation.insert_prediction_result(
                     predict_result_df, SUB_NAMES[0], pearson_coeff, data_clip_start, data_clip_end)
                 result[i_row, i_col] = pearson_coeff
-        Evaluation.export_prediction_result(predict_result_df)
         plt.imshow(result, cmap='RdBu')
         plt.show()
+        predict_result_df.to_csv('result_conclusion/grid_search.csv')
 
 
 class ProcessorLRCrazyKernel(ProcessorLR):

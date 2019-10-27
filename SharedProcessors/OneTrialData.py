@@ -124,13 +124,10 @@ class OneTrialData:
         :param mag:
         :return:
         """
-        if from_IMU == 2:
-            filter_delay = int(FILTER_WIN_LEN / 2)
-        else:
-            filter_delay = 0
+        filter_delay = 0
         if not from_IMU:
             offs, step_num = self.get_offs()
-            strikes, step_num = self.get_strikes()
+            strikes, _ = self.get_strikes()
         else:
             offs, strikes, step_num = self.get_offs_strikes_from_IMU(from_IMU)
         lr_data = self.gait_param_df[self._side + '_LR'].values
@@ -178,11 +175,11 @@ class OneTrialData:
         :return:
         """
         if from_IMU == 1:
-            off_column = 'offs_IMU'
-            strike_column = 'strikes_IMU'
+            off_column = 'offs_foot_IMU'
+            strike_column = 'strikes_foot_IMU'
         elif from_IMU == 2:
-            off_column = 'offs_IMU_lfilter'
-            strike_column = 'strikes_IMU_lfilter'
+            off_column = 'offs_shank_IMU'
+            strike_column = 'strikes_shank_IMU'
         else:
             raise ValueError('Invalid from_IMU value. from_IMU: 0 for from plate, 1 for filtfilt, 2 for lfilter')
         offs = self.gait_param_df[off_column]

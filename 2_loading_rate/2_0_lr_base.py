@@ -8,19 +8,16 @@ from ProcessorLRTests import ProcessorIMUIndependentTower, ProcessorLR2DConv, Pr
 
 # define the IMU sensors used for prediction
 # 'trunk', 'pelvis', 'l_thigh', 'l_shank',
-IMU_locations = ['l_shank', 'l_foot']
+IMU_locations = ['l_shank']
 
-# define train and test subjects
+# define train and test subjects  190423LiuSensen
 train = copy.deepcopy(SUB_AND_SI_SR_TRIALS)
-del train['190522QinZhun']
-del train['190522YangCan']
-del train['190522SunDongxiao']
-test = {'190522QinZhun': SI_SR_TRIALS, '190522YangCan': SI_SR_TRIALS,
-        '190522SunDongxiao': SI_SR_TRIALS}
+del train['190517ZhangYaqian']
+test = {'190517ZhangYaqian': SI_SR_TRIALS}
 
-train = {'190414WangDianxin':  SI_SR_TRIALS[7:8]}
-test = {'190522QinZhun':  SI_SR_TRIALS[:1]}
+# train = {'190517ZhangYaqian':  SI_SR_TRIALS[:1]}
+# test = {'190517ZhangYaqian':  SI_SR_TRIALS[:1]}
 
 base_LR_processor = ProcessorLR(train, test, IMU_locations, strike_off_from_IMU=1,
-                                                do_input_norm=True, do_output_norm=True)
+                                          do_input_norm=True, do_output_norm=True)
 base_LR_processor.cnn_train_test()

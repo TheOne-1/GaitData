@@ -22,7 +22,7 @@ class PeakTibiaAccModel(ProcessorLR):
         self.param_name = 'LR'
         train_all_data = AllSubData(self.train_sub_and_trials, imu_locations, self.param_name, self.sensor_sampling_fre,
                                     self.strike_off_from_IMU)
-        self.train_all_data_list = train_all_data.get_all_data(imu_cut_off_fre=60)
+        self.train_all_data_list = train_all_data.get_all_data(imu_cut_off_fre=75)
 
     def peak_tibia_acc_model(self, test_date, test_name):
         """
@@ -77,17 +77,18 @@ class ComboGenerator:
         :param c53: bool. Whether to run through combinations of three sensors
         :param c54: bool. Whether to run through combinations of four sensors
         :param c55: bool. Whether to run using all five sensors
+        :param do_pta: bool. Whether to run pta model
         :return:
         """
 
         ComboGenerator.create_folders(date)
-
+        from_imu = 0
         segments = ['trunk', 'pelvis', 'l_thigh', 'l_shank', 'l_foot']
         if c51:
             print('\n\nDoing C51')
             for segment in segments:
                 print('\nCurrent segment: ' + segment)
-                cross_vali_LR_processor = ProcessorLR(train, {}, [segment])
+                cross_vali_LR_processor = ProcessorLR(train, {}, [segment], strike_off_from_IMU=from_imu)
                 cross_vali_LR_processor.cnn_cross_vali(test_date=date, test_name=date + '_' + segment, plot=False)
                 keras.backend.clear_session()
 
@@ -96,7 +97,7 @@ class ComboGenerator:
             segment_combos = ComboGenerator.combinations_by_subset(segments, 2)
             for combo in segment_combos:
                 print('\nCurrent segments: ' + str(combo))
-                cross_vali_LR_processor = ProcessorLR(train, {}, combo)
+                cross_vali_LR_processor = ProcessorLR(train, {}, combo, strike_off_from_IMU=from_imu)
                 test_name = date
                 for segment in combo:
                     test_name = test_name + '_' + segment
@@ -108,7 +109,7 @@ class ComboGenerator:
             segment_combos = ComboGenerator.combinations_by_subset(segments, 3)
             for combo in segment_combos:
                 print('\nCurrent segments: ' + str(combo))
-                cross_vali_LR_processor = ProcessorLR(train, {}, combo)
+                cross_vali_LR_processor = ProcessorLR(train, {}, combo, strike_off_from_IMU=from_imu)
                 test_name = date
                 for segment in combo:
                     test_name = test_name + '_' + segment
@@ -121,7 +122,7 @@ class ComboGenerator:
                 segment_list = copy.deepcopy(segments)
                 segment_list.remove(segment)
                 print('\nCurrent segments: ' + str(segment_list))
-                cross_vali_LR_processor = ProcessorLR(train, {}, segment_list)
+                cross_vali_LR_processor = ProcessorLR(train, {}, segment_list, strike_off_from_IMU=from_imu)
                 test_name = date
                 for segment in segment_list:
                     test_name = test_name + '_' + segment
@@ -130,7 +131,7 @@ class ComboGenerator:
 
         if c55:
             print('\n\nDoing all segment')
-            cross_vali_LR_processor = ProcessorLR(train, {}, segments)
+            cross_vali_LR_processor = ProcessorLR(train, {}, segments, strike_off_from_IMU=from_imu)
             test_name = date
             for segment in segments:
                 test_name = test_name + '_' + segment

@@ -8,18 +8,20 @@ import xlrd
 from scipy.signal import find_peaks
 from numpy.linalg import norm
 import pickle
-from StrikeOffDetectorIMU import StrikeOffDetectorIMU, StrikeOffDetectorIMUFilter
+from StrikeOffDetectorIMU import StrikeOffDetectorIMU, StrikeOffDetectorIMUFilter, StrikeOffDetectorFootIMU,\
+    StrikeOffDetectorShankIMU
+
 
 
 class ParamProcessor:
-    def __init__(self, sub_name, readme_xls, trials, check_steps=False, plot_strike_off=False,
+    def __init__(self, sub_name, readme_xls, trials, check_steps=False, plot_plate_strike_off=False,
                  initialize_100Hz=True, initialize_200Hz=True):
         self._sub_name = sub_name
         readme_sheet = xlrd.open_workbook(readme_xls).sheet_by_index(0)
         self.__weight = readme_sheet.cell_value(17, 1)  # in kilos
         self.__height = readme_sheet.cell_value(18, 1)  # in meters
         self.__check_steps = check_steps
-        self.__plot_strike_off = plot_strike_off
+        self.__plot_strike_off = plot_plate_strike_off
         self.__initialize_thresholds()
         self.__initialize_100Hz = initialize_100Hz
         self.__initialize_200Hz = initialize_200Hz
@@ -53,7 +55,7 @@ class ParamProcessor:
                 trial_param_df_100, l_steps_1000, r_steps_1000 = self.init_trial_params(gait_data_100_df, grf_1000_df,
                                                                                         HAISHENG_SENSOR_SAMPLE_RATE)
                 self.__save_data(fre_100_path, trial_name, trial_param_df_100, l_steps_1000, r_steps_1000)
-                # plt.show()
+            plt.show()
 
         if self.__initialize_200Hz:
             self.nike_static_200_df = pd.read_csv(fre_200_path + TRIAL_NAMES[0] + '.csv', index_col=False)
@@ -70,7 +72,7 @@ class ParamProcessor:
                                                                                         MOCAP_SAMPLE_RATE)
                 l_steps, r_steps = self.resample_steps(l_steps_1000, 200), self.resample_steps(r_steps_1000, 200)
                 self.__save_data(fre_200_path, trial_name, trial_param_df_200, l_steps, r_steps)
-                # plt.show()
+            plt.show()
 
     @staticmethod
     def resample_steps(steps_1000, sample_fre):
@@ -114,20 +116,17 @@ class ParamProcessor:
                                  'l_strike_angle', 'r_strike_angle', 'l_FPA', 'r_FPA']
         param_data_df.insert(0, 'marker_frame', gait_data_df['marker_frame'])
 
-        # get strikes and offs from IMU data
-        estimated_strikes, estimated_offs = self.get_strike_off_from_imu(gait_data_df, param_data_df,
-                                                                         sensor_sampling_rate, check_strike_off=False,
-                                                                         plot_the_strike_off=False)
-        param_data_df.insert(len(param_data_df.columns), 'strikes_IMU', estimated_strikes)
-        param_data_df.insert(len(param_data_df.columns), 'offs_IMU', estimated_offs)
+        # get strikes and offs from shank IMU data
+        estimated_strikes, estimated_offs = self.get_strike_off_from_shank_imu(
+            gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True, plot_the_strike_off=True)
+        param_data_df.insert(len(param_data_df.columns), 'strikes_shank_IMU', estimated_strikes)
+        param_data_df.insert(len(param_data_df.columns), 'offs_shank_IMU', estimated_offs)
 
-        estimated_strikes_lfilter, estimated_offs_lfilter = self.get_strike_off_from_imu_lfilter(gait_data_df,
-                                                                                                 param_data_df,
-                                                                                                 sensor_sampling_rate,
-                                                                                                 check_strike_off=True,
-                                                                                                 plot_the_strike_off=self.__plot_strike_off)
-        param_data_df.insert(len(param_data_df.columns), 'strikes_IMU_lfilter', estimated_strikes_lfilter)
-        param_data_df.insert(len(param_data_df.columns), 'offs_IMU_lfilter', estimated_offs_lfilter)
+        # get strikes and offs from foot IMU data
+        estimated_strikes, estimated_offs = self.get_strike_off_from_foot_imu(
+            gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=False, plot_the_strike_off=False)
+        param_data_df.insert(len(param_data_df.columns), 'strikes_foot_IMU', estimated_strikes)
+        param_data_df.insert(len(param_data_df.columns), 'offs_foot_IMU', estimated_offs)
 
         # get loading rate
         l_steps_1000 = self.get_legal_steps(l_strikes_1000, l_offs_1000, 'left', plate_data_1000)
@@ -402,7 +401,7 @@ class ParamProcessor:
                     end_index - start_index)
             if LOADING_RATE_NORMALIZATION:
                 loading_rate = - loading_rate / (self.__weight * 10)
-            marker_frame = plate_data.loc[step[0], 'marker_frame']      # place the valid loading rate at strike sample
+            marker_frame = plate_data.loc[step[0], 'marker_frame']  # place the valid loading rate at strike sample
             loading_rates.append([loading_rate, marker_frame])
         return loading_rates
 
@@ -468,18 +467,36 @@ class ParamProcessor:
             folder_path=folder_path, trial_name=trial_name)
         data_all_df.to_csv(data_file_str, index=False)
 
-    def get_strike_off_from_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True,
-                                plot_the_strike_off=False):
+    def get_strike_off_from_foot_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True,
+                                     plot_the_strike_off=False):
         if sensor_sampling_rate == HAISHENG_SENSOR_SAMPLE_RATE:
-            my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'r_foot',
-                                               HAISHENG_SENSOR_SAMPLE_RATE)
+            my_detector = StrikeOffDetectorFootIMU(self._current_trial, gait_data_df, param_data_df, 'r_foot',
+                                                   HAISHENG_SENSOR_SAMPLE_RATE)
             strike_delay, off_delay = 4, 4  # delay from the peak
         elif sensor_sampling_rate == MOCAP_SAMPLE_RATE:
-            my_detector = StrikeOffDetectorIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot',
-                                               MOCAP_SAMPLE_RATE)
+            my_detector = StrikeOffDetectorFootIMU(self._current_trial, gait_data_df, param_data_df, 'l_foot',
+                                                   MOCAP_SAMPLE_RATE)
             strike_delay, off_delay = 8, 6  # delay from the peak
         else:
             raise ValueError('Wrong sensor sampling rate value')
+        estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)
+        if plot_the_strike_off:
+            my_detector.show_IMU_data_and_strike_off(estimated_strike_indexes, estimated_off_indexes)
+        data_len = gait_data_df.shape[0]
+        estimated_strikes, estimated_offs = np.zeros([data_len]), np.zeros([data_len])
+        estimated_strikes[estimated_strike_indexes] = 1
+        estimated_offs[estimated_off_indexes] = 1
+        if check_strike_off:
+            my_detector.true_esti_diff(estimated_strike_indexes, 'strikes')
+            my_detector.true_esti_diff(estimated_off_indexes, 'offs')
+        return estimated_strikes, estimated_offs
+
+    def get_strike_off_from_shank_imu(self, gait_data_df, param_data_df, sensor_sampling_rate, check_strike_off=True,
+                                      plot_the_strike_off=False):
+        my_detector = StrikeOffDetectorShankIMU(self._current_trial, gait_data_df, param_data_df, 'l_shank',
+                                                sensor_sampling_rate)
+        strike_delay, off_delay = -9, -0  # delay from the peak
+
         estimated_strike_indexes, estimated_off_indexes = my_detector.get_jogging_strike_off(strike_delay, off_delay)
         if plot_the_strike_off:
             my_detector.show_IMU_data_and_strike_off(estimated_strike_indexes, estimated_off_indexes)

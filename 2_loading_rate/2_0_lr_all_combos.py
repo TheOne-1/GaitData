@@ -2,7 +2,7 @@
 This file does all the combos of five segments. Each combo was done using cross validation
 """
 from ComboGenerator import ComboGenerator
-from const import SUB_AND_SI_SR_TRIALS
+from const import SUB_AND_SI_SR_TRIALS, SI_SR_TRIALS
 import copy
 
 
@@ -10,5 +10,5 @@ import copy
 train = copy.deepcopy(SUB_AND_SI_SR_TRIALS)
 # train = {'190521GongChangyang': SI_SR_TRIALS, '190522QinZhun':  SI_SR_TRIALS}
 
-ComboGenerator.all_combos(train, date='1013', c53=False, c54=True)
+ComboGenerator.all_combos(train, date='1025', c54=True, c55=True)
 

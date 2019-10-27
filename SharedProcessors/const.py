@@ -74,7 +74,7 @@ SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAM
                   '190426YuHongzhe': TRIAL_NAMES,
                   '190510HeMing': TRIAL_NAMES,
                   '190514XieJie': TRIAL_NAMES,
-                  '190517FuZhenzhen': TRIAL_NAMES,
+                  '190513YangYicheng': TRIAL_NAMES,
                   # '190414WangDianxin': TRIAL_NAMES[0:4] + TRIAL_NAMES[7:8] + TRIAL_NAMES[9:12] + TRIAL_NAMES[13:],
                   # '190423LiuSensen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:5] + TRIAL_NAMES[6:13],
                   # '190424XuSen': TRIAL_NAMES[0:2] + TRIAL_NAMES[3:4] + TRIAL_NAMES[6:8] + TRIAL_NAMES[10:],
@@ -133,8 +133,9 @@ TRIAL_START_BUFFER = 3  # 3 seconds filter buffer
 FILTER_WIN_LEN = 100  # The length of FIR filter window
 
 FONT_SIZE = 18
+FONT_SIZE_SMALL = 16
 FONT_DICT = {'fontsize': FONT_SIZE, 'fontname': 'DejaVu Sans'}
-FONT_DICT_SMALL = {'fontsize': 16, 'fontname': 'DejaVu Sans'}
+FONT_DICT_SMALL = {'fontsize': FONT_SIZE_SMALL, 'fontname': 'DejaVu Sans'}
 LINE_WIDTH = 2
 
 COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z',
