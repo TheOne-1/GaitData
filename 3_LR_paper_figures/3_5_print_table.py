@@ -9,7 +9,7 @@ import copy
 
 
 segments = ['trunk', 'pelvis', 'l_thigh', 'l_shank', 'l_foot']
-result_date = '1013'
+result_date = '1026'
 precision = 3
 
 mean_array, std_array = np.zeros([3, 5]), np.zeros([3, 5])
@@ -45,9 +45,11 @@ for i_row in range(3):
     print()
     for i_col in range(5):
         if i_row == 0:
-            print(str(mean_array[i_row, i_col])[:5], end='\t')
+            print(str(round(mean_array[i_row, i_col], 2)) + '(' + str(round(std_array[i_row, i_col], 2)) + ')', end='\t')
+            # print(str(round(mean_array[i_row, i_col], 3)), end='\t')
         else:
-            print(str(mean_array[i_row, i_col])[:4] + '(' + str(std_array[i_row, i_col])[:3] + ')', end='\t')
+            print(str(round(mean_array[i_row, i_col], 1)) + '(' + str(round(std_array[i_row, i_col], 1)) + ')', end='\t')
+
 
 # print the result of PTA model
 

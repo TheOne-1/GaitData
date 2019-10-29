@@ -67,7 +67,7 @@ class PeakTibiaAccModel(ProcessorLR):
 
 class ComboGenerator:
     @staticmethod
-    def all_combos(train, date, c51=False, c52=False, c53=False, c54=False, c55=False, do_pta=False):
+    def all_combos(train, date, from_imu, c51=False, c52=False, c53=False, c54=False, c55=False, pta=False):
         """
 
         :param train: dict. Train subjects and trials.
@@ -77,12 +77,11 @@ class ComboGenerator:
         :param c53: bool. Whether to run through combinations of three sensors
         :param c54: bool. Whether to run through combinations of four sensors
         :param c55: bool. Whether to run using all five sensors
-        :param do_pta: bool. Whether to run pta model
+        :param pta: bool. Whether to run pta model
         :return:
         """
 
         ComboGenerator.create_folders(date)
-        from_imu = 0
         segments = ['trunk', 'pelvis', 'l_thigh', 'l_shank', 'l_foot']
         if c51:
             print('\n\nDoing C51')
@@ -138,7 +137,7 @@ class ComboGenerator:
             cross_vali_LR_processor.cnn_cross_vali(test_date=date, test_name=test_name, plot=False)
             keras.backend.clear_session()
 
-        if do_pta:
+        if pta:
             print('\n\nDoing PTA model LR prediction')
             pta_model = PeakTibiaAccModel(train)
             pta_model.peak_tibia_acc_model(test_date=date, test_name=date + '_pta')

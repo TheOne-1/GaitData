@@ -35,10 +35,7 @@ class Evaluation:
     def evaluate_nn(self, model, check_convergence=True):
         # train NN
         # lr = learning rate, the other params are default values
-        # optimizer = optimizers.Nadam(lr=0.0008, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
-        optimizer = optimizers.Nadam(lr=0.0004, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
-        optimizer = optimizers.Adamax(learning_rate=0.0004, beta_1=0.9, beta_2=0.999)
-        # optimizer = optimizers.Adam()
+        optimizer = optimizers.Nadam(lr=0.0008, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
         model.compile(loss='mean_squared_error', optimizer=optimizer)
         # val_loss = validation loss, patience is the tolerance
         early_stopping_patience = 5     # !!!
@@ -55,7 +52,7 @@ class Evaluation:
                 raise ValueError('Loss is Nan')
             n_epochs = len(r.history['loss'])
             # retrain the model if the model did not converge
-            while check_convergence and (n_epochs < early_stopping_patience + 5 or r.history['loss'][-1] > 0.05):
+            while check_convergence and n_epochs < early_stopping_patience + 3:
                 print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
                 model.reset_states()
                 r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,

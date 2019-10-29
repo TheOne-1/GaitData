@@ -220,29 +220,21 @@ class ProcessorLR:
         self._x_test = self._x_test.reshape(self._x_test.shape[0], main_input_shape[1], main_input_shape[2], 1)
 
     # convert the input from list to ndarray
-    def convert_input(self, input_all_list, sampling_fre):
+    def convert_input(self, input_all_list, sampling_fre, data_clip_start=-12, data_clip_end=30):
         """
-        CNN based algorithm improved
+        input start from strike-20 to strike+20
         """
-        # plt.figure()        # !!!
-
         step_num = len(input_all_list)
-        resample_len = self.sensor_sampling_fre
-        data_clip_start, data_clip_end = 104, 166       # 104, 151 for strike off from foot IMU
-        # data_clip_start, data_clip_end = 94, 161       # 104, 151 for strike off from foot IMU
+        # data_clip_start, data_clip_end = -40, 25
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
             acc_gyr_data = input_all_list[i_step][:, 0:self.channel_num]
-            for i_channel in range(self.channel_num):
-                channel_resampled = ProcessorLR.resample_channel(acc_gyr_data[:, i_channel], resample_len)
-                step_input[i_step, :, i_channel] = channel_resampled[data_clip_start:data_clip_end]
-                step_len = acc_gyr_data.shape[0]
-                aux_input[i_step, 0] = step_len
-                strike_sample_num = np.where(input_all_list[i_step][:, -1] == 1)[0]
-                aux_input[i_step, 1] = strike_sample_num
-
-            # plt.plot(step_input[i_step, :, 2])      # !!!
+            step_len = acc_gyr_data.shape[0]
+            aux_input[i_step, 0] = step_len
+            strike_sample_num = int(np.where(input_all_list[i_step][:, -1] == 1)[0])
+            aux_input[i_step, 1] = strike_sample_num
+            step_input[i_step, :, :] = acc_gyr_data[strike_sample_num+data_clip_start:strike_sample_num+data_clip_end, :]
 
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input
@@ -445,8 +437,8 @@ class ProcessorLR:
         # save input scalar parameter
         self.main_max_vals,  self.main_min_vals = [], []
         for i_channel in range(channel_num):
-            max_val = np.max(self._x_train[:, :, i_channel]) * 0.99
-            min_val = np.min(self._x_train[:, :, i_channel]) * 0.99
+            max_val = np.max(self._x_train[:, :, i_channel])
+            min_val = np.min(self._x_train[:, :, i_channel])
             self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
             self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
             self.main_max_vals.append(max_val)

@@ -8,7 +8,7 @@ from scipy.stats import ttest_ind
 import statsmodels.stats.multicomp as ml
 
 segments = ['l_shank', 'l_foot', 'pelvis', 'trunk', 'l_thigh']
-result_date = '1013'
+result_date = '1026'
 precision = 3
 param_name = 'pearson correlation'
 

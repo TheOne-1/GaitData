@@ -220,7 +220,7 @@ class ComboResultReader:
             result_reader = ResultReader(self.result_date, combo)
             mean_NRMSE, _ = result_reader.get_all_trial_NRMSE_mean_std()
             if combo_best_mean[0] == -1 or mean_NRMSE < combo_best_mean[1]:
-                combo_best_mean[0], _ = result_reader.get_param_mean_std('pearson correlation', ['All trials'])
+                combo_best_mean[0], combo_best_std[0] = result_reader.get_param_mean_std('pearson correlation', ['All trials'])
                 combo_best_mean[1], combo_best_std[1] = result_reader.get_all_trial_NRMSE_mean_std()
                 combo_best_mean[2], combo_best_std[2] = result_reader.get_param_mean_std('absolute mean error',
                                                                                          ['All trials'])
