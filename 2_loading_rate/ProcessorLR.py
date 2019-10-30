@@ -7,7 +7,7 @@ from AllSubData import AllSubData
 import scipy.interpolate as interpo
 from const import SUB_NAMES, COLORS, DATA_COLUMNS_XSENS, MOCAP_SAMPLE_RATE, SI_SR_TRIALS
 import scipy.stats as stats
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from Evaluation import Evaluation
 from keras import regularizers
 from keras.layers import *
@@ -98,11 +98,11 @@ class ProcessorLR:
         sub_id_set_tuple = tuple(set(sub_id_list))
         sample_num = len(input_list)
         sub_num = len(self.train_sub_and_trials.keys())
-        folder_num = int(np.ceil(sub_num / test_set_sub_num))        # the number of cross validation times
+        folder_num = int(np.ceil(sub_num / test_set_sub_num))  # the number of cross validation times
         predict_result_df = pd.DataFrame()
-        predicted_value_df = pd.DataFrame()     # save all the predicted values in case reviewer ask for more analysis
+        predicted_value_df = pd.DataFrame()  # save all the predicted values in case reviewer ask for more analysis
         for i_folder in range(folder_num):
-            test_id_list = sub_id_set_tuple[test_set_sub_num*i_folder:test_set_sub_num*(i_folder+1)]
+            test_id_list = sub_id_set_tuple[test_set_sub_num * i_folder:test_set_sub_num * (i_folder + 1)]
             print('\ntest subjects: ')
             for test_id in test_id_list:
                 print(SUB_NAMES[test_id])
@@ -203,13 +203,13 @@ class ProcessorLR:
             self._y_test = ProcessorLR.convert_output(output_list)
         else:
             # split the train, test set from the train data
-            self._x_train, self._x_test, self._x_train_aux, self._x_test_aux, self._y_train, self._y_test =\
+            self._x_train, self._x_test, self._x_train_aux, self._x_test_aux, self._y_train, self._y_test = \
                 train_test_split(self._x_train, self._x_train_aux, self._y_train, test_size=0.33)
 
     def do_normalization(self):
         # do input normalization
         if self.do_input_norm:
-            self.norm_input(feature_range=(-1, 1))
+            self.norm_input(feature_range=(-2, 2))
 
         if self.do_output_norm:
             self.norm_output()
@@ -234,7 +234,8 @@ class ProcessorLR:
             aux_input[i_step, 0] = step_len
             strike_sample_num = int(np.where(input_all_list[i_step][:, -1] == 1)[0])
             aux_input[i_step, 1] = strike_sample_num
-            step_input[i_step, :, :] = acc_gyr_data[strike_sample_num+data_clip_start:strike_sample_num+data_clip_end, :]
+            step_input[i_step, :, :] = acc_gyr_data[
+                                       strike_sample_num + data_clip_start:strike_sample_num + data_clip_end, :]
 
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input
@@ -326,7 +327,8 @@ class ProcessorLR:
         return self._y_test, y_pred
 
     def find_feature(self):
-        train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre, self.strike_off_from_IMU)
+        train_all_data = AllSubData(self.train_sub_and_trials, self.param_name, self.sensor_sampling_fre,
+                                    self.strike_off_from_IMU)
         train_all_data_list = train_all_data.get_all_data()
         train_all_data_list = ProcessorLR.clean_all_data(train_all_data_list, self.sensor_sampling_fre)
         input_list, output_list = train_all_data_list.get_input_output_list()
@@ -358,7 +360,7 @@ class ProcessorLR:
             plot_list.append(channel_plot)
         plt.xlabel('gait phase')
         plt.ylabel('correlation')
-        plt.legend(plot_list, DATA_COLUMNS_XSENS[0:max(channels)+1])
+        plt.legend(plot_list, DATA_COLUMNS_XSENS[0:max(channels) + 1])
         plt.grid()
         plt.show()
 
@@ -441,16 +443,12 @@ class ProcessorLR:
             min_val = np.min(self._x_train[:, :, i_channel])
             self._x_train[:, :, i_channel] = (self._x_train[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
             self._x_test[:, :, i_channel] = (self._x_test[:, :, i_channel] - min_val) / (max_val - min_val) * (feature_range[1] - feature_range[0]) + feature_range[0]
-            self.main_max_vals.append(max_val)
-            self.main_min_vals.append(min_val)
 
         if hasattr(self, '_x_train_aux'):
             # MinMaxScaler is more suitable because StandardScalar will make the input greatly differ from each other
             aux_input_scalar = MinMaxScaler()
             self._x_train_aux = aux_input_scalar.fit_transform(self._x_train_aux)
             self._x_test_aux = aux_input_scalar.transform(self._x_test_aux)
-            self.aux_max_vals = aux_input_scalar.data_max_.tolist()
-            self.aux_min_vals = aux_input_scalar.data_min_.tolist()
 
     def norm_output(self):
         self.output_minmax_scalar = MinMaxScaler(feature_range=(1, 3))
@@ -462,8 +460,4 @@ class ProcessorLR:
     def norm_output_reverse(self, output):
         output = output.reshape(-1, 1)
         output = self.output_minmax_scalar.inverse_transform(output)
-        return output.reshape(-1,)
-
-
-
-
+        return output.reshape(-1, )

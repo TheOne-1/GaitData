@@ -15,8 +15,8 @@ IMU_locations = ['l_shank']
 train = copy.deepcopy(SUB_AND_SI_SR_TRIALS)
 # train = {'190521GongChangyang': SI_SR_TRIALS, '190522YangCan':  SI_SR_TRIALS}
 
-test_date = '1025'
-test_name = test_date + '_l_shank_no_scaling'
+test_date = '1026'
+test_name = test_date + '_l_shank_scaling'
 cross_vali_LR_processor = ProcessorLRNoResample(train, {}, IMU_locations, strike_off_from_IMU=2, do_input_norm=True, do_output_norm=True)
 cross_vali_LR_processor.cnn_cross_vali(test_date=test_date, test_name=test_name)
 plt.show()

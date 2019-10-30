@@ -6,7 +6,7 @@ from scipy.stats import ttest_ind
 
 
 segments = ['l_shank']
-result_date = '1026'
+result_date = '1028'
 
 the_reader = ResultReader(result_date, segments)
 trial_id_sets = [[2, 3], [5, 6], [9, 10], [12, 13]]

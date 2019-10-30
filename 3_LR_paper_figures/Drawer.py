@@ -36,7 +36,7 @@ class Drawer:
     def set_one_imu_ticks(bar_locs):
         ax = plt.gca()
         ax.set_xlim(-1, 10)
-        ax.set_xticks(bar_locs)
+        ax.set_xticks([0.5, 3, 5, 7, 9])
         ax.set_xticklabels(['shank', 'foot', 'pelvis', 'trunk', 'thigh'], fontdict=FONT_DICT)
         ax.set_xlabel('IMU attachment location', labelpad=6, fontdict=FONT_DICT)
 
