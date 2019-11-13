@@ -41,6 +41,7 @@ mcobj = ml.MultiComparison(data, groups)
 out = mcobj.tukeyhsd(0.05)
 print(out)
 
+mean_array, std_array = Drawer.add_extra_correlation_from_citation(mean_array, std_array)
 Drawer.draw_one_imu_result(mean_array, std_array)
 
 

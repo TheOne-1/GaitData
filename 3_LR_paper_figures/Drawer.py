@@ -9,18 +9,24 @@ import matplotlib as mpl
 class Drawer:
     @staticmethod
     def draw_one_imu_result(mean_values, std_values):
-        plt.figure(figsize=(7, 6))
-        bar_locs = [0, 3, 5, 7, 9, 1]
+
+        bar_patterns = ['//', '\\\\', 'x', '..']
+        bar_labels = ['PTA (Zhang et al.${^{21}}$)', 'PTA (present study)', 'PTA (Laughton et al.${^{22}}$)',
+                      'PTA (Greenhalgh et al.${^{23}}$)']
+        plt.figure(figsize=(11, 6))
+        bar_locs = [-1, 6.5, 8, 9.5, 11, 0.5, 2, 3.5, 5]
         Drawer.format_plot()
         bars, ebars = [], []
         for i_segment in range(5):
             bars.append(plt.bar(bar_locs[i_segment], mean_values[i_segment], color='grey', width=1,
-                                label='CNN model'))
-        bars.append(plt.bar(bar_locs[5], mean_values[5], color='white', edgecolor='black', hatch='//', width=1,
-                            linewidth=LINE_WIDTH, label='PTA model'))
+                                label='Proposed CNN model'))
+        for i_extra in range(5, 9):
+            bars.append(plt.bar(bar_locs[i_extra], mean_values[i_extra], color='white', edgecolor='black',
+                                hatch=bar_patterns[i_extra-5], width=1, linewidth=LINE_WIDTH,
+                                label=bar_labels[i_extra-5]))
 
-        plt.legend(handles=bars[-2:], bbox_to_anchor=[0.53, 0.88], ncol=1, fontsize=FONT_SIZE,
-                   frameon=False, handlelength=2, handleheight=1.3)
+        plt.legend(handles=bars[4:], bbox_to_anchor=[0.08, 1], ncol=2, fontsize=FONT_SIZE,
+                   frameon=False, handlelength=2, handleheight=1.5)
 
         plt.plot([-1, 3], [0, 0], linewidth=LINE_WIDTH, color='black')
         ebar, caplines, barlinecols = plt.errorbar(bar_locs, mean_values, std_values,
@@ -35,16 +41,47 @@ class Drawer:
     @staticmethod
     def set_one_imu_ticks(bar_locs):
         ax = plt.gca()
-        ax.set_xlim(-1, 10)
-        ax.set_xticks([0.5, 3, 5, 7, 9])
-        ax.set_xticklabels(['shank', 'foot', 'pelvis', 'trunk', 'thigh'], fontdict=FONT_DICT)
-        ax.set_xlabel('IMU attachment location', labelpad=6, fontdict=FONT_DICT)
+        ax.set_xlim(-1.7, 11.5)
+        ax.set_xticks(bar_locs)
+        ax.set_xticklabels(['shank', 'foot', 'pelvis', 'trunk', 'thigh', 'shank', 'shank', 'shank', 'shank'], fontdict=FONT_DICT)
+        ax.set_xlabel('IMU Location', labelpad=6, fontdict=FONT_DICT)
 
         ax.set_ylim(0, 1.05)
         y_range = [0, 0.2, 0.4, 0.6, 0.8, 1]
         ax.set_yticks(y_range)
         ax.set_yticklabels(y_range, fontdict=FONT_DICT)
-        ax.set_ylabel('Pearson\'s correlation coefficient', labelpad=6, fontdict=FONT_DICT)
+        ax.set_ylabel('Correlation Coefficient', labelpad=6, fontdict=FONT_DICT)
+
+    @staticmethod
+    def add_extra_correlation_from_citation(mean_array, std_array):
+        """add additional mean and std from citation"""
+        mean_additional = []
+        std_additional = []
+
+        # citation 1: Comparison of the correlations between impact loading rates and peak accelerations measured at
+        # two different body sites: Intra- and inter-subject analysis
+        values_of_research_1 = [0.546, 0.793, 0.778, 0.913, 0.580, 0.495, 0.556, 0.802, 0.638, 0.486]
+        mean_additional.append(np.mean(values_of_research_1))
+        std_additional.append(np.std(values_of_research_1))
+
+        # append the PTA obtained from this research
+        mean_additional.append(mean_array[5])
+        std_additional.append(std_array[5])
+        mean_array = np.delete(mean_array, 5)
+        std_array = np.delete(std_array, 5)
+
+        # citation 2: Effect of Strike Pattern and Orthotic Intervention on Tibial Shock During Running, RFS
+        mean_additional.append(0.585)
+        std_additional.append(0)
+
+        # citation 2: Effect of Strike Pattern and Orthotic Intervention on Tibial Shock During Running
+        mean_additional.append(0.439)
+        std_additional.append(0)
+
+        mean_array = np.concatenate([mean_array, mean_additional])
+        std_array = np.concatenate([std_array, std_additional])
+
+        return mean_array, std_array
 
     @staticmethod
     def draw_compare_bars(true_mean_values, true_std_values, pred_mean_values, pred_std_values):
@@ -54,7 +91,8 @@ class Drawer:
         for i_cate in range(4):
             bars.append(
                 plt.bar(i_cate * 3, true_mean_values[i_cate], color='darkgray', width=0.8, label='VALR - force plate'))
-            bars.append(plt.bar(i_cate * 3 + 1, pred_mean_values[i_cate], color='dimgray', width=0.8, label='VALR - CNN model'))
+            bars.append(
+                plt.bar(i_cate * 3 + 1, pred_mean_values[i_cate], color='dimgray', width=0.8, label='VALR - CNN model'))
 
         plt.legend(handles=bars[:2], bbox_to_anchor=[0.63, 0.85], ncol=1, handlelength=2, handleheight=1.3,
                    fontsize=FONT_SIZE, frameon=False)
@@ -102,7 +140,7 @@ class Drawer:
     def format_errorbar_cap(caplines):
         for i_cap in range(1):
             caplines[i_cap].set_marker('_')
-            caplines[i_cap].set_markersize(12)
+            caplines[i_cap].set_markersize(15)
             caplines[i_cap].set_markeredgewidth(LINE_WIDTH)
 
     @staticmethod
@@ -220,7 +258,8 @@ class ComboResultReader:
             result_reader = ResultReader(self.result_date, combo)
             mean_NRMSE, _ = result_reader.get_all_trial_NRMSE_mean_std()
             if combo_best_mean[0] == -1 or mean_NRMSE < combo_best_mean[1]:
-                combo_best_mean[0], combo_best_std[0] = result_reader.get_param_mean_std('pearson correlation', ['All trials'])
+                combo_best_mean[0], combo_best_std[0] = result_reader.get_param_mean_std('pearson correlation',
+                                                                                         ['All trials'])
                 combo_best_mean[1], combo_best_std[1] = result_reader.get_all_trial_NRMSE_mean_std()
                 combo_best_mean[2], combo_best_std[2] = result_reader.get_param_mean_std('absolute mean error',
                                                                                          ['All trials'])
