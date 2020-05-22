@@ -8,7 +8,7 @@ import copy
 
 # define train and test subjects
 train = copy.deepcopy(SUB_AND_SI_SR_TRIALS)
-# train = {'190521GongChangyang': SI_SR_TRIALS, '190522QinZhun':  SI_SR_TRIALS}
+train = {'190521GongChangyang': SI_SR_TRIALS, '190522QinZhun':  SI_SR_TRIALS}
 
-ComboGenerator.all_combos(train, date='1028', from_imu=2, c51=True)
+ComboGenerator.all_combos(train, date='0522', from_imu=2, c51=True)
 

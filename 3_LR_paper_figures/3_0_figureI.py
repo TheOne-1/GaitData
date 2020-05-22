@@ -32,6 +32,13 @@ mean_array[5], std_array[5] = np.mean(param_values), np.std(param_values)
 _, pvalue = ttest_ind(param_values_list[0], param_values_list[5])
 print('PTA and CNN pvalue: ' + str(round(pvalue, 5)), end='\n\n')
 
+# calculate Cohen's d
+mean_diff = mean_array[0] - mean_array[5]
+pooled_values = np.concatenate([param_values_list[0], param_values_list[5]])
+pooled_std = np.std(param_values)
+print('Mean difference: ' + str(mean_diff)[:4] + '  Pooled std: ' + str(pooled_std)[:4] +
+      '  Cohen\'s d: ' + str(mean_diff / pooled_std)[:4] + '\n')
+
 data = np.zeros([0])
 groups = np.zeros([0])
 for i_segment in range(5):
@@ -43,5 +50,4 @@ print(out)
 
 mean_array, std_array = Drawer.add_extra_correlation_from_citation(mean_array, std_array)
 Drawer.draw_one_imu_result(mean_array, std_array)
-
 

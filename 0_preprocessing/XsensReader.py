@@ -107,6 +107,46 @@ class XsensReader(IMUSensorReader):
         return data_processed_df
 
 
+class XsensReaderLjx(XsensReader):
+    def _get_raw_data(self, device, callback, control):
+        # Get total number of samples
+        packetCount = device.getDataPacketCount()
+        # Export the data
+        data_mat = np.zeros([packetCount, 16])
+        for index in range(packetCount):
+            # Retrieve a packet
+            packet = device.getDataPacketByIndex(index)
+            acc = packet.calibratedAcceleration()
+            gyr = packet.calibratedGyroscopeData()
+            mag = packet.calibratedMagneticField()
+
+            # skip the mag if it does not exist
+            if len(mag) != 3:
+                data_mat[index, 0:6] = np.concatenate([acc, gyr])
+                data_mat[index, 6:9] = data_mat[index - 1, 6:9]
+            else:
+                data_mat[index, 0:9] = np.concatenate([acc, gyr, mag])
+
+            angles = packet.orientationEuler()
+            data_mat[index, 9:12] = [angles.x(), angles.y(), angles.z()]
+            quat = packet.orientationQuaternion()
+            data_mat[index, 12:16] = quat
+
+        data_raw_df = pd.DataFrame(data_mat)
+        data_raw_df.columns = ['l_thigh_acc_x', 'l_thigh_acc_y', 'l_thigh_acc_z',
+                               'l_thigh_gyr_x', 'l_thigh_gyr_y', 'l_thigh_gyr_z',
+                               'l_thigh_mag_x', 'l_thigh_mag_y', 'l_thigh_mag_z',
+                               'l_thigh_roll', 'l_thigh_pitch', 'l_thigh_yaw',
+                               'l_thigh_q0', 'l_thigh_q1', 'l_thigh_q2', 'l_thigh_q3']
+        device.removeCallbackHandler(callback)
+        control.close()
+        return data_raw_df
+
+    def _get_sensor_data_processed(self):
+        data_processed_df = self.data_raw_df
+        return data_processed_df
+
+
 class XdaCallback(xda.XsCallback):
     """
     This class is created by Xsens B.V.

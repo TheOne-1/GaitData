@@ -17,9 +17,9 @@ for trial_id in trial_ids:
     true_lr_list.append(true_lr)
     pred_lr_list.append(pred_lr)
 
-pearson_cor, _ = the_reader.get_param_mean_std('pearson correlation', ['All trials'], sub_id_list=[subject_id])
-NRMSE, _ = the_reader.get_all_trial_NRMSE_mean_std(sub_id_list=[subject_id])
-MAE, _ = the_reader.get_param_mean_std('absolute mean error', ['All trials'], sub_id_list=[subject_id])
+pearson_cor, _ = the_reader.get_param_mean_std_of_trial_mean('pearson correlation', ['All trials'], sub_id_list=[subject_id])
+NRMSE, _ = the_reader.get_one_trial_NRMSE_mean_std(sub_id_list=[subject_id])
+MAE, _ = the_reader.get_param_mean_std_of_trial_mean('absolute mean error', ['All trials'], sub_id_list=[subject_id])
 
 Drawer.draw_example_result(true_lr_list, pred_lr_list, title='')
 print(str(pearson_cor)[:4] + '\t' + str(NRMSE)[:4] + '\t' + str(MAE)[:4])

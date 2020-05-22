@@ -55,16 +55,16 @@ COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', '
 RUNNING_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28',
                   'mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
 
-SI_SR_TRIALS = ('nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28',
-                'mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28')
+SI_SR_TRIALS = ['nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28',
+                'mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28']
 
-NIKE_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28')
+NIKE_TRIALS = ['nike SI 24', 'nike SR 24', 'nike SI 28', 'nike SR 28']
 
-MINI_TRIALS = ('mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
+MINI_TRIALS = ['mini SI 24', 'mini SR 24', 'mini SI 28', 'mini SR 28']
 
-_24_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'mini baseline 24', 'mini SI 24', 'mini SR 24')
+_24_TRIALS = ['nike SI 24', 'nike SR 24', 'mini SI 24', 'mini SR 24']
 
-_28_TRIALS = ('nike baseline 28', 'nike SI 28', 'nike SR 28', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
+_28_TRIALS = ['nike SI 28', 'nike SR 28', 'mini SI 28', 'mini SR 28']
 
 SUB_AND_TRIALS = {'190521GongChangyang': TRIAL_NAMES, '190523ZengJia': TRIAL_NAMES, '190522SunDongxiao': TRIAL_NAMES,
                   '190522QinZhun': TRIAL_NAMES, '190522YangCan': TRIAL_NAMES, '190521LiangJie': TRIAL_NAMES,
@@ -132,11 +132,13 @@ ROTATION_VIA_STATIC_CALIBRATION = False
 TRIAL_START_BUFFER = 3  # 3 seconds filter buffer
 FILTER_WIN_LEN = 100  # The length of FIR filter window
 
-FONT_SIZE = 18
-FONT_SIZE_SMALL = 16
+FONT_SIZE = 28
+FONT_SIZE_SMALL = 24
+FONT_SIZE_LONG_FIG = 20
 FONT_DICT = {'fontsize': FONT_SIZE, 'fontname': 'DejaVu Sans'}
 FONT_DICT_SMALL = {'fontsize': FONT_SIZE_SMALL, 'fontname': 'DejaVu Sans'}
-LINE_WIDTH = 2
+FONT_DICT_LONG_FIG = {'fontsize': FONT_SIZE_LONG_FIG, 'fontname': 'DejaVu Sans'}
+LINE_WIDTH = 3
 
 COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z',
                      'LFCC_x', 'LFCC_y', 'LFCC_z', 'LFM5_x', 'LFM5_y', 'LFM5_z', 'LFM2_x', 'LFM2_y', 'LFM2_z',
