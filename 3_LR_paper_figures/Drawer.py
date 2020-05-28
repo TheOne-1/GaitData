@@ -159,32 +159,41 @@ class Drawer:
 
     @staticmethod
     def draw_example_result(true_lr_list, pred_lr_list, title):
-        # colors = ['darkgreen', 'darkgreen', 'slategrey', 'slategrey']
-        # patterns = ['^', '*', '^', '*']
-        plt.figure(figsize=(7, 6))
+        colors = ['darkgreen', 'darkgreen', 'maroon', 'maroon']
+        markers = ['^', 'o', '^', 'o']
+        labels = ['Standard Shoes, 2.4 m/s', 'Standard Shoes, 2.8 m/s',
+                  'Minimalist Shoes, 2.4 m/s', 'Minimalist Shoes, 2.8 m/s']
+        transparency = [0.7, 0.7, 0.4, 0.4]
+        plt.figure(figsize=(11, 9))
         Drawer.format_plot()
         plt.title(title)
-        plt.plot([0, 150], [0, 150], 'black')
+        # plt.plot([0, 250], [0, 250], 'black')
         cate_num = len(true_lr_list)
+        scatters = []
         for i_cate in range(cate_num):
-            plt.plot(true_lr_list[i_cate], pred_lr_list[i_cate], 'b.')
-        plt.tight_layout(rect=[0.07, 0.06, 0.98, 0.98])
+            scatters.append(plt.scatter(true_lr_list[i_cate], pred_lr_list[i_cate], s=200, color=colors[int(i_cate / 2)],
+                                        marker=markers[int(i_cate / 2)], alpha=transparency[int(i_cate/2)],
+                                        label=labels[int(i_cate/2)]))
         Drawer.set_example_bar_ticks()
+        plt.legend(handles=scatters[::2], bbox_to_anchor=[0.64, 1.04], ncol=1, fontsize=FONT_SIZE_SMALL,
+                   frameon=False)
+
+        plt.tight_layout(rect=[0, 0, 0.98, 0.98])
         plt.savefig('paper_figures/example result.png')
 
     @staticmethod
     def set_example_bar_ticks():
         ax = plt.gca()
-        ax.set_xlim(0, 160)
-        ax.set_xticks(range(0, 151, 30))
-        ax.set_xticklabels(range(0, 151, 30), fontdict=FONT_DICT)
-        ax.set_xlabel('VALR - force plate (BW/s)', labelpad=6, fontdict=FONT_DICT)
+        ax.set_xlim(0, 250)
+        ax.set_xticks(range(0, 251, 50))
+        ax.set_xticklabels(range(0, 251, 50), fontdict=FONT_DICT_SMALL)
+        ax.set_xlabel('VALR: Laboratory Force Plate (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
 
-        ax.set_ylim(0, 160)
-        y_range = range(0, 151, 30)
+        ax.set_ylim(0, 250)
+        y_range = range(0, 251, 50)
         ax.set_yticks(y_range)
-        ax.set_yticklabels(y_range, fontdict=FONT_DICT)
-        ax.set_ylabel('VALR - CNN model (BW/s)', labelpad=6, fontdict=FONT_DICT)
+        ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
+        ax.set_ylabel('VALR: CNN with Single Shank IMU (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
 
 
 class ResultReader:
@@ -201,6 +210,10 @@ class ResultReader:
         step_result_file_path = step_result_file_path + '.csv'
         self._step_result_df = pd.read_csv(step_result_file_path)
 
+        info_path = '../2_loading_rate/result_conclusion/' + date + '/step_result/' + date + '_step_info.csv'
+        info_df = pd.read_csv(info_path, index_col=False)
+        self._step_result_df = pd.concat([self._step_result_df, info_df['step type']], axis=1)
+
     def get_param_mean_std_of_trial_mean(self, param_name, trial_list, sub_id_list=None):
         """
         This function takes the average accuracy of all the selected trials
@@ -213,18 +226,17 @@ class ResultReader:
         param_mean, param_std = np.mean(param_array), np.std(param_array)
         return param_mean, param_std
 
-    def get_param_mean_std_of_all_steps(self, trial_list, sub_id_list):
+    def get_param_mean_std_of_all_steps(self, sub_id_list, select_value, select_col_name='trial id'):
         """
         This function pulls the step of all the selected trials and compute accuracy
-        :param trial_list:
+        :param select_value:
         :param sub_id_list:
         :return:
         """
-        trial_id_list = [float(TRIAL_NAMES.index(name)) for name in trial_list]
         pearson_coeffs, RMSEs, mean_errors, absolute_mean_errors = [], [], [], []
         for sub_id in sub_id_list:
             sub_df = self._step_result_df[self._step_result_df['subject id'].isin([sub_id])]
-            trial_sub_df = sub_df[sub_df['trial id'].isin(trial_id_list)]
+            trial_sub_df = sub_df[sub_df[select_col_name].isin(select_value)]
             pearson_coeff, RMSE, mean_error, absolute_mean_error = Evaluation.get_all_scores(
                 trial_sub_df['true LR'], trial_sub_df['predicted LR'], precision=3)
             pearson_coeffs.append(pearson_coeff)
@@ -234,16 +246,18 @@ class ResultReader:
         return np.mean(pearson_coeffs), np.std(pearson_coeffs),\
                np.mean(absolute_mean_errors), np.std(absolute_mean_errors)
 
-    def get_NRMSE_mean_std_of_all_steps(self, trial_list, sub_id_list):
-        trial_id_list = [float(TRIAL_NAMES.index(name)) for name in trial_list]
+    def get_NRMSE_mean_std_of_all_steps(self, sub_id_list, select_value, select_col_name='trial id'):
         NRMSEs = []
+        sub_lr_ranges = []      # !!!
         for sub_id in sub_id_list:
             sub_df = self._step_result_df[self._step_result_df['subject id'].isin([sub_id])]
-            trial_sub_df = sub_df[sub_df['trial id'].isin(trial_id_list)]
+            trial_sub_df = sub_df[sub_df[select_col_name].isin(select_value)]
             _, RMSE, _, _ = Evaluation.get_all_scores(
                 trial_sub_df['true LR'], trial_sub_df['predicted LR'], precision=3)
             sub_max, sub_min = np.max(trial_sub_df['true LR']), np.min(trial_sub_df['true LR'])
             NRMSEs.append(RMSE/(sub_max - sub_min)*100)
+            sub_lr_ranges.append(sub_max - sub_min)
+        print(str(select_value) + '  ' + str(np.mean(sub_lr_ranges)))        # !!!
         return np.mean(NRMSEs), np.std(NRMSEs)
 
     def get_param_values(self, param_name, trial_list, sub_id_list=None):

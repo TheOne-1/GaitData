@@ -49,9 +49,6 @@ COP_DIFFERENCE = np.array([279.4, 784, 0])  # reset coordinate difference
 COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'gray', 'rosybrown', 'firebrick', 'olive', 'darkgreen',
           'slategray', 'navy', 'slateblue', 'm', 'indigo', 'maroon', 'peru', 'seagreen']
 
-# '190513OuYangjue', '190513YangYicheng', '190514QiuYue', '190514XieJie', '190517FuZhenzhen',
-#              '190517ZuanYaqian', '190518FuZhinan', '190518MouRongzi'
-
 RUNNING_TRIALS = ('nike baseline 24', 'nike SI 24', 'nike SR 24', 'nike baseline 28', 'nike SI 28', 'nike SR 28',
                   'mini baseline 24', 'mini SI 24', 'mini SR 24', 'mini baseline 28', 'mini SI 28', 'mini SR 28')
 
@@ -147,3 +144,5 @@ COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y'
                      'l_foot_mag_x', 'l_foot_mag_y', 'l_foot_mag_z']
 
 COLUMN_FOR_HUAWEI_1000 = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z']
+
+SUB_ID_PAPER = [5, 8, 4, 6, 7, 12, 13, 0, 1, 2, 3, 9, 10, 11, 14]
