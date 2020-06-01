@@ -10,6 +10,33 @@ from Evaluation import Evaluation
 
 class Drawer:
     @staticmethod
+    def draw_clip_sensitivity(the_range, the_accuracy, color='g', name='start', used_loc=3):
+        plt.figure(figsize=(10, 7))
+        time = [x * 5 for x in the_range]
+        fig_accuracy, = plt.plot(time, the_accuracy, linewidth=LINE_WIDTH, label='accuracy curve')
+        fig_used_loc, = plt.plot(time[used_loc], the_accuracy[used_loc], color+'o', markersize=15, label='used window ' + name)
+        # plt.plot([0, 0], [0.5, 1], '--', linewidth=LINE_WIDTH, color='gray')
+
+        ax = plt.gca()
+        ax.set_xticks(time)
+        ax.set_xticklabels(time, fontdict=FONT_DICT_SMALL)
+        if 'start' in name:
+            x_label = 'Window start time before foot-strike (ms)'
+        else:
+            x_label = 'Window end time after foot-strike (ms)'
+        ax.set_xlabel(x_label, labelpad=10, fontdict=FONT_DICT_SMALL)
+        ax.set_ylim(0.5, 1)
+        y_range = [x/10 for x in range(5, 11)]
+        ax.set_yticks(y_range)
+        ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
+        ax.set_ylabel('Correlation coefficient', labelpad=10, fontdict=FONT_DICT_SMALL)
+        Drawer.format_plot()
+
+        plt.legend(handles=[fig_accuracy, fig_used_loc], bbox_to_anchor=[0.55, 0.95], ncol=1,
+                   fontsize=FONT_SIZE_LONG_FIG, frameon=False, handlelength=2.5, handleheight=1.6)
+        plt.tight_layout(rect=[0.01, 0.01, 0.99, 0.99])
+
+    @staticmethod
     def draw_one_imu_result(mean_values, std_values):
 
         bar_patterns = ['/', '\\', 'x', '.']
@@ -182,15 +209,38 @@ class Drawer:
         plt.savefig('paper_figures/example result.png')
 
     @staticmethod
+    def draw_example_result_one_cate(true_lr_list, pred_lr_list, title):
+        """
+        Only one color and one type of marker was used.
+        :param true_lr_list:
+        :param pred_lr_list:
+        :param title:
+        :return:
+        """
+        plt.figure(figsize=(11, 9))
+        Drawer.format_plot()
+        plt.title(title)
+        # plt.plot([0, 250], [0, 250], 'black')
+        cate_num = len(true_lr_list)
+        scatters = []
+        for i_cate in range(cate_num):
+            scatters.append(plt.scatter(true_lr_list[i_cate], pred_lr_list[i_cate], s=50, color='black',
+                                        marker='s', alpha=0.5))
+        Drawer.set_example_bar_ticks()
+
+        plt.tight_layout(rect=[0, 0, 0.98, 0.98])
+        plt.savefig('paper_figures/example result_2.png')
+
+    @staticmethod
     def set_example_bar_ticks():
         ax = plt.gca()
-        ax.set_xlim(0, 250)
-        ax.set_xticks(range(0, 251, 50))
-        ax.set_xticklabels(range(0, 251, 50), fontdict=FONT_DICT_SMALL)
+        ax.set_xlim(0, 200)
+        ax.set_xticks(range(0, 201, 50))
+        ax.set_xticklabels(range(0, 201, 50), fontdict=FONT_DICT_SMALL)
         ax.set_xlabel('VALR: Laboratory Force Plate (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
 
-        ax.set_ylim(0, 250)
-        y_range = range(0, 251, 50)
+        ax.set_ylim(0, 200)
+        y_range = range(0, 201, 50)
         ax.set_yticks(y_range)
         ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
         ax.set_ylabel('VALR: CNN with Single Shank IMU (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
@@ -243,12 +293,11 @@ class ResultReader:
             RMSEs.append(RMSE)
             mean_errors.append(mean_error)
             absolute_mean_errors.append(absolute_mean_error)
-        return np.mean(pearson_coeffs), np.std(pearson_coeffs),\
+        return np.mean(pearson_coeffs), np.std(pearson_coeffs), pearson_coeffs,\
                np.mean(absolute_mean_errors), np.std(absolute_mean_errors)
 
     def get_NRMSE_mean_std_of_all_steps(self, sub_id_list, select_value, select_col_name='trial id'):
         NRMSEs = []
-        sub_lr_ranges = []      # !!!
         for sub_id in sub_id_list:
             sub_df = self._step_result_df[self._step_result_df['subject id'].isin([sub_id])]
             trial_sub_df = sub_df[sub_df[select_col_name].isin(select_value)]
@@ -256,9 +305,16 @@ class ResultReader:
                 trial_sub_df['true LR'], trial_sub_df['predicted LR'], precision=3)
             sub_max, sub_min = np.max(trial_sub_df['true LR']), np.min(trial_sub_df['true LR'])
             NRMSEs.append(RMSE/(sub_max - sub_min)*100)
-            sub_lr_ranges.append(sub_max - sub_min)
-        print(str(select_value) + '  ' + str(np.mean(sub_lr_ranges)))        # !!!
         return np.mean(NRMSEs), np.std(NRMSEs)
+
+    # def get_lr_values_of_gait(self, sub_id_list, select_value, select_col_name='trial id'):
+    #     """Return the step lr of selected gait"""
+    #
+    #     for sub_id in sub_id_list:
+    #         sub_df = self._step_result_df[self._step_result_df['subject id'].isin([sub_id])]
+    #         trial_sub_df = sub_df[sub_df[select_col_name].isin(select_value)]
+    #         pearson_coeff, RMSE, mean_error, absolute_mean_error = Evaluation.get_all_scores(
+    #             trial_sub_df['true LR'], trial_sub_df['predicted LR'], precision=3)
 
     def get_param_values(self, param_name, trial_list, sub_id_list=None):
         """

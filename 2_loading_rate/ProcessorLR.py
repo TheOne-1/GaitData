@@ -17,7 +17,6 @@ from sklearn.model_selection import train_test_split
 from const import TRIAL_NAMES
 import numpy as np
 import pandas as pd
-import copy
 
 
 class ProcessorLR:
@@ -49,44 +48,6 @@ class ProcessorLR:
             test_all_data = AllSubData(self.test_sub_and_trials, imu_locations, self.param_name,
                                        self.sensor_sampling_fre, self.strike_off_from_IMU)
             self.test_all_data_list = test_all_data.get_all_data()
-
-    def cnn_train_test(self):
-        """
-        The very basic condition, use the train set to train and use the test set to test.
-        :return:
-        """
-        self.prepare_data()
-        plt.show()
-        self.do_normalization()
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.show_weights()
-        keras.backend.clear_session()
-
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.show_weights()
-        keras.backend.clear_session()
-
-        self.define_cnn_model()
-        self.evaluate_cnn_model()
-        self.show_weights()
-        keras.backend.clear_session()
-
-        plt.show()
-
-    def show_weights(self):
-        """
-        Show weights of the first Dense layer.
-        :return:
-        """
-        for layer in self.model.layers:
-            if isinstance(layer, Dense):
-                weights = layer.get_weights()
-                weights_sum = np.linalg.norm(weights[0], axis=1)
-                plt.figure()
-                plt.plot(weights_sum)
-                break
 
     def cnn_cross_vali(self, test_date, test_name, test_set_sub_num=1, plot=True):
         train_all_data_list = ProcessorLR.clean_all_data(self.train_all_data_list, self.sensor_sampling_fre)
@@ -221,11 +182,7 @@ class ProcessorLR:
 
     # convert the input from list to ndarray
     def convert_input(self, input_all_list, sampling_fre, data_clip_start=-12, data_clip_end=30):
-        """
-        input start from strike-20 to strike+20
-        """
         step_num = len(input_all_list)
-        # data_clip_start, data_clip_end = -40, 25
         step_input = np.zeros([step_num, data_clip_end - data_clip_start, self.channel_num])
         aux_input = np.zeros([step_num, 2])
         for i_step in range(step_num):
@@ -235,8 +192,7 @@ class ProcessorLR:
             strike_sample_num = int(np.where(input_all_list[i_step][:, -1] == 1)[0])
             aux_input[i_step, 1] = strike_sample_num
             step_input[i_step, :, :] = acc_gyr_data[
-                                       strike_sample_num + data_clip_start:strike_sample_num + data_clip_end, :]
-
+                                   strike_sample_num + data_clip_start:strike_sample_num + data_clip_end, :]
         aux_input = ProcessorLR.clean_aux_input(aux_input)
         return step_input, aux_input
 
@@ -302,20 +258,6 @@ class ProcessorLR:
         aux_joined_outputs = Dense(1, activation='linear')(aux_joined_outputs)
         model = Model(inputs=[main_input, aux_input], outputs=aux_joined_outputs)
         self.model = model
-
-    def evaluate_cnn_model(self):
-        my_evaluator = Evaluation(self._x_train, self._x_test, self._y_train, self._y_test, self._x_train_aux,
-                                  self._x_test_aux)
-        y_pred = my_evaluator.evaluate_nn(self.model)
-        if self.do_output_norm:
-            y_pred = self.norm_output_reverse(y_pred)
-
-        if self.split_train:
-            my_evaluator.plot_nn_result(self._y_test, y_pred, 'loading rate')
-        else:
-            my_evaluator.plot_nn_result_cate_color(self._y_test, y_pred, self.test_trial_id_list, TRIAL_NAMES,
-                                                   'loading rate')
-        return y_pred
 
     def save_cnn_model(self, model_name='lr_model'):
         self.model.save(model_name + '.h5', include_optimizer=False)

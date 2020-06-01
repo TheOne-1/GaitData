@@ -166,6 +166,7 @@ class Evaluation:
 
         file_path = 'result_conclusion/' + test_date + '/trial_summary/' + test_name + '.xlsx'
         predict_result_df.to_excel(file_path, index=False)
+        return predict_result_df
 
     @staticmethod
     def export_predicted_values(predicted_value_df, test_date, test_name):
