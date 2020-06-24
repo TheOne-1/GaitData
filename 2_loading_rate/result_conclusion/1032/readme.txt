@@ -1,2 +1,2 @@
-For clip data amount analysis
-percents = [3**-4, 3**-3, 3**-2, 3**-1, 0.5, 0.7, 3**0]
+For clip data amount analysis, loss included.
+percents = [0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1]

@@ -16,6 +16,6 @@ for clip_end in end_range:
     sheet = xlrd.open_workbook(file_path).sheet_by_index(0)
     result_end.append(sheet.cell_value(61, 10))
 
-Drawer.draw_clip_sensitivity(start_range, result_start)
-Drawer.draw_clip_sensitivity(end_range, result_end, color='r', name='end', used_loc=7)
+Drawer.show_clip_sensitivity(start_range, result_start)
+Drawer.show_clip_sensitivity(end_range, result_end, color='r', name='End', used_loc=7)
 plt.show()

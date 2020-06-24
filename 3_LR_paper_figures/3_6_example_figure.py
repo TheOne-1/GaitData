@@ -10,7 +10,9 @@ result_date = '1028'
 
 trial_ids = [int(TRIAL_NAMES.index(trial_name)) for trial_name in SI_SR_TRIALS]
 the_reader = ResultReader(result_date, segments)
-for subject_id in [9]:
+
+# potential subjects are 0, 9, and 5
+for subject_id in [0]:
 
     true_lr_list, pred_lr_list = [], []
     for trial_id in trial_ids:
@@ -39,7 +41,7 @@ for subject_id in [9]:
     MAE, _ = the_reader.get_param_mean_std_of_trial_mean('absolute mean error', ['All trials'], sub_id_list=[subject_id])
 
     Drawer.draw_example_result(true_lr_list, pred_lr_list, title='')
-    Drawer.draw_example_result_one_cate(true_lr_list, pred_lr_list, title='')
+    # Drawer.draw_example_result_one_cate(true_lr_list, pred_lr_list, title='')
     print(str(pearson_cor)[:4] + '\t' + str(NRMSE)[:4] + '\t' + str(MAE)[:4])
 
 plt.show()

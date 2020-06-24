@@ -28,18 +28,18 @@ class OneTrialDataStepInfo(OneTrialData):
 
         elif 'SR' in trial_name:
             self.up_first = self.__if_up_first()
-            self.sample_ranges['mid_0'] = [int(self.data_len * 1 / 6), int(self.data_len * 2 / 6)]
-            self.sample_ranges['mid_1'] = [int(self.data_len * 4 / 6), int(self.data_len * 5 / 6)]
+            self.sample_ranges['mid_0'] = [int(self.data_len * 7 / 40), int(self.data_len * 13 / 40)]
+            self.sample_ranges['mid_1'] = [int(self.data_len * 27 / 40), int(self.data_len * 33 / 40)]
             if self.up_first:
-                self.sample_ranges['hig_0'] = [0, int(self.data_len / 6)]
-                self.sample_ranges['hig_1'] = [int(self.data_len * 5 / 6), self.data_len]
-                self.sample_ranges['low_0'] = [int(self.data_len * 2 / 6), int(self.data_len * 3 / 6)]
-                self.sample_ranges['low_1'] = [int(self.data_len * 3 / 6), int(self.data_len * 4 / 6)]
+                self.sample_ranges['hig_0'] = [0, int(self.data_len * 7 / 40)]
+                self.sample_ranges['hig_1'] = [int(self.data_len * 33 / 40), self.data_len]
+                self.sample_ranges['low_0'] = [int(self.data_len * 13 / 40), int(self.data_len * 1 / 2)]
+                self.sample_ranges['low_1'] = [int(self.data_len * 1 / 2), int(self.data_len * 27 / 40)]
             else:
-                self.sample_ranges['low_0'] = [0, int(self.data_len / 6)]
-                self.sample_ranges['low_1'] = [int(self.data_len * 5 / 6), self.data_len]
-                self.sample_ranges['hig_0'] = [int(self.data_len * 2 / 6), int(self.data_len * 3 / 6)]
-                self.sample_ranges['hig_1'] = [int(self.data_len * 3 / 6), int(self.data_len * 4 / 6)]
+                self.sample_ranges['low_0'] = [0, int(self.data_len * 7 / 40)]
+                self.sample_ranges['low_1'] = [int(self.data_len * 33 / 40), self.data_len]
+                self.sample_ranges['hig_0'] = [int(self.data_len * 13 / 40), int(self.data_len * 1 / 2)]
+                self.sample_ranges['hig_1'] = [int(self.data_len * 1 / 2), int(self.data_len * 27 / 40)]
 
     @staticmethod
     def __get_pattern_start(three_ends, index):

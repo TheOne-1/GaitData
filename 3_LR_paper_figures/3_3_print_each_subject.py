@@ -6,6 +6,7 @@ from scipy.stats import ttest_ind
 result_date = '1028'
 reader_cnn = ResultReader(result_date, ['l_shank'])
 reader_pta = ResultReader(result_date, ['pta'])
+sub_info_df = ResultReader.get_subject_info()
 
 print('Result of each subject')
 for subject_id in SUB_ID_PAPER:
@@ -17,9 +18,11 @@ for subject_id in SUB_ID_PAPER:
     pearson_cor, _ = reader_cnn.get_param_mean_std_of_trial_mean('pearson correlation', ['All trials'], sub_id_list=[subject_id])
     pearson_cor_pta, _ = reader_pta.get_param_mean_std_of_trial_mean('pearson correlation', ['All trials'], sub_id_list=[subject_id])
 
-    print('{:.2f}'.format(round(pearson_cor, 2)), end='\t')
-    print('', end='\t')
-    print('{:.2f}'.format(round(pearson_cor_pta, 2)))
+    print(str(sub_info_df.iloc[subject_id, 3]), end='\t')
+    print('{:.2f}'.format(round(sub_info_df.iloc[subject_id, 5] / 100, 2)), end='\t')
+    print(str(sub_info_df.iloc[subject_id, 4]), end='\n')
+    # print('{:.2f}'.format(round(pearson_cor, 2)), end='\t')
+    # print('{:.2f}'.format(round(pearson_cor_pta, 2)))
 
 
 print('\n\n\nResult of each gait:')

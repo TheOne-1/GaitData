@@ -68,6 +68,42 @@ class Evaluation:
             y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
         return y_pred
 
+    def evaluate_nn_report_loss(self, model, check_convergence=True):
+        # train NN
+        # lr = learning rate, the other params are default values
+        optimizer = optimizers.Nadam(lr=0.0008, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+        model.compile(loss='mean_squared_error', optimizer=optimizer)
+        # val_loss = validation loss, patience is the tolerance
+        early_stopping_patience = 5     # !!!
+        early_stopping = EarlyStopping(monitor='val_loss', patience=early_stopping_patience)
+        # epochs is the maximum training round, validation split is the size of the validation set,
+        # callback stops the training if the validation was not approved
+        batch_size = 32  # the size of data that be trained together
+        epoch_num = 200
+        if self._x_train_aux is not None:
+            r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
+                          batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
+                          verbose=2)
+            if np.isnan(r.history['loss'][0]):
+                raise ValueError('Loss is Nan')
+            n_epochs = len(r.history['loss'])
+            # retrain the model if the model did not converge
+            while check_convergence and n_epochs < early_stopping_patience + 3:
+                print('Epcohs number was {num}, reset weights and retrain'.format(num=n_epochs))
+                model.reset_states()
+                r = model.fit(x={'main_input': self._x_train, 'aux_input': self._x_train_aux}, y=self._y_train,
+                              batch_size=batch_size, epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping],
+                              verbose=2)
+                n_epochs = len(r.history['loss'])
+            y_pred = model.predict(x={'main_input': self._x_test, 'aux_input': self._x_test_aux},
+                                   batch_size=batch_size).ravel()
+            # print('Final model, loss = {loss}, epochs = {epochs}'.format(loss=r.history['loss'][-1], epochs=len())
+        else:
+            model.fit(self._x_train, self._y_train, batch_size=batch_size,
+                      epochs=epoch_num, validation_split=0.2, callbacks=[early_stopping])
+            y_pred = model.predict(self._x_test, batch_size=batch_size).ravel()
+        return y_pred, r.history['loss'], r.history['val_loss']
+
     @staticmethod
     def plot_nn_result(y_true, y_pred, title=''):
         # change the shape of data so that no error will be raised during pearsonr analysis

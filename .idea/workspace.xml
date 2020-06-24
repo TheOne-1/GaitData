@@ -2,16 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c92c1fa7-68af-461c-8a81-398298ffad5f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/2_loading_rate/2_2_show_clip_sensitivity.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/2_loading_rate/2_3_data_amount_training_error.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/_2_3_show_data_amount.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/_2_4_hidden_layer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/_2_4_show_hidden_layer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2_loading_rate/_2_5_calculate_flop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_2_data_clip_sensitivity.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/2_2_data_clip_sensitivity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_0_lr_all_combos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_0_lr_cross_vali.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_0_lr_just_shank.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_0_lr_just_shank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_1_generate_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_1_generate_type.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_2_data_clip_sensitivity.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_2_data_clip_sensitivity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_2_show_clip_sensitivity.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_2_show_clip_sensitivity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_3_data_amount_training_error.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/_2_3_data_amount_training_error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190423LiuSensen.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190423LiuSensen.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190424XuSen.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190424XuSen.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190426YuHongzhe.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190426YuHongzhe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190510HeMing.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190510HeMing.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190514XieJie.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190514XieJie.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190517ZhangYaqian.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190517ZhangYaqian.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190518FuZhinan.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190518FuZhinan.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190518MouRongzi.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190518MouRongzi.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190521GongChangyang.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190521GongChangyang.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190521LiangJie.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190521LiangJie.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522QinZhun.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522QinZhun.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522SunDongxiao.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522SunDongxiao.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522YangCan.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190522YangCan.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190523ZengJia.png" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/exported_figures/lr_190523ZengJia.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/result_conclusion/1031/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_loading_rate/result_conclusion/1032/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/2_loading_rate/result_conclusion/1032/readme.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/Evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SharedProcessors/const.py" beforeDir="false" afterPath="$PROJECT_DIR$/SharedProcessors/const.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,49 +50,48 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/2_3_data_amount_training_error.py">
+        <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_4_show_hidden_layer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="107" selection-start-line="107" selection-end-line="107" />
+            <state relative-caret-position="572">
+              <caret line="29" column="38" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
               <folding>
-                <element signature="e#220#255#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_3_show_data_amount.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
+        <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_2_show_clip_sensitivity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="9" />
+            <state relative-caret-position="418">
+              <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#1318#3651#0" />
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
+        <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="621">
-              <caret line="106" column="8" selection-start-line="106" selection-start-column="8" selection-end-line="106" selection-end-column="8" />
+            <state relative-caret-position="84">
+              <caret line="25" column="126" selection-start-line="25" selection-start-column="126" selection-end-line="25" selection-end-column="126" />
               <folding>
-                <element signature="e#110#141#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#0#168#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,26 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pd.DataFrame</find>
-      <find>pd.concat</find>
-      <find>round</find>
-      <find>NRMSE_mean_std</find>
-      <find>get_all_scores</find>
-      <find>nrmse</find>
-      <find>readme</find>
-      <find>readme_xls</find>
-      <find>reset_inde</find>
-      <find>self.readme_sheet</find>
-      <find>clean_all_data</find>
-      <find>read_csv</find>
-      <find>trial type</find>
-      <find>low_0</find>
-      <find>legend</find>
-      <find>keras</find>
-      <find>os.</find>
-      <find>open_workbook</find>
-      <find>resample</find>
-      <find>BW</find>
       <find>max</find>
       <find>os</find>
       <find>to_csv</find>
@@ -114,14 +118,28 @@
       <find>super</find>
       <find>clip</find>
       <find>ttest</find>
+      <find>fit</find>
+      <find>root</find>
+      <find>def fit</find>
+      <find>rdbu</find>
+      <find>, = plt.plot</find>
+      <find>line</find>
+      <find>Input</find>
+      <find>defin</find>
+      <find>x</find>
+      <find>accuracy curve</find>
+      <find>mean_squared_error</find>
+      <find>ZHUJIA</find>
+      <find>.2</find>
+      <find>.f</find>
+      <find>$</find>
+      <find>:.</find>
+      <find>1 / 6</find>
+      <find>4 / 6</find>
+      <find>5 / 6</find>
+      <find>3 / 6</find>
     </findStrings>
     <replaceStrings>
-      <replace>marker</replace>
-      <replace>FM2</replace>
-      <replace>LFCC</replace>
-      <replace>gait_data_df</replace>
-      <replace>z</replace>
-      <replace>model</replace>
       <replace>r_</replace>
       <replace>r_foot</replace>
       <replace>r_toe</replace>
@@ -146,6 +164,12 @@
       <replace>,</replace>
       <replace>, 'l_thigh_</replace>
       <replace>readme_sheet</replace>
+      <replace>_</replace>
+      <replace>7 / 40</replace>
+      <replace>13 / 40</replace>
+      <replace>27 / 40</replace>
+      <replace>33 / 40</replace>
+      <replace>1 / 2</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -154,15 +178,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRMultiSensor.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRMultiSensors.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/test.py" />
-        <option value="$PROJECT_DIR$/SharedProcessors/AllSubDataStruct.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRCrossVali.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/2_0_loading_rate.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLRNoResample.py" />
-        <option value="$PROJECT_DIR$/4_generating_figures/4_2_regression_example.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/check_static_trial_orientations.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/check_static_orientations.py" />
         <option value="$PROJECT_DIR$/3_LR_paper_figures/0_best_of_combos.py" />
         <option value="$PROJECT_DIR$/SharedProcessors/AllSubData.py" />
@@ -192,27 +207,36 @@
         <option value="$PROJECT_DIR$/2_loading_rate/2_0_lr_just_shank.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_l_shank_info.csv" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py" />
-        <option value="$PROJECT_DIR$/SharedProcessors/const.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_1_generate_type.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py" />
-        <option value="$PROJECT_DIR$/SharedProcessors/Evaluation.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_2_data_clip_sensitivity.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_2_show_clip_sensitivity.py" />
-        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py" />
-        <option value="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" />
-        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_3_data_amount.py" />
-        <option value="$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py" />
+        <option value="$PROJECT_DIR$/SharedProcessors/Evaluation.py" />
         <option value="$PROJECT_DIR$/2_loading_rate/2_3_data_amount_training_error.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/ProcessorLR.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/2_4_CNN_neuron_and_hidden_layer.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_5_show_hidden_layer.py" />
+        <option value="$PROJECT_DIR$/SharedProcessors/const.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_3_show_data_amount.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_3_data_amount_training_error.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_2_show_clip_sensitivity.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_5_calculate_flop.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_4_hidden_layer.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_1_generate_type.py" />
+        <option value="$PROJECT_DIR$/2_loading_rate/_2_4_show_hidden_layer.py" />
+        <option value="$PROJECT_DIR$/3_LR_paper_figures/Drawer.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1897" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -222,7 +246,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -238,8 +261,7 @@
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
               <item name="190406DataProcess" type="462c0819:PsiDirectoryNode" />
-              <item name="2_loading_rate" type="462c0819:PsiDirectoryNode" />
-              <item name="result_conclusion" type="462c0819:PsiDirectoryNode" />
+              <item name="3_LR_paper_figures" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="190406DataProcess" type="b2602c69:ProjectViewProjectNode" />
@@ -250,6 +272,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -257,19 +280,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate\result_conclusion\reserved results" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\abondened" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\SharedProcessors" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate" />
+      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\7_fdeep" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\3_LR_paper_figures" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\0_preprocessing" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\4_generating_figures\exported_figures" />
       <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\4_generating_figures" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\abondened" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\SharedProcessors" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\7_fdeep" />
-      <recent name="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\6_to_cpp" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -284,7 +307,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.2_3_data_amount">
+  <component name="RunManager" selected="Python._2_2_show_clip_sensitivity">
     <configuration name="0_initialize_data" type="PythonConfigurationType" factoryName="Python" singleton="false">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -298,69 +321,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/0_preprocessing/0_initialize_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="2_2_show_clip_sensitivity" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
-      <module name="190406DataProcess" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/2_2_show_clip_sensitivity.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="2_3_data_amount" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="190406DataProcess" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="D:\Tian\Research\Projects\HuaweiProject\codes\190406DataProcess\2_loading_rate\2_3_data_amount_training_error.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="2_3_show_data_amount" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="190406DataProcess" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -411,7 +371,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="3_6_example_figure" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
+    <configuration name="_2_1_generate_type" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="190406DataProcess" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -419,11 +379,74 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/3_LR_paper_figures" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/_2_1_generate_type.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="_2_2_show_clip_sensitivity" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="190406DataProcess" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/_2_2_show_clip_sensitivity.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="_2_4_show_hidden_layer" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
+      <module name="190406DataProcess" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/_2_4_show_hidden_layer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="_2_5_calculate_flop" type="PythonConfigurationType" factoryName="Python" singleton="false" temporary="true">
+      <module name="190406DataProcess" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/2_loading_rate" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2_loading_rate/_2_5_calculate_flop.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -435,19 +458,19 @@
     <list>
       <item itemvalue="Python.0_initialize_data" />
       <item itemvalue="Python.3_0_figureI" />
-      <item itemvalue="Python.3_6_example_figure" />
-      <item itemvalue="Python.2_2_show_clip_sensitivity" />
-      <item itemvalue="Python.2_3_data_amount" />
-      <item itemvalue="Python.2_3_show_data_amount" />
       <item itemvalue="Python.3_3_print_each_subject" />
+      <item itemvalue="Python._2_1_generate_type" />
+      <item itemvalue="Python._2_2_show_clip_sensitivity" />
+      <item itemvalue="Python._2_4_show_hidden_layer" />
+      <item itemvalue="Python._2_5_calculate_flop" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.2_3_data_amount" />
-        <item itemvalue="Python.2_3_show_data_amount" />
+        <item itemvalue="Python._2_2_show_clip_sensitivity" />
+        <item itemvalue="Python._2_4_show_hidden_layer" />
         <item itemvalue="Python.3_3_print_each_subject" />
-        <item itemvalue="Python.3_6_example_figure" />
-        <item itemvalue="Python.2_2_show_clip_sensitivity" />
+        <item itemvalue="Python._2_1_generate_type" />
+        <item itemvalue="Python._2_5_calculate_flop" />
       </list>
     </recent_temporary>
   </component>
@@ -474,22 +497,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.13804004" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49586776" visible="true" weight="0.13804004" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5041322" side_tool="true" weight="0.13382508" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32827735" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49841937" visible="true" weight="0.37703142" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49894625" weight="0.31852654" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49789253" weight="0.31744313" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49894625" weight="0.36403033" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.329718" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.329718" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015806" side_tool="true" weight="0.32321042" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5021075" side_tool="true" weight="0.4409534" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -556,185 +579,14 @@
           <option name="timeStamp" value="650" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py</url>
-          <line>15</line>
-          <option name="timeStamp" value="653" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SharedProcessors/Evaluation.py</url>
-          <line>166</line>
-          <option name="timeStamp" value="663" />
+          <url>file://$PROJECT_DIR$/2_loading_rate/_2_3_data_amount_training_error.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="680" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/paper_figures/comparison of one IMU result.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/paper_figures/comparison of one IMU result.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-1187615432/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="501" column="4" selection-start-line="501" selection-start-column="4" selection-end-line="501" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexes/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="2658" selection-start-line="2658" selection-end-line="2658" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1029/step_result/1029_l_shank.csv" />
-    <entry file="file://$PROJECT_DIR$/1_param_processing/1_initialize_parameter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="26" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#100#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/1_param_processing/ParameterProcessor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="19" selection-start-line="19" selection-end-line="20" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/numpy/core/fromnumeric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="85" selection-start-line="85" selection-end-line="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_l_foot.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="859" selection-start-line="859" selection-end-line="859" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_l_shank_l_foot.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_l_shank.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="-350471">
-          <caret line="2519" column="21" lean-forward="true" selection-start-line="2519" selection-start-column="21" selection-end-line="2519" selection-end-column="21" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_step_info.csv">
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="2409">
-          <caret line="18469" lean-forward="true" selection-start-line="18469" selection-end-line="18469" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/random.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="754" selection-start-line="754" selection-end-line="754" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/4_hw_report_figures/4_1_off.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_1_generate_type.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="117" selection-start-line="117" selection-end-line="117" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/OneTrialData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="152" column="44" lean-forward="true" selection-start-line="152" selection-start-column="44" selection-end-line="152" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#153#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_cross_vali.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-22">
-          <caret line="2" column="46" selection-start-line="2" selection-start-column="46" selection-end-line="2" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/4_hw_report_figures/4_2_regression_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="22" column="37" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0_preprocessing/data_for_ljx2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
-          <folding>
-            <element signature="e#63#158#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_just_shank.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/sklearn/utils/validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="581" selection-start-line="581" selection-end-line="581" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1029/step_result/-12_30.csv" />
     <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1029/step_result/-4_30.csv" />
     <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/xlrd/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -760,16 +612,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_2_print_R2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="33" column="5" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_5_print_table.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
@@ -791,27 +633,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1029/step_result/start_-12_end_38.csv" />
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/const.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2046">
-          <caret line="147" column="40" selection-start-line="147" selection-start-column="39" selection-end-line="147" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure_2.py" />
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_2_show_clip_sensitivity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="19" column="28" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SharedProcessors/AllSubData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
@@ -829,20 +651,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_0_lr_all_combos.py">
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_0_lr_all_combos.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
           <caret line="12" column="20" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/ComboGenerator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="49">
-          <caret line="90" column="101" selection-start-line="90" selection-start-column="94" selection-end-line="90" selection-end-column="101" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -853,38 +665,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_2_data_clip_sensitivity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="62" column="28" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1031/amount_summary.csv">
-      <provider selected="true" editor-type-id="csv-text-editor" />
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1031/amount_summary.csv" />
     <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_0_figureI.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="20" column="49" selection-start-line="20" selection-start-column="49" selection-end-line="20" selection-end-column="49" />
           <folding>
             <element signature="e#50#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="295" column="78" selection-start-line="295" selection-start-column="78" selection-end-line="295" selection-end-column="78" />
-          <folding>
-            <element signature="e#0#168#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -899,20 +686,128 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py">
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/sklearn/manifold/t_sne.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+        <state relative-caret-position="141">
+          <caret line="898" column="34" lean-forward="true" selection-start-line="898" selection-start-column="34" selection-end-line="898" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/keras/losses.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="605" selection-start-line="605" selection-end-line="605" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/keras/engine/training.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="963">
+          <caret line="711" selection-start-line="711" selection-end-line="711" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#50#88#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/sklearn/preprocessing/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-19">
+          <caret line="337" column="5" selection-start-line="337" selection-start-column="5" selection-end-line="337" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/ComboGenerator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5">
+          <caret line="131" column="7" selection-start-line="131" selection-start-column="7" selection-end-line="131" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1033/amount_summary.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1033/loss_summary.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="2807" column="4" selection-start-line="2807" selection-start-column="4" selection-end-line="2807" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/matplotlib/cm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/keras/engine/input_layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="113" column="4" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1035/layer_summary.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/tensorflow/python/keras/engine/training.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10">
+          <caret line="164" column="6" selection-start-line="164" selection-start-column="6" selection-end-line="164" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/matplotlib/axes/_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="3777" column="23" selection-start-line="3777" selection-start-column="8" selection-end-line="3777" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-1187615432/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="2958" column="8" selection-start-line="2958" selection-start-column="8" selection-end-line="2958" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_6_example_figure.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="41" column="40" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
+        <state relative-caret-position="836">
+          <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/pandas/core/indexing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="2138" selection-start-line="2138" selection-end-line="2138" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SharedProcessors/const.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="66" column="32" selection-start-line="66" selection-start-column="19" selection-end-line="66" selection-end-column="32" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -921,41 +816,162 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/2_loading_rate/ProcessorLR.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="106" column="8" selection-start-line="106" selection-start-column="8" selection-end-line="106" selection-end-column="8" />
+        <state relative-caret-position="22">
+          <caret line="215" column="8" selection-start-line="215" selection-start-column="8" selection-end-line="215" selection-end-column="8" />
           <folding>
             <element signature="e#110#141#0" expanded="true" />
+            <element signature="e#2241#5492#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_3_show_data_amount.py">
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1036/layer_summary.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="12" />
+        <state relative-caret-position="143">
+          <caret line="200" selection-start-line="200" selection-end-line="200" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2_loading_rate/2_3_data_amount_training_error.py">
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/keras_applications/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        <state relative-caret-position="187">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/ProgramFiles/Python368/Lib/site-packages/tensorflow/python/keras/applications/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="69" selection-start-line="69" selection-end-line="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1037/layer_summary_1.csv" />
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1037/layer_summary.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_2_print_R2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="33" column="5" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/3_3_print_each_subject.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="55" column="63" selection-start-line="55" selection-start-column="55" selection-end-line="55" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/result_conclusion/1028/step_result/1028_step_info.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_1_generate_type.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_5_calculate_flop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="99" selection-start-line="99" selection-end-line="99" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_3_data_amount_training_error.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="27" column="31" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="31" />
           <folding>
             <element signature="e#220#255#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SharedProcessors/Evaluation.py">
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_4_hidden_layer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="9" />
+        <state relative-caret-position="3058">
+          <caret line="185" column="17" selection-start-line="185" selection-start-column="17" selection-end-line="185" selection-end-column="17" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1318#3651#0" />
+            <element signature="e#220#255#0" expanded="true" />
+            <element signature="e#1618#3912#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_2_data_clip_sensitivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="478">
+          <caret line="63" column="18" selection-end-line="110" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_4_show_hidden_layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="29" column="38" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_3_show_data_amount.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/3_LR_paper_figures/Drawer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="25" column="126" selection-start-line="25" selection-start-column="126" selection-end-line="25" selection-end-column="126" />
+          <folding>
+            <element signature="e#0#168#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2_loading_rate/_2_2_show_clip_sensitivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>

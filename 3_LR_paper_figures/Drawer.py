@@ -10,31 +10,102 @@ from Evaluation import Evaluation
 
 class Drawer:
     @staticmethod
-    def draw_clip_sensitivity(the_range, the_accuracy, color='g', name='start', used_loc=3):
-        plt.figure(figsize=(10, 7))
+    def linearly_generate_colors(start, end, n_colors):
+        result = []
+        steps = [(end[i_axis] - start[i_axis]) / (n_colors - 1) for i_axis in range(len(start))]
+        for i_color in range(n_colors):
+            the_color = [start[i_axis] + steps[i_axis] * i_color for i_axis in range(len(start))]
+            result.append(the_color)
+        return result
+
+    @staticmethod
+    def show_clip_sensitivity(the_range, the_accuracy, color='g', name='Start', used_loc=3):
+        plt.figure(figsize=(11, 8))
         time = [x * 5 for x in the_range]
-        fig_accuracy, = plt.plot(time, the_accuracy, linewidth=LINE_WIDTH, label='accuracy curve')
-        fig_used_loc, = plt.plot(time[used_loc], the_accuracy[used_loc], color+'o', markersize=15, label='used window ' + name)
+        fig_accuracy, = plt.plot(time, the_accuracy, linewidth=LINE_WIDTH, label='Accuracy Curve')
+        fig_used_loc, = plt.plot(time[used_loc], the_accuracy[used_loc], color+'o', markersize=15, label='Window ' + name + ' Time')
         # plt.plot([0, 0], [0.5, 1], '--', linewidth=LINE_WIDTH, color='gray')
 
         ax = plt.gca()
         ax.set_xticks(time)
-        ax.set_xticklabels(time, fontdict=FONT_DICT_SMALL)
-        if 'start' in name:
-            x_label = 'Window start time before foot-strike (ms)'
+        ax.set_xticklabels(time, fontdict=FONT_DICT)
+        if 'Start' in name:
+            x_label = 'Window Start Time with Respect to Foot-Strike (ms)'
         else:
-            x_label = 'Window end time after foot-strike (ms)'
-        ax.set_xlabel(x_label, labelpad=10, fontdict=FONT_DICT_SMALL)
+            x_label = 'Window End Time after Foot-Strike (ms)'
+        ax.set_xlabel(x_label, labelpad=10, fontdict=FONT_DICT)
         ax.set_ylim(0.5, 1)
         y_range = [x/10 for x in range(5, 11)]
         ax.set_yticks(y_range)
-        ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
-        ax.set_ylabel('Correlation coefficient', labelpad=10, fontdict=FONT_DICT_SMALL)
+        ax.set_yticklabels(y_range, fontdict=FONT_DICT)
+        ax.set_ylabel('Correlation Coefficient', labelpad=10, fontdict=FONT_DICT)
         Drawer.format_plot()
 
-        plt.legend(handles=[fig_accuracy, fig_used_loc], bbox_to_anchor=[0.55, 0.95], ncol=1,
-                   fontsize=FONT_SIZE_LONG_FIG, frameon=False, handlelength=2.5, handleheight=1.6)
+        plt.legend(handles=[fig_accuracy, fig_used_loc], bbox_to_anchor=[0.39, 0.94], ncol=1,
+                   fontsize=FONT_SIZE, frameon=False)
         plt.tight_layout(rect=[0.01, 0.01, 0.99, 0.99])
+
+    @staticmethod
+    def show_data_amount(result_data_df, optimal_segment_list, percents, param_name):
+        # curve_colors = Drawer.linearly_generate_colors([0, 0, 1], [1, 0, 0], 5)
+        curve_colors = Drawer.linearly_generate_colors([0.8, 0.8, 0], [0, 0, 0], 5)
+        curve_names = ['1 IMU'] + [str(i) + ' IMUs' for i in range(2, 6)]
+
+        plt.figure(figsize=(10, 7))
+        plts = []
+
+        for i_segment, segment_list in enumerate(optimal_segment_list):
+            test_name = segment_list[0]
+            for segment in segment_list[1:]:
+                test_name = test_name + '_' + segment
+
+            current_result_df = result_data_df[result_data_df['segment'] == test_name]
+            fig_amount, = plt.plot(percents, current_result_df[param_name], color=curve_colors[i_segment],
+                                   linewidth=2)
+            plts.append(fig_amount)
+
+        ax = plt.gca()
+        x_range = [0, 0.2, 0.4, 0.6, 0.8, 1]
+        ax.set_xticks(x_range)
+        ax.set_xlim(0, 1)
+        ax.set_xticklabels([str(int(100*x)) + '%' for x in x_range], fontdict=FONT_DICT_SMALL)
+        ax.set_xlabel('Percentage of Data Used for Training', labelpad=10, fontdict=FONT_DICT_SMALL)
+        ax.set_ylim(0, 4)
+        y_range = [0, 1, 2, 3, 4]
+        ax.set_yticks(y_range)
+        ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
+        ax.set_ylabel('Training Loss (BW/s)$^{2}$', labelpad=10, fontdict=FONT_DICT_SMALL)
+        ax.tick_params(axis='both', which='major', pad=15)
+        Drawer.format_plot()
+
+        plt.legend(plts, curve_names, bbox_to_anchor=[1, 0.95], ncol=1,
+                   fontsize=FONT_SIZE_LONG_FIG, frameon=False)
+        plt.tight_layout(rect=[0.01, 0.01, 0.99, 0.99])
+        plt.show()
+
+    @staticmethod
+    def show_hidden_layer(the_range, the_accuracy, param_name, figure_param_dict):
+        plt.figure(figsize=(11, 8))
+        fig_accuracy, = plt.plot(the_range, the_accuracy, linewidth=LINE_WIDTH, label='Accuracy Curve')
+        fig_used_loc, = plt.plot(the_range[figure_param_dict['used_loc']], the_accuracy[figure_param_dict['used_loc']],
+                                 'go', markersize=15, label=figure_param_dict['marker_label'])
+
+        ax = plt.gca()
+        ax.set_xscale("log", nonposx='clip')
+        ax.set_xticks(figure_param_dict['x_ticks'])
+        ax.set_xticklabels(figure_param_dict['x_tick_labels'], fontdict=FONT_DICT)
+        x_label = figure_param_dict['x_label']
+        ax.set_xlabel(x_label, labelpad=10, fontdict=FONT_DICT)
+        ax.set_ylim(0.5, 1)
+        y_range = [x/10 for x in range(5, 11)]
+        ax.set_yticks(y_range)
+        ax.set_yticklabels(y_range, fontdict=FONT_DICT)
+        ax.set_ylabel('Correlation Coefficient', labelpad=10, fontdict=FONT_DICT)
+
+        Drawer.format_plot()
+        plt.legend(handles=[fig_accuracy, fig_used_loc], bbox_to_anchor=[1, 1.3], ncol=1,
+                   fontsize=FONT_SIZE, frameon=False)
+        plt.tight_layout(rect=[0.01, 0.01, 0.99, 1.04])
 
     @staticmethod
     def draw_one_imu_result(mean_values, std_values):
@@ -186,7 +257,7 @@ class Drawer:
 
     @staticmethod
     def draw_example_result(true_lr_list, pred_lr_list, title):
-        colors = ['darkgreen', 'darkgreen', 'maroon', 'maroon']
+        colors = ['steelblue', 'steelblue', 'maroon', 'maroon']
         markers = ['^', 'o', '^', 'o']
         labels = ['Standard Shoes, 2.4 m/s', 'Standard Shoes, 2.8 m/s',
                   'Minimalist Shoes, 2.4 m/s', 'Minimalist Shoes, 2.8 m/s']
@@ -194,16 +265,25 @@ class Drawer:
         plt.figure(figsize=(11, 9))
         Drawer.format_plot()
         plt.title(title)
-        # plt.plot([0, 250], [0, 250], 'black')
         cate_num = len(true_lr_list)
         scatters = []
+        true_lr_all, pred_lr_all = [], []
         for i_cate in range(cate_num):
+            true_lr_all.extend(true_lr_list[i_cate])
+            pred_lr_all.extend(pred_lr_list[i_cate])
             scatters.append(plt.scatter(true_lr_list[i_cate], pred_lr_list[i_cate], s=200, color=colors[int(i_cate / 2)],
                                         marker=markers[int(i_cate / 2)], alpha=transparency[int(i_cate/2)],
                                         label=labels[int(i_cate/2)]))
+        coef = np.polyfit(true_lr_all, pred_lr_all, 1)
+        print(coef)
+        poly1d_fn = np.poly1d(coef)
+        plt.plot([0, 150], poly1d_fn([0, 150]), color='black', linewidth=LINE_WIDTH)
+        plt.text(95, 10, 'ρ = 0.93\ny = ' + str(coef[0])[:4] + 'x + ' + str(coef[1])[:4], fontdict=FONT_DICT)
+
         Drawer.set_example_bar_ticks()
-        plt.legend(handles=scatters[::2], bbox_to_anchor=[0.64, 1.04], ncol=1, fontsize=FONT_SIZE_SMALL,
-                   frameon=False)
+
+        plt.legend(handles=scatters[::2], bbox_to_anchor=[0.62, 1.05], ncol=1, fontsize=FONT_SIZE_SMALL,
+                   frameon=False, handletextpad=0.05)
 
         plt.tight_layout(rect=[0, 0, 0.98, 0.98])
         plt.savefig('paper_figures/example result.png')
@@ -220,12 +300,20 @@ class Drawer:
         plt.figure(figsize=(11, 9))
         Drawer.format_plot()
         plt.title(title)
-        # plt.plot([0, 250], [0, 250], 'black')
         cate_num = len(true_lr_list)
+        true_lr_all, pred_lr_all = [], []
         scatters = []
         for i_cate in range(cate_num):
             scatters.append(plt.scatter(true_lr_list[i_cate], pred_lr_list[i_cate], s=50, color='black',
-                                        marker='s', alpha=0.5))
+                                        marker='s', alpha=0.4))
+            true_lr_all.extend(true_lr_list[i_cate])
+            pred_lr_all.extend(pred_lr_list[i_cate])
+        plt.plot([0, 150], [0, 150], '--', color='green', linewidth=2)
+        coef = np.polyfit(true_lr_all, pred_lr_all, 1)
+        print(coef)
+        poly1d_fn = np.poly1d(coef)
+        plt.plot([0, 150], poly1d_fn([0, 150]), color='green', linewidth=LINE_WIDTH)
+        plt.text(5, 130, 'ρ = 0.93\ny = ' + str(coef[0])[:4] + 'x + ' + str(coef[1])[:4], fontdict=FONT_DICT)
         Drawer.set_example_bar_ticks()
 
         plt.tight_layout(rect=[0, 0, 0.98, 0.98])
@@ -234,16 +322,16 @@ class Drawer:
     @staticmethod
     def set_example_bar_ticks():
         ax = plt.gca()
-        ax.set_xlim(0, 200)
-        ax.set_xticks(range(0, 201, 50))
-        ax.set_xticklabels(range(0, 201, 50), fontdict=FONT_DICT_SMALL)
+        ax.set_xlim(0, 150)
+        ax.set_xticks(range(0, 151, 30))
+        ax.set_xticklabels(range(0, 151, 30), fontdict=FONT_DICT_SMALL)
         ax.set_xlabel('VALR: Laboratory Force Plate (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
 
-        ax.set_ylim(0, 200)
-        y_range = range(0, 201, 50)
+        ax.set_ylim(0, 150)
+        y_range = range(0, 151, 30)
         ax.set_yticks(y_range)
         ax.set_yticklabels(y_range, fontdict=FONT_DICT_SMALL)
-        ax.set_ylabel('VALR: CNN with Single Shank IMU (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
+        ax.set_ylabel('VALR: Single Shank IMU (BW/s)', labelpad=10, fontdict=FONT_DICT_SMALL)
 
 
 class ResultReader:
@@ -263,6 +351,12 @@ class ResultReader:
         info_path = '../2_loading_rate/result_conclusion/' + date + '/step_result/' + date + '_step_info.csv'
         info_df = pd.read_csv(info_path, index_col=False)
         self._step_result_df = pd.concat([self._step_result_df, info_df['step type']], axis=1)
+
+    @staticmethod
+    def get_subject_info():
+        sub_info_path = 'D:/Tian/Research/Projects/HuaweiProject/PhaseIData/SubjectInfo.xlsx'
+        sub_info_df = pd.read_excel(sub_info_path, index_col=False, header=0, nrows=15, usecols='A:F')
+        return sub_info_df
 
     def get_param_mean_std_of_trial_mean(self, param_name, trial_list, sub_id_list=None):
         """

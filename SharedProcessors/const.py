@@ -145,4 +145,4 @@ COLUMN_FOR_HUAWEI = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y'
 
 COLUMN_FOR_HUAWEI_1000 = ['marker_frame', 'f_1_x', 'f_1_y', 'f_1_z', 'c_1_x', 'c_1_y', 'c_1_z']
 
-SUB_ID_PAPER = [5, 8, 4, 6, 7, 12, 13, 0, 1, 2, 3, 9, 10, 11, 14]
+SUB_ID_PAPER = [0, 1, 2, 3, 9, 10, 11, 14, 5, 8, 4, 6, 7, 12, 13]
