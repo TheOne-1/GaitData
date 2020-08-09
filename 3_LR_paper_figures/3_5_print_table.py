@@ -1,6 +1,3 @@
-"""
-Figure is not a good choice, changed to a table showing that one IMU or five IMUs gives the same result.
-"""
 
 import numpy as np
 from Drawer import Drawer, ResultReader, ComboResultReader
